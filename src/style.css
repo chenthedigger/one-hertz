@@ -1,0 +1,214 @@
+/* ONE HERTZ — Spike B styles.
+   Tokens are working defaults from PLAN §3; the real ramp locks at P1.5. */
+
+:root {
+  --clock: 0; /* written by src/core/clock.ts every frame */
+  --porcelain: #ebebeb;
+  --ink: #0b0b0c;
+  --biosignal: #ff2d55;
+  --font-display: "Clash Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scrollbar-width: thin;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--porcelain);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* ---- WebGL stage: fixed behind everything -------------------------------- */
+
+#stage {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* ---- Clock hairline: the CSS layer visibly consuming the clock scalar ---- */
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--biosignal);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--clock));
+  z-index: 30;
+  pointer-events: none;
+}
+
+/* ---- Loader ---------------------------------------------------------------- */
+
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-content: center;
+  gap: 1.25rem;
+  justify-items: center;
+  background: var(--porcelain);
+}
+
+#loader-arc {
+  transform: rotate(-90deg);
+}
+
+.loader-arc__track,
+.loader-arc__fill {
+  fill: none;
+  stroke-width: 3;
+}
+
+.loader-arc__track {
+  stroke: rgb(11 11 12 / 8%);
+}
+
+.loader-arc__fill {
+  stroke: var(--biosignal);
+  stroke-linecap: round;
+}
+
+.loader__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--ink);
+}
+
+/* ---- Scroll tracks + sticky pinning (NO ScrollTrigger pins) --------------- */
+
+main {
+  position: relative;
+  z-index: 10;
+}
+
+.track {
+  position: relative;
+}
+
+.track--hero {
+  height: 100svh;
+}
+
+.track--one {
+  height: 300svh; /* SECTION_VH.one — keep in sync with src/core/constants.ts */
+}
+
+.pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+}
+
+/* ---- Hero ------------------------------------------------------------------ */
+
+.hero {
+  height: 100%;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  will-change: transform, opacity;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgb(11 11 12 / 55%);
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 12vw, 9rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.hero__sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgb(11 11 12 / 70%);
+}
+
+.hero__hint {
+  margin-top: 3rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--biosignal);
+  animation: hint-pulse 1s steps(2, jump-none) infinite; /* 1 Hz, of course */
+}
+
+@keyframes hint-pulse {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+
+/* ---- ONE section (pinned copy) --------------------------------------------- */
+
+.one__copy {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 12svh;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  text-align: center;
+  padding-inline: 1.5rem;
+  opacity: 0;
+  will-change: transform, opacity;
+  /* Text-legibility scrim over the 3D stage (PLAN §3 post stack rule). */
+  background: radial-gradient(60% 140% at 50% 100%, rgb(235 235 235 / 80%), transparent 70%);
+  padding-block: 3rem 1rem;
+}
+
+.one__copy h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.one__copy p {
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  color: rgb(11 11 12 / 65%);
+}

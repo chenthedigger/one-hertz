@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="ONE HERTZ — the watch regulated by a human heart." />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%23FF2D55' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%230B0B0C'/%3E%3C/svg%3E"
+    />
+    <title>ONE HERTZ</title>
+  </head>
+  <body>
+    <div id="loader" aria-hidden="true">
+      <svg id="loader-arc" viewBox="0 0 120 120" width="120" height="120">
+        <circle class="loader-arc__track" cx="60" cy="60" r="54" />
+        <circle class="loader-arc__fill" cx="60" cy="60" r="54" />
+      </svg>
+      <p class="loader__label">ONE HERTZ</p>
+    </div>
+
+    <canvas id="stage" aria-hidden="true"></canvas>
+
+    <main id="app">
+      <section class="track track--hero" data-section="hero">
+        <div class="pin">
+          <header class="hero">
+            <p class="hero__eyebrow">CHEN presents</p>
+            <h1 class="hero__title">ONE&nbsp;HERTZ</h1>
+            <p class="hero__sub">the watch regulated by a human heart</p>
+            <p class="hero__hint">scroll</p>
+          </header>
+        </div>
+      </section>
+
+      <section class="track track--one" data-section="one">
+        <div class="pin">
+          <div class="one__copy one__copy--a">
+            <h2>Every mechanism has a pulse.</h2>
+            <p>Haute horlogerie worships the 4&nbsp;Hz balance wheel.</p>
+          </div>
+          <div class="one__copy one__copy--b">
+            <h2>This one beats at 1&nbsp;Hz.</h2>
+            <p>Where the Always-On floor meets a resting human heart.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
