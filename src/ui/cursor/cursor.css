@@ -1,0 +1,106 @@
+/* ONE HERTZ — custom cursor (module-scoped; desktop fine-pointer only).
+ *
+ * Design (PLAN §3 cursor spec, working default until the P1.5 look bible):
+ *   - dot: white in mix-blend-mode:difference — self-inverting over both
+ *     porcelain stage and ink typography, no per-section theming needed.
+ *   - HOLD ring: biosignal red, NO blend (the signal color must never
+ *     invert), fills clockwise from 12 o'clock with longpress intensity.
+ *   - icon chip: porcelain disc + ink glyph, floats over anything.
+ *   - text label: mono micro-caps offset SE of the dot, porcelain halo as
+ *     its legibility scrim.
+ * Layer transforms/opacity are driven by GSAP (power3.inOut defaults) —
+ * only static geometry lives here.
+ */
+
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+
+/* While a hold is armed: no accidental text selection under the pointer. */
+html.is-longpressing,
+html.is-longpressing * {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  will-change: transform;
+}
+
+.cursor.is-active {
+  opacity: 1;
+}
+
+.cursor__dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: #fff;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+.cursor__ring {
+  position: absolute;
+  margin: -24px 0 0 -24px;
+  transform: rotate(-90deg); /* fill starts at 12 o'clock */
+  opacity: 0;
+}
+
+.cursor__ring-track {
+  fill: none;
+  stroke: rgb(11 11 12 / 12%);
+  stroke-width: 2;
+}
+
+.cursor__ring-fill {
+  fill: none;
+  stroke: var(--biosignal);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1; /* pathLength=1 → dashoffset = 1 - progress */
+  stroke-dashoffset: 1;
+}
+
+.cursor__icon {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: rgb(235 235 235 / 92%);
+  box-shadow: 0 1px 10px rgb(11 11 12 / 14%);
+  color: var(--ink);
+  transform: scale(0);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.cursor__label {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: var(--ink);
+  /* Legibility scrim over the 3D stage, cursor-sized. */
+  text-shadow:
+    0 0 8px rgb(235 235 235 / 95%),
+    0 0 3px rgb(235 235 235 / 95%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
