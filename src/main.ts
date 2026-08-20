@@ -86,7 +86,7 @@ function boot(): void {
   // Loaded in parallel with the HDR; the loader waits for both (honesty).
   // Failure keeps the placeholder + warns — never a black canvas
   // (reviewer-resilience rule); the loader task settles either way.
-  let currentLookName = params.look ?? "default";
+  let currentLookName = params.look ?? "instrument";
   const watchReady = loadWatch(stage.renderer, (p) => watchTask.report(p))
     .then((watch) => {
       retargetScreenTexture(dial.texture, watch.bakedScreenTexture);
@@ -109,7 +109,9 @@ function boot(): void {
     look: currentLookName,
   }));
 
-  // -- Look config (?look=<name>, default = the built-in TEMP look) ---------
+  // -- Look config (?look=<name>; default = "instrument", the P1.5 council
+  // winner — docs/LOOKBIBLE.md). DEFAULT_LOOK stays the in-code fallback
+  // (fetch failure never leaves the stage unstyled).
   // Applied AFTER the watch settles so materialOverrides find their
   // mat_* targets (applyLook itself tolerates watch=null).
   const applyLookToStage = async (look: LookConfig): Promise<void> => {
@@ -118,7 +120,7 @@ function boot(): void {
   };
   void watchReady.then(async () => {
     try {
-      const look = params.look !== null ? await loadLook(params.look) : DEFAULT_LOOK;
+      const look = await loadLook(params.look ?? "instrument");
       currentLookName = look.name ?? currentLookName;
       await applyLookToStage(look);
     } catch (error: unknown) {

@@ -81,6 +81,7 @@ loadWatch(stage.renderer, p => watchTask.report(p))     // loader task weight 2,
       "anisotropyRotation": 1.57,    // radians (physical upgrade too)
       "clearcoat": 0.4,              // physical upgrade too
       "clearcoatRoughness": 0.25,
+      "ior": 1.77,                   // physical upgrade too (added by dusk lane — closes the sapphire-IOR schema gap)
       "opacity": 1.0,                // <1 sets transparent:true (crystal lever)
       "emissive": "#000000",
       "emissiveIntensity": 1.0

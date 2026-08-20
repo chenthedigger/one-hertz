@@ -16,18 +16,21 @@
   "bgTokens": { "stage": "#E8E1D8", "ink": "#0E0C0A" },
 
   "materialOverrides": {
-    "mat_titanium_case": { "color": "#c3c4c6", "roughness": 0.38, "metalness": 1.0, "anisotropy": 0.65, "anisotropyRotation": 0, "envMapIntensity": 1.0 },
-    "mat_titanium_brushed": { "color": "#c3c4c6", "roughness": 0.32, "metalness": 1.0, "anisotropy": 0.75, "anisotropyRotation": 0, "envMapIntensity": 1.0 },
-    "mat_case_top": { "color": "#c3c4c6", "roughness": 0.36, "metalness": 1.0, "anisotropy": 0.6, "envMapIntensity": 1.0 },
+    "mat_titanium_case": { "color": "#c3c4c6", "roughness": 0.38, "metalness": 1.0, "envMapIntensity": 1.0 },
+    "mat_titanium_brushed": { "color": "#c3c4c6", "roughness": 0.32, "metalness": 1.0, "envMapIntensity": 1.0 },
+    "mat_case_top": { "color": "#c3c4c6", "roughness": 0.36, "metalness": 1.0, "envMapIntensity": 1.0 },
+    "mat_titanium_hardware": { "color": "#c3c4c6", "roughness": 0.34, "metalness": 1.0, "envMapIntensity": 1.0 },
     "mat_bezel": { "color": "#c3c4c6", "roughness": 0.3, "metalness": 1.0, "anisotropy": 0.5, "envMapIntensity": 1.0 },
-    "mat_titanium_hardware": { "color": "#c3c4c6", "roughness": 0.34, "metalness": 1.0, "anisotropy": 0.5, "envMapIntensity": 1.0 },
     "mat_titanium_crown": { "color": "#c3c4c6", "roughness": 0.33, "metalness": 1.0, "anisotropy": 0.45, "envMapIntensity": 1.0 },
     "mat_crown_knurl": { "color": "#c3c4c6", "roughness": 0.33, "metalness": 1.0, "anisotropy": 0.4, "envMapIntensity": 1.0 },
     "mat_titanium_polished": { "color": "#c9cacc", "roughness": 0.12, "metalness": 1.0, "anisotropy": 0.3, "envMapIntensity": 1.1 },
 
-    "mat_crystal_sapphire": { "opacity": 0.22, "roughness": 0.03, "clearcoat": 1.0, "clearcoatRoughness": 0.03, "envMapIntensity": 0.7 },
+    "mat_case_ao": { "roughness": 1.0, "metalness": 0.0, "envMapIntensity": 0.0 },
+
+    "mat_crystal_sapphire": { "opacity": 0.22, "roughness": 0.03, "clearcoat": 1.0, "clearcoatRoughness": 0.03, "ior": 1.77, "envMapIntensity": 0.7 },
 
     "mat_back_spun": { "color": "#2c2c2f", "metalness": 1.0, "roughness": 0.3, "anisotropy": 0.9, "envMapIntensity": 0.9 },
+    "mat_back_ring": { "metalness": 1.0, "roughness": 0.35 },
     "mat_back_ceramic": { "color": "#141517", "roughness": 0.32, "clearcoat": 0.6, "clearcoatRoughness": 0.12 },
     "mat_back_lens": { "color": "#0a0b0d", "roughness": 0.06, "clearcoat": 1.0, "clearcoatRoughness": 0.02 },
     "mat_back_matte": { "color": "#1e1f22", "roughness": 0.7 },
@@ -39,23 +42,22 @@
     "mat_actionButton_orange": { "roughness": 0.42 }
   },
 
-  "_comment": "Keys below are outside the LookConfig schema (loader ignores unknown top-level keys by contract) — carried here so the look is one document. See docs/p15/look-dusk.md.",
+  "_comment": "Cross-lane lessons applied: mat_case_ao dead-override (porcelain — AO overlay shells catch env speculars as camo mottling); anisotropy REMOVED from the case set mat_titanium_case/brushed/case_top/hardware (instrument A/B — quantized-UV tangents render aniso as marbled noise in three.js; kept only on crown/knurl/bezel/polished/back where it reads clean); sapphire ior 1.77 is real config now (dusk lane added MaterialOverride.ior to gl/look.ts). Keys below are outside the LookConfig schema (loader ignores unknown top-level keys by contract) — carried here so the look is one document. See docs/p15/look-dusk.md.",
 
   "finishVariants": {
     "blackDlc": {
-      "_applies_to": ["mat_titanium_case", "mat_titanium_brushed", "mat_titanium_crown", "mat_titanium_polished", "mat_titanium_hardware", "mat_crown_knurl", "mat_bezel", "mat_case_top"],
-      "color": "#232426",
-      "roughness": 0.4,
-      "roughnessPolished": 0.3,
-      "metalness": 1.0,
-      "anisotropy": 0.5,
-      "envMapIntensity": 1.1
+      "_semantics": "P3 CONFIG_CHANGE payload — same MaterialOverride shape, apply over the natural grade. Aniso topology follows the same case-set ban.",
+      "materialOverrides": {
+        "mat_titanium_case": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "envMapIntensity": 1.1 },
+        "mat_titanium_brushed": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "envMapIntensity": 1.1 },
+        "mat_case_top": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "envMapIntensity": 1.1 },
+        "mat_titanium_hardware": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "envMapIntensity": 1.1 },
+        "mat_bezel": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "anisotropy": 0.5, "envMapIntensity": 1.1 },
+        "mat_titanium_crown": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "anisotropy": 0.45, "envMapIntensity": 1.1 },
+        "mat_crown_knurl": { "color": "#232426", "roughness": 0.4, "metalness": 1.0, "anisotropy": 0.4, "envMapIntensity": 1.1 },
+        "mat_titanium_polished": { "color": "#232426", "roughness": 0.3, "metalness": 1.0, "anisotropy": 0.3, "envMapIntensity": 1.1 }
+      }
     }
-  },
-
-  "desired": {
-    "mat_crystal_sapphire.ior": 1.77,
-    "_note": "ior is not a MaterialOverride field; live value stays the 1.76 first-pass from webgl/watch.ts. Schema gap flagged in look-dusk.md."
   },
 
   "sectionKeyframes": {

@@ -54,6 +54,12 @@ export interface MaterialOverride {
   /** 0..1 — physical upgrade. */
   clearcoat?: number;
   clearcoatRoughness?: number;
+  /**
+   * Index of refraction (MeshPhysicalMaterial.ior, default 1.5) — physical
+   * upgrade. Lets looks state the sapphire 1.77 as config instead of
+   * inheriting the in-code 1.76 first-pass (porcelain/instrument blocker #1).
+   */
+  ior?: number;
   envMapIntensity?: number;
   /** Extra levers first-pass fixes exposed (crystal etc.). */
   opacity?: number;
@@ -192,7 +198,8 @@ function applyMaterialOverride(
     o.anisotropy !== undefined ||
     o.anisotropyRotation !== undefined ||
     o.clearcoat !== undefined ||
-    o.clearcoatRoughness !== undefined;
+    o.clearcoatRoughness !== undefined ||
+    o.ior !== undefined;
 
   const material = needsPhysical
     ? ensurePhysical(watch, name)
@@ -221,6 +228,7 @@ function applyMaterialOverride(
     if (o.clearcoatRoughness !== undefined) {
       material.clearcoatRoughness = o.clearcoatRoughness;
     }
+    if (o.ior !== undefined) material.ior = o.ior;
   }
   material.needsUpdate = true;
 }
