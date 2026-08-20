@@ -145,6 +145,17 @@ export class ScrollEngine {
    * actually constant (usable for the demo-reel capture too).
    */
   startAutoscroll(speedPxPerSec: number | null): void {
+    // Slow boots can reach loader.ready before Lenis has measured the page
+    // (stale-limit pitfall): refresh first, and retry once next frame if the
+    // limit still reads empty.
+    this.refresh();
+    if (this.limit() <= 0) {
+      requestAnimationFrame(() => {
+        this.refresh();
+        if (this.limit() > 0) this.startAutoscroll(speedPxPerSec);
+      });
+      return;
+    }
     const distance = this.limit() - this.lenis.scroll;
     if (distance <= 0) return;
     const duration =
