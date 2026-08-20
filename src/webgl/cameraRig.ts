@@ -11,8 +11,14 @@
 
 import { gsap } from "gsap";
 import { PerspectiveCamera, Vector3 } from "three";
-import { WEBGL_PROGRESS_LERP } from "../core/constants";
-import { EASE } from "../core/constants";
+import {
+  EASE,
+  LONGPRESS_ZOOM_DEFAULT,
+  PARALLAX_BASE_RAD,
+  PARALLAX_LERP,
+  WEBGL_PROGRESS_LERP,
+} from "../core/constants";
+import type { CameraAuxSnapshot } from "../core/debug";
 
 interface OrbitProxy {
   theta: number; // azimuth, radians
@@ -34,6 +40,21 @@ export class CameraRig {
   private readonly target = new Vector3();
   private lerpedProgress = 0;
   private targetProgress = 0;
+
+  /* Longpress hold-zoom (PLAN §1 mechanic 2): the camera consumes the ramp
+   * intensity as a dolly-in on the orbit radius, scaled by the ACTIVE
+   * section's zoomMultiplier (wired via lifecycle in main.ts). */
+  private longpressIntensity = 0;
+  private zoomMultiplier = LONGPRESS_ZOOM_DEFAULT;
+
+  /* Mouse parallax: normalized pointer (-1..1) nudges theta/phi, lerped on
+   * its own constant (scroll position stays single-smoothing-owner). Gain is
+   * ×(1 + intensity) during a hold, per recon. */
+  private pointerX = 0;
+  private pointerY = 0;
+  private parallaxX = 0;
+  private parallaxY = 0;
+  private effectiveRadius = 0;
 
   constructor(private readonly camera: PerspectiveCamera) {
     // Paused timeline — progress() is the ONLY driver.
@@ -70,21 +91,78 @@ export class CameraRig {
     this.apply();
   }
 
-  /** Set the scrub target (raw section progress, 0..1). */
+  /** Set the scrub target (webgl-channel section progress, 0..1). */
   setProgress(p: number): void {
     this.targetProgress = p;
+  }
+
+  /** Longpress ramp intensity 0..1 (wired from LONGPRESS_TOGGLE in main.ts). */
+  setLongpress(intensity: number): void {
+    this.longpressIntensity = intensity;
+  }
+
+  /** Active section's hold-zoom multiplier (wired from lifecycle events). */
+  setZoomMultiplier(multiplier: number): void {
+    this.zoomMultiplier = Math.max(1, multiplier);
+  }
+
+  /** Normalized pointer position, -1..1 both axes (viewport center = 0). */
+  setPointer(nx: number, ny: number): void {
+    this.pointerX = nx;
+    this.pointerY = ny;
   }
 
   /** Advance the lerped master progress and pose the camera. */
   update(dt: number): void {
     const k = 1 - Math.exp(-dt * WEBGL_PROGRESS_LERP);
     this.lerpedProgress += (this.targetProgress - this.lerpedProgress) * k;
+    const kp = 1 - Math.exp(-dt * PARALLAX_LERP);
+    this.parallaxX += (this.pointerX - this.parallaxX) * kp;
+    this.parallaxY += (this.pointerY - this.parallaxY) * kp;
     this.timeline.progress(this.lerpedProgress);
     this.apply();
   }
 
+  /**
+   * Snap the lerped master to its target (Snappable — eval-mode settling:
+   * `gotoSection` must return with the camera already in final pose).
+   * Parallax snaps too, so a settle is a full fixed point of update().
+   */
+  snap(): void {
+    this.lerpedProgress = this.targetProgress;
+    this.parallaxX = this.pointerX;
+    this.parallaxY = this.pointerY;
+    this.timeline.progress(this.lerpedProgress);
+    this.apply();
+  }
+
+  /** Mouse-parallax gain — base amplitude ×(1 + hold intensity). */
+  get parallaxGain(): number {
+    return 1 + this.longpressIntensity;
+  }
+
+  /** Interaction telemetry for state().camera (additive eval field). */
+  aux(): CameraAuxSnapshot {
+    return {
+      dolly: Math.round(this.effectiveRadius * 1e5) / 1e5,
+      parallaxGain: this.parallaxGain,
+      zoomMultiplier: this.zoomMultiplier,
+    };
+  }
+
   private apply(): void {
-    const { theta, phi, radius, targetY, fov } = this.proxy;
+    const { theta: baseTheta, phi: basePhi, radius: baseRadius, targetY, fov } = this.proxy;
+    // Dolly-in: full intensity divides the radius by the section multiplier.
+    const zoom = 1 + this.longpressIntensity * (this.zoomMultiplier - 1);
+    const radius = baseRadius / zoom;
+    this.effectiveRadius = radius;
+    // Parallax: small orbital nudge, amplified while holding.
+    const gain = PARALLAX_BASE_RAD * this.parallaxGain;
+    const theta = baseTheta + this.parallaxX * gain;
+    const phi = Math.min(
+      Math.PI - 0.15,
+      Math.max(0.15, basePhi + this.parallaxY * gain * 0.6),
+    );
     this.camera.position.set(
       radius * Math.sin(phi) * Math.sin(theta),
       radius * Math.cos(phi) + targetY,

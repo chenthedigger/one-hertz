@@ -1,52 +1,108 @@
 /**
- * WebGL stage — renderer, scene, camera, environment.
+ * WebGL stage — renderer, scene, camera, environment, post pipeline.
  *
- * Spike B slice: torus-knot placeholder standing in for the watch,
- * PMREM environment generated from a procedural gradient (no network
- * asset — real envmaps are pre-PMREM'd offline in P1), ACES filmic
- * tonemapping (PLAN §3 post stack).
+ * P1 gl lane (extends the Spike B slice): torus-knot placeholder still
+ * stands in for the watch and rides the FULL chain — studio-HDR PMREM env
+ * (procedural gradient as instant fallback), selective bloom on the
+ * emissive screen, luminance-weighted grain, optional DOF/vignette flags,
+ * quality tiers, contact-shadow grounding. ACES filmic + sRGB output are
+ * applied by the composer's OutputPass (PLAN §3 post stack).
  */
 
 import {
   ACESFilmicToneMapping,
-  CanvasTexture,
   Color,
-  EquirectangularReflectionMapping,
   Group,
   Mesh,
   MeshPhysicalMaterial,
   MeshStandardMaterial,
   PerspectiveCamera,
-  PMREMGenerator,
   Scene,
   SRGBColorSpace,
   TorusKnotGeometry,
   CylinderGeometry,
   Vector3,
   WebGLRenderer,
+  type CanvasTexture,
+  type Texture,
 } from "three";
 import { uClock } from "../core/clock";
+import { isEvalMode } from "../core/determinism";
+import { createContactShadow } from "../gl/contactShadow";
+import { buildProceduralEnv, loadStudioHdr } from "../gl/env";
+import { PostPipeline } from "../gl/post";
+import { detectInitialTier, QualityGovernor, TIER_FULL } from "../gl/quality";
+import {
+  createPlaceholderDialTexture,
+  createPlaceholderScreenMesh,
+  createScreenMaterial,
+  SCREEN_BLOOM_LAYER,
+} from "../gl/screen";
 
 const STAGE_COLOR = 0xebebeb; // porcelain, from recon
+
+/** Snapshot of the live camera for `state()` assertions (PLAN §6). */
+export interface CameraPose {
+  position: [number, number, number];
+  quaternion: [number, number, number, number];
+  fov: number;
+}
+
+/** One row of the `?materials` inspector stub. */
+export interface MaterialInfo {
+  mesh: string;
+  material: string;
+  type: string;
+  color: string | null;
+  roughness: number | null;
+  metalness: number | null;
+  envMapIntensity: number | null;
+}
+
+export interface StageOptions {
+  /** Real byte progress of the studio HDR fetch (feeds a loader task). */
+  onEnvProgress?: ((p: number) => void) | undefined;
+}
 
 export class Stage {
   readonly renderer: WebGLRenderer;
   readonly scene = new Scene();
   readonly camera: PerspectiveCamera;
   readonly product: Group;
+  /** Post chain — sections drive DOF/vignette flags through this. */
+  readonly post: PostPipeline;
+  /**
+   * Resolves once the environment SETTLED — studio HDR swapped in, or the
+   * procedural fallback confirmed after a failed fetch. Loader honesty:
+   * either way the stage is presentable when this resolves.
+   */
+  readonly envReady: Promise<void>;
 
-  private qualityTier = 0; // 0 = full; higher tiers shed post, never smoothness
+  private qualityTier: number; // 0 = full; higher tiers shed post, never smoothness
+  private readonly governor: QualityGovernor;
+  private readonly screenMaterial: MeshStandardMaterial;
+  private readonly placeholderDial: CanvasTexture;
+  private screenMesh: Mesh;
+  private rotationSpeed = 1; // multiplier — UPDATE_ROTATIONS (longpress lane)
   private disposed = false;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, options: StageOptions = {}) {
     this.renderer = new WebGLRenderer({
       canvas,
       antialias: true,
       powerPreference: "high-performance",
     });
+    // ACES + sRGB stay on the renderer; with the composer active they are
+    // honored by OutputPass (r152+ tone-maps only the default framebuffer).
     this.renderer.toneMapping = ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
     this.renderer.outputColorSpace = SRGBColorSpace;
+
+    // Quality tier: deterministic tier 0 under ?eval=1 (forceQualityTier is
+    // the eval control); heuristic + fps governor in live mode (PLAN §3).
+    this.qualityTier = isEvalMode ? TIER_FULL : detectInitialTier(this.renderer);
+    this.governor = new QualityGovernor(this.qualityTier);
+    if (isEvalMode) this.governor.force();
     this.applyPixelRatio();
 
     this.scene.background = new Color(STAGE_COLOR);
@@ -54,50 +110,36 @@ export class Stage {
     this.camera = new PerspectiveCamera(35, 1, 0.1, 100);
     this.camera.position.set(0, 0.4, 6);
 
-    this.buildEnvironment();
+    // Environment: procedural PMREM NOW (never an unlit first frame), the
+    // studio HDR swapped in when its bytes arrive (gl/env.ts).
+    this.scene.environment = buildProceduralEnv(this.renderer);
+    this.envReady = this.upgradeEnvironment(options.onEnvProgress);
+
+    this.placeholderDial = createPlaceholderDialTexture();
+    this.screenMaterial = createScreenMaterial(this.placeholderDial);
     this.product = this.buildProduct();
+    this.screenMesh = createPlaceholderScreenMesh(this.screenMaterial);
+    this.product.add(this.screenMesh);
     this.scene.add(this.product);
+    this.scene.add(createContactShadow());
+
+    this.post = new PostPipeline(this.renderer, this.scene, this.camera);
+    this.post.applyTier(this.qualityTier);
 
     this.resize();
   }
 
-  /**
-   * PMREM environment from a generated gradient — warm key above fading to
-   * cool floor, with a bright horizontal band to draw long speculars
-   * (stand-in for the P1.5 authored lightformer rig).
-   */
-  private buildEnvironment(): void {
-    const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 256;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Stage: 2d context unavailable for env gradient");
-
-    const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    sky.addColorStop(0.0, "#ffffff");
-    sky.addColorStop(0.35, "#dfe3e8");
-    sky.addColorStop(0.62, "#9aa1ab");
-    sky.addColorStop(1.0, "#3c4048");
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Horizontal specular band (lightformer stand-in).
-    const band = ctx.createLinearGradient(0, 88, 0, 128);
-    band.addColorStop(0, "rgba(255,255,255,0)");
-    band.addColorStop(0.5, "rgba(255,255,255,0.95)");
-    band.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = band;
-    ctx.fillRect(0, 88, canvas.width, 40);
-
-    const texture = new CanvasTexture(canvas);
-    texture.mapping = EquirectangularReflectionMapping;
-    texture.colorSpace = SRGBColorSpace;
-
-    const pmrem = new PMREMGenerator(this.renderer);
-    const envMap = pmrem.fromEquirectangular(texture).texture;
-    this.scene.environment = envMap;
-    texture.dispose();
-    pmrem.dispose();
+  /** Swap the procedural env for the studio HDR once loaded (TEMP asset). */
+  private async upgradeEnvironment(onProgress?: (p: number) => void): Promise<void> {
+    const hdr = await loadStudioHdr(this.renderer, onProgress);
+    if (hdr === null) return; // fallback stays; page remains presentable
+    if (this.disposed) {
+      hdr.dispose();
+      return;
+    }
+    const previous = this.scene.environment;
+    this.scene.environment = hdr;
+    previous?.dispose();
   }
 
   /** Torus-knot placeholder "watch" on a pedestal — swapped for the GLB in P1.5. */
@@ -134,11 +176,21 @@ export class Stage {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, cap));
   }
 
-  /** Quality tiers shed post/resolution, never smoothness (PLAN §3). */
+  /**
+   * Quality tiers shed post/resolution, never smoothness (PLAN §3).
+   * Forcing a tier retires the fps governor for the session — evals
+   * measure each tier separately via this call (PLAN §6).
+   */
   forceQualityTier(tier: number): void {
+    this.governor.force();
+    this.applyTier(tier);
+  }
+
+  private applyTier(tier: number): void {
     this.qualityTier = tier;
     this.applyPixelRatio();
-    this.resize();
+    this.post.applyTier(tier);
+    this.resize(); // composer targets follow the new pixel ratio
   }
 
   get tier(): number {
@@ -149,6 +201,7 @@ export class Stage {
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.renderer.setSize(w, h, false);
+    this.post.setSize(w, h, this.renderer.getPixelRatio());
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
   }
@@ -158,9 +211,103 @@ export class Stage {
     // Idle life driven by the clock scalar + time: the placeholder slowly
     // turns; the clock scalar biases its attitude so the WebGL layer
     // visibly consumes the same scalar the CSS layer does.
-    this.product.rotation.y += dt * 0.15;
+    // Eval determinism: idle motion derives from the (freezable) clock
+    // scalar only — never from accumulated wall time (PLAN §6).
+    if (isEvalMode) {
+      this.product.rotation.y = uClock.value * Math.PI * 2;
+    } else {
+      this.product.rotation.y += dt * 0.15 * this.rotationSpeed;
+    }
     this.product.rotation.x = -0.15 + uClock.value * 0.3;
-    this.renderer.render(this.scene, this.camera);
+
+    // fps governor: shed one tier per bad window in live mode (inert when
+    // forced or in eval mode — QualityGovernor.force()).
+    const shed = this.governor.update(dt);
+    if (shed !== null) this.applyTier(shed);
+
+    this.post.render(dt);
+  }
+
+  /**
+   * Screen-material contract (PLAN §3): hand the dial subsystem's
+   * CanvasTexture to the emissive slot. The material keeps
+   * toneMapped=false + emissiveIntensity 2.8 so the display stays luminous
+   * under ACES and is the ONLY thing the bloom pass sees. The caller owns
+   * the texture (and its per-dirty-flag updates); only the built-in
+   * placeholder dial is disposed here.
+   */
+  setScreenTexture(texture: Texture): void {
+    texture.colorSpace = SRGBColorSpace;
+    const previous = this.screenMaterial.emissiveMap;
+    if (previous === texture) return;
+    this.screenMaterial.emissiveMap = texture;
+    this.screenMaterial.needsUpdate = true;
+    if (previous === this.placeholderDial) previous.dispose();
+  }
+
+  /**
+   * Adopt the GLB's named screen mesh: it takes the screen material and
+   * bloom-layer membership; the placeholder panel dies. (Asset lane calls
+   * this after the watch GLB lands.)
+   */
+  adoptScreenMesh(mesh: Mesh): void {
+    mesh.material = this.screenMaterial;
+    mesh.layers.enable(SCREEN_BLOOM_LAYER);
+    if (this.screenMesh.name === "placeholder_screen") {
+      this.screenMesh.removeFromParent();
+      this.screenMesh.geometry.dispose();
+    }
+    this.screenMesh = mesh;
+  }
+
+  /**
+   * Rotate the environment around Y — the per-section lighting-keyframe
+   * hook (PLAN §3: env rotation driven by the clock scalar at P1.5).
+   */
+  setEnvRotation(radians: number): void {
+    this.scene.environmentRotation.y = radians;
+  }
+
+  /**
+   * Idle/mechanism rotation-speed multiplier (1 = base rate) — consumer of
+   * UPDATE_ROTATIONS (recon: rotations accelerate during the longpress
+   * hold). Eval-mode rotation stays clock-derived and ignores this.
+   */
+  setRotationSpeed(speed: number): void {
+    this.rotationSpeed = speed;
+  }
+
+  /** Live camera pose for `state()` snapshots. */
+  cameraPose(): CameraPose {
+    const p = this.camera.position;
+    const q = this.camera.quaternion;
+    return {
+      position: [round5(p.x), round5(p.y), round5(p.z)],
+      quaternion: [round5(q.x), round5(q.y), round5(q.z), round5(q.w)],
+      fov: this.camera.fov,
+    };
+  }
+
+  /** Scene material listing for the `?materials` inspector stub. */
+  listMaterials(): MaterialInfo[] {
+    const rows: MaterialInfo[] = [];
+    this.scene.traverse((obj) => {
+      if (!(obj instanceof Mesh)) return;
+      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+      for (const mat of mats) {
+        const std = mat instanceof MeshStandardMaterial ? mat : null;
+        rows.push({
+          mesh: obj.name || "(unnamed)",
+          material: mat.name || "(unnamed)",
+          type: mat.type,
+          color: std ? `#${std.color.getHexString()}` : null,
+          roughness: std ? std.roughness : null,
+          metalness: std ? std.metalness : null,
+          envMapIntensity: std ? std.envMapIntensity : null,
+        });
+      }
+    });
+    return rows;
   }
 
   lookAt(target: Vector3): void {
@@ -169,6 +316,11 @@ export class Stage {
 
   dispose(): void {
     this.disposed = true;
+    this.post.dispose();
     this.renderer.dispose();
   }
+}
+
+function round5(v: number): number {
+  return Math.round(v * 1e5) / 1e5;
 }
