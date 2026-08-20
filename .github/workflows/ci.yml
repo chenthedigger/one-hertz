@@ -1,0 +1,67 @@
+# ONE HERTZ · CI — typecheck, build, headless eval-lite (PLAN §5 P1: "CI from day 1")
+#
+# NOTE: remote not connected yet (chenthedigger auth pending) — this workflow
+# activates on the first push. No Blender / gltfpack in CI: asset work is local
+# (macOS toolchain, docs/TOOLCHAIN.md); CI covers the engine only, so
+# ubuntu-latest is fine.
+
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npx vite build
+
+      # eval-lite: structural smoke of the engine in headless real Chrome
+      # (evals/engine-smoke.mjs). Runs the vite preview server, then the check.
+      # Guarded — NOT continue-on-error: the guard script itself decides.
+      #   - Chrome absent on runner            -> notice + exit 0 (skip)
+      #   - playwright-core not yet a dep      -> notice + exit 0 (skip;
+      #     the evals lane merges it via evals/package-scripts.json)
+      #   - both present                       -> smoke must PASS or the job fails
+      - name: Eval-lite (engine smoke, headless Chrome)
+        env:
+          BASE: http://localhost:4573
+        run: |
+          node .github/scripts/eval-lite-guard.mjs || exit_code=$?
+          if [ "${exit_code:-0}" = "78" ]; then
+            echo "::notice title=eval-lite skipped::Chrome or playwright-core unavailable on this runner — structural smoke skipped (typecheck+build still gate)."
+            exit 0
+          elif [ "${exit_code:-0}" != "0" ]; then
+            exit "$exit_code"
+          fi
+          npx vite preview --port 4573 --strictPort &
+          PREVIEW_PID=$!
+          for i in $(seq 1 50); do
+            curl -sf "$BASE" >/dev/null && break
+            sleep 0.2
+          done
+          SMOKE=0
+          node evals/engine-smoke.mjs || SMOKE=$?
+          kill $PREVIEW_PID || true
+          exit $SMOKE
