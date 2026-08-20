@@ -1,0 +1,17 @@
+{
+  "//": "Editor/typecheck config for the eval harness ONLY. The app build (root tsconfig, `npm run build`) does NOT include evals/. Files run directly under Node native type stripping, hence erasable-syntax-only + allowImportingTsExtensions.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["./**/*.ts"]
+}

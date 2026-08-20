@@ -1,0 +1,1125 @@
+{
+  "round": "r0",
+  "rubricVersion": "1.0.0",
+  "builtAt": "2026-08-20T02:41:13.000Z",
+  "seed": 1,
+  "stillPairs": [
+    {
+      "id": "still-desktop-Colors-1",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Colors",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/desktop/Colors_1.png",
+      "source": "evals/reference/source/desktop/Colors_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Curves-0.5",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Curves",
+      "localProgress": 0.5,
+      "ours": "evals/reference/ours/desktop/Curves_0.5.png",
+      "source": "evals/reference/source/desktop/Curves_0.5.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Footer-0.5",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Footer",
+      "localProgress": 0.5,
+      "ours": "evals/reference/ours/desktop/Footer_0.5.png",
+      "source": "evals/reference/source/desktop/Footer_0.5.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Images-0.5",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Images",
+      "localProgress": 0.5,
+      "ours": "evals/reference/ours/desktop/Images_0.5.png",
+      "source": "evals/reference/source/desktop/Images_0.5.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Intro-1",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Intro",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/desktop/Intro_1.png",
+      "source": "evals/reference/source/desktop/Intro_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Mechanism-0.25",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Mechanism",
+      "localProgress": 0.25,
+      "ours": "evals/reference/ours/desktop/Mechanism_0.25.png",
+      "source": "evals/reference/source/desktop/Mechanism_0.25.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-MovementWatchRight-0.25",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "MovementWatchRight",
+      "localProgress": 0.25,
+      "ours": "evals/reference/ours/desktop/MovementWatchRight_0.25.png",
+      "source": "evals/reference/source/desktop/MovementWatchRight_0.25.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Parts-1",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Parts",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/desktop/Parts_1.png",
+      "source": "evals/reference/source/desktop/Parts_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-Straps-0.75",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "Straps",
+      "localProgress": 0.75,
+      "ours": "evals/reference/ours/desktop/Straps_0.75.png",
+      "source": "evals/reference/source/desktop/Straps_0.75.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-desktop-VerticalText-1",
+      "kind": "still",
+      "viewport": "desktop",
+      "sectionId": "VerticalText",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/desktop/VerticalText_1.png",
+      "source": "evals/reference/source/desktop/VerticalText_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Colors-0.75",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Colors",
+      "localProgress": 0.75,
+      "ours": "evals/reference/ours/mobile/Colors_0.75.png",
+      "source": "evals/reference/source/mobile/Colors_0.75.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Disassembly-0",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Disassembly",
+      "localProgress": 0,
+      "ours": "evals/reference/ours/mobile/Disassembly_0.png",
+      "source": "evals/reference/source/mobile/Disassembly_0.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Disassembly-1",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Disassembly",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/mobile/Disassembly_1.png",
+      "source": "evals/reference/source/mobile/Disassembly_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Hands-0.75",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Hands",
+      "localProgress": 0.75,
+      "ours": "evals/reference/ours/mobile/Hands_0.75.png",
+      "source": "evals/reference/source/mobile/Hands_0.75.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Images-1",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Images",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/mobile/Images_1.png",
+      "source": "evals/reference/source/mobile/Images_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Mechanism-0.25",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Mechanism",
+      "localProgress": 0.25,
+      "ours": "evals/reference/ours/mobile/Mechanism_0.25.png",
+      "source": "evals/reference/source/mobile/Mechanism_0.25.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-MovementWatchRight-0",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "MovementWatchRight",
+      "localProgress": 0,
+      "ours": "evals/reference/ours/mobile/MovementWatchRight_0.png",
+      "source": "evals/reference/source/mobile/MovementWatchRight_0.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-MovementWatchRight-1",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "MovementWatchRight",
+      "localProgress": 1,
+      "ours": "evals/reference/ours/mobile/MovementWatchRight_1.png",
+      "source": "evals/reference/source/mobile/MovementWatchRight_1.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-Straps-0.75",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "Straps",
+      "localProgress": 0.75,
+      "ours": "evals/reference/ours/mobile/Straps_0.75.png",
+      "source": "evals/reference/source/mobile/Straps_0.75.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    },
+    {
+      "id": "still-mobile-VerticalText-0.75",
+      "kind": "still",
+      "viewport": "mobile",
+      "sectionId": "VerticalText",
+      "localProgress": 0.75,
+      "ours": "evals/reference/ours/mobile/VerticalText_0.75.png",
+      "source": "evals/reference/source/mobile/VerticalText_0.75.png",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition"
+      ]
+    }
+  ],
+  "videoPairs": [
+    {
+      "id": "video-desktop-scroll",
+      "kind": "video",
+      "viewport": "desktop",
+      "ours": "evals/reference/ours/desktop/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+      "source": "evals/reference/source/videos/desktop_scroll.webm",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition",
+        "motion"
+      ]
+    },
+    {
+      "id": "video-mobile-scroll",
+      "kind": "video",
+      "viewport": "mobile",
+      "ours": "evals/reference/ours/mobile/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+      "source": "evals/reference/source/videos/mobile_scroll.webm",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition",
+        "motion"
+      ]
+    },
+    {
+      "id": "video-desktop-explode",
+      "kind": "video",
+      "viewport": "desktop",
+      "ours": "evals/reference/ours/desktop/interactions/explode.webm  [MISSING — TODO(P5)]",
+      "source": "evals/reference/source/interactions/explode.webm",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition",
+        "motion"
+      ]
+    },
+    {
+      "id": "video-desktop-colorway_swap",
+      "kind": "video",
+      "viewport": "desktop",
+      "ours": "evals/reference/ours/desktop/interactions/colorway_swap.webm  [MISSING — TODO(P5)]",
+      "source": "evals/reference/source/interactions/colorway_swap.webm",
+      "axes": [
+        "light",
+        "material",
+        "typography",
+        "composition",
+        "motion"
+      ]
+    }
+  ],
+  "unmatched": [
+    "desktop/Nocturne_0.png (no sourceRole mapping)",
+    "desktop/Nocturne_0.25.png (no sourceRole mapping)",
+    "desktop/Nocturne_0.5.png (no sourceRole mapping)",
+    "desktop/Nocturne_0.75.png (no sourceRole mapping)",
+    "desktop/Nocturne_1.png (no sourceRole mapping)",
+    "mobile/Nocturne_0.png (no sourceRole mapping)",
+    "mobile/Nocturne_0.25.png (no sourceRole mapping)",
+    "mobile/Nocturne_0.5.png (no sourceRole mapping)",
+    "mobile/Nocturne_0.75.png (no sourceRole mapping)",
+    "mobile/Nocturne_1.png (no sourceRole mapping)"
+  ],
+  "assignments": [
+    {
+      "judge": 1,
+      "pairs": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "A": "evals/reference/ours/desktop/Colors_1.png",
+          "B": "evals/reference/source/desktop/Colors_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "A": "evals/reference/ours/desktop/Curves_0.5.png",
+          "B": "evals/reference/source/desktop/Curves_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "A": "evals/reference/ours/desktop/Footer_0.5.png",
+          "B": "evals/reference/source/desktop/Footer_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "A": "evals/reference/ours/desktop/Images_0.5.png",
+          "B": "evals/reference/source/desktop/Images_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "A": "evals/reference/source/desktop/Intro_1.png",
+          "B": "evals/reference/ours/desktop/Intro_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "A": "evals/reference/source/desktop/Mechanism_0.25.png",
+          "B": "evals/reference/ours/desktop/Mechanism_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "A": "evals/reference/source/desktop/MovementWatchRight_0.25.png",
+          "B": "evals/reference/ours/desktop/MovementWatchRight_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "A": "evals/reference/source/desktop/Parts_1.png",
+          "B": "evals/reference/ours/desktop/Parts_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "A": "evals/reference/source/desktop/Straps_0.75.png",
+          "B": "evals/reference/ours/desktop/Straps_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "A": "evals/reference/ours/desktop/VerticalText_1.png",
+          "B": "evals/reference/source/desktop/VerticalText_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "A": "evals/reference/ours/mobile/Colors_0.75.png",
+          "B": "evals/reference/source/mobile/Colors_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "A": "evals/reference/ours/mobile/Disassembly_0.png",
+          "B": "evals/reference/source/mobile/Disassembly_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "A": "evals/reference/source/mobile/Disassembly_1.png",
+          "B": "evals/reference/ours/mobile/Disassembly_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "A": "evals/reference/source/mobile/Hands_0.75.png",
+          "B": "evals/reference/ours/mobile/Hands_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "A": "evals/reference/source/mobile/Images_1.png",
+          "B": "evals/reference/ours/mobile/Images_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "A": "evals/reference/source/mobile/Mechanism_0.25.png",
+          "B": "evals/reference/ours/mobile/Mechanism_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "A": "evals/reference/source/mobile/MovementWatchRight_0.png",
+          "B": "evals/reference/ours/mobile/MovementWatchRight_0.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_1.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "A": "evals/reference/source/mobile/Straps_0.75.png",
+          "B": "evals/reference/ours/mobile/Straps_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "A": "evals/reference/source/mobile/VerticalText_0.75.png",
+          "B": "evals/reference/ours/mobile/VerticalText_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "A": "evals/reference/source/videos/desktop_scroll.webm",
+          "B": "evals/reference/ours/desktop/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "A": "evals/reference/source/videos/mobile_scroll.webm",
+          "B": "evals/reference/ours/mobile/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "A": "evals/reference/ours/desktop/interactions/explode.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/interactions/explode.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "A": "evals/reference/source/interactions/colorway_swap.webm",
+          "B": "evals/reference/ours/desktop/interactions/colorway_swap.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        }
+      ]
+    },
+    {
+      "judge": 2,
+      "pairs": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "A": "evals/reference/ours/desktop/Colors_1.png",
+          "B": "evals/reference/source/desktop/Colors_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "A": "evals/reference/source/desktop/Curves_0.5.png",
+          "B": "evals/reference/ours/desktop/Curves_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "A": "evals/reference/ours/desktop/Footer_0.5.png",
+          "B": "evals/reference/source/desktop/Footer_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "A": "evals/reference/ours/desktop/Images_0.5.png",
+          "B": "evals/reference/source/desktop/Images_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "A": "evals/reference/ours/desktop/Intro_1.png",
+          "B": "evals/reference/source/desktop/Intro_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "A": "evals/reference/source/desktop/Mechanism_0.25.png",
+          "B": "evals/reference/ours/desktop/Mechanism_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "A": "evals/reference/ours/desktop/MovementWatchRight_0.25.png",
+          "B": "evals/reference/source/desktop/MovementWatchRight_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "A": "evals/reference/ours/desktop/Parts_1.png",
+          "B": "evals/reference/source/desktop/Parts_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "A": "evals/reference/source/desktop/Straps_0.75.png",
+          "B": "evals/reference/ours/desktop/Straps_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "A": "evals/reference/ours/desktop/VerticalText_1.png",
+          "B": "evals/reference/source/desktop/VerticalText_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "A": "evals/reference/source/mobile/Colors_0.75.png",
+          "B": "evals/reference/ours/mobile/Colors_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "A": "evals/reference/ours/mobile/Disassembly_0.png",
+          "B": "evals/reference/source/mobile/Disassembly_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "A": "evals/reference/ours/mobile/Disassembly_1.png",
+          "B": "evals/reference/source/mobile/Disassembly_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "A": "evals/reference/source/mobile/Hands_0.75.png",
+          "B": "evals/reference/ours/mobile/Hands_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "A": "evals/reference/ours/mobile/Images_1.png",
+          "B": "evals/reference/source/mobile/Images_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "A": "evals/reference/ours/mobile/Mechanism_0.25.png",
+          "B": "evals/reference/source/mobile/Mechanism_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_0.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_1.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "A": "evals/reference/ours/mobile/Straps_0.75.png",
+          "B": "evals/reference/source/mobile/Straps_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "A": "evals/reference/ours/mobile/VerticalText_0.75.png",
+          "B": "evals/reference/source/mobile/VerticalText_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "A": "evals/reference/ours/desktop/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/videos/desktop_scroll.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "A": "evals/reference/source/videos/mobile_scroll.webm",
+          "B": "evals/reference/ours/mobile/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "A": "evals/reference/source/interactions/explode.webm",
+          "B": "evals/reference/ours/desktop/interactions/explode.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "A": "evals/reference/source/interactions/colorway_swap.webm",
+          "B": "evals/reference/ours/desktop/interactions/colorway_swap.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        }
+      ]
+    },
+    {
+      "judge": 3,
+      "pairs": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "A": "evals/reference/ours/desktop/Colors_1.png",
+          "B": "evals/reference/source/desktop/Colors_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "A": "evals/reference/ours/desktop/Curves_0.5.png",
+          "B": "evals/reference/source/desktop/Curves_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "A": "evals/reference/source/desktop/Footer_0.5.png",
+          "B": "evals/reference/ours/desktop/Footer_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "A": "evals/reference/source/desktop/Images_0.5.png",
+          "B": "evals/reference/ours/desktop/Images_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "A": "evals/reference/source/desktop/Intro_1.png",
+          "B": "evals/reference/ours/desktop/Intro_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "A": "evals/reference/source/desktop/Mechanism_0.25.png",
+          "B": "evals/reference/ours/desktop/Mechanism_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "A": "evals/reference/ours/desktop/MovementWatchRight_0.25.png",
+          "B": "evals/reference/source/desktop/MovementWatchRight_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "A": "evals/reference/source/desktop/Parts_1.png",
+          "B": "evals/reference/ours/desktop/Parts_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "A": "evals/reference/source/desktop/Straps_0.75.png",
+          "B": "evals/reference/ours/desktop/Straps_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "A": "evals/reference/ours/desktop/VerticalText_1.png",
+          "B": "evals/reference/source/desktop/VerticalText_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "A": "evals/reference/ours/mobile/Colors_0.75.png",
+          "B": "evals/reference/source/mobile/Colors_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "A": "evals/reference/source/mobile/Disassembly_0.png",
+          "B": "evals/reference/ours/mobile/Disassembly_0.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "A": "evals/reference/ours/mobile/Disassembly_1.png",
+          "B": "evals/reference/source/mobile/Disassembly_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "A": "evals/reference/ours/mobile/Hands_0.75.png",
+          "B": "evals/reference/source/mobile/Hands_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "A": "evals/reference/source/mobile/Images_1.png",
+          "B": "evals/reference/ours/mobile/Images_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "A": "evals/reference/source/mobile/Mechanism_0.25.png",
+          "B": "evals/reference/ours/mobile/Mechanism_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_0.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_1.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "A": "evals/reference/ours/mobile/Straps_0.75.png",
+          "B": "evals/reference/source/mobile/Straps_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "A": "evals/reference/ours/mobile/VerticalText_0.75.png",
+          "B": "evals/reference/source/mobile/VerticalText_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "A": "evals/reference/ours/desktop/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/videos/desktop_scroll.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "A": "evals/reference/source/videos/mobile_scroll.webm",
+          "B": "evals/reference/ours/mobile/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "A": "evals/reference/source/interactions/explode.webm",
+          "B": "evals/reference/ours/desktop/interactions/explode.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "A": "evals/reference/source/interactions/colorway_swap.webm",
+          "B": "evals/reference/ours/desktop/interactions/colorway_swap.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        }
+      ]
+    },
+    {
+      "judge": 4,
+      "pairs": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "A": "evals/reference/ours/desktop/Colors_1.png",
+          "B": "evals/reference/source/desktop/Colors_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "A": "evals/reference/ours/desktop/Curves_0.5.png",
+          "B": "evals/reference/source/desktop/Curves_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "A": "evals/reference/ours/desktop/Footer_0.5.png",
+          "B": "evals/reference/source/desktop/Footer_0.5.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "A": "evals/reference/source/desktop/Images_0.5.png",
+          "B": "evals/reference/ours/desktop/Images_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "A": "evals/reference/source/desktop/Intro_1.png",
+          "B": "evals/reference/ours/desktop/Intro_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "A": "evals/reference/ours/desktop/Mechanism_0.25.png",
+          "B": "evals/reference/source/desktop/Mechanism_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "A": "evals/reference/source/desktop/MovementWatchRight_0.25.png",
+          "B": "evals/reference/ours/desktop/MovementWatchRight_0.25.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "A": "evals/reference/source/desktop/Parts_1.png",
+          "B": "evals/reference/ours/desktop/Parts_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "A": "evals/reference/ours/desktop/Straps_0.75.png",
+          "B": "evals/reference/source/desktop/Straps_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "A": "evals/reference/source/desktop/VerticalText_1.png",
+          "B": "evals/reference/ours/desktop/VerticalText_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "A": "evals/reference/ours/mobile/Colors_0.75.png",
+          "B": "evals/reference/source/mobile/Colors_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "A": "evals/reference/source/mobile/Disassembly_0.png",
+          "B": "evals/reference/ours/mobile/Disassembly_0.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "A": "evals/reference/ours/mobile/Disassembly_1.png",
+          "B": "evals/reference/source/mobile/Disassembly_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "A": "evals/reference/ours/mobile/Hands_0.75.png",
+          "B": "evals/reference/source/mobile/Hands_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "A": "evals/reference/source/mobile/Images_1.png",
+          "B": "evals/reference/ours/mobile/Images_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "A": "evals/reference/ours/mobile/Mechanism_0.25.png",
+          "B": "evals/reference/source/mobile/Mechanism_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_0.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "A": "evals/reference/source/mobile/MovementWatchRight_1.png",
+          "B": "evals/reference/ours/mobile/MovementWatchRight_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "A": "evals/reference/ours/mobile/Straps_0.75.png",
+          "B": "evals/reference/source/mobile/Straps_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "A": "evals/reference/ours/mobile/VerticalText_0.75.png",
+          "B": "evals/reference/source/mobile/VerticalText_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "A": "evals/reference/ours/desktop/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/videos/desktop_scroll.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "A": "evals/reference/ours/mobile/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/videos/mobile_scroll.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "A": "evals/reference/source/interactions/explode.webm",
+          "B": "evals/reference/ours/desktop/interactions/explode.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "A": "evals/reference/ours/desktop/interactions/colorway_swap.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/interactions/colorway_swap.webm",
+          "oursIs": "A"
+        }
+      ]
+    },
+    {
+      "judge": 5,
+      "pairs": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "A": "evals/reference/ours/desktop/Colors_1.png",
+          "B": "evals/reference/source/desktop/Colors_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "A": "evals/reference/source/desktop/Curves_0.5.png",
+          "B": "evals/reference/ours/desktop/Curves_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "A": "evals/reference/source/desktop/Footer_0.5.png",
+          "B": "evals/reference/ours/desktop/Footer_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "A": "evals/reference/source/desktop/Images_0.5.png",
+          "B": "evals/reference/ours/desktop/Images_0.5.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "A": "evals/reference/source/desktop/Intro_1.png",
+          "B": "evals/reference/ours/desktop/Intro_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "A": "evals/reference/ours/desktop/Mechanism_0.25.png",
+          "B": "evals/reference/source/desktop/Mechanism_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "A": "evals/reference/ours/desktop/MovementWatchRight_0.25.png",
+          "B": "evals/reference/source/desktop/MovementWatchRight_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "A": "evals/reference/ours/desktop/Parts_1.png",
+          "B": "evals/reference/source/desktop/Parts_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "A": "evals/reference/source/desktop/Straps_0.75.png",
+          "B": "evals/reference/ours/desktop/Straps_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "A": "evals/reference/ours/desktop/VerticalText_1.png",
+          "B": "evals/reference/source/desktop/VerticalText_1.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "A": "evals/reference/source/mobile/Colors_0.75.png",
+          "B": "evals/reference/ours/mobile/Colors_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "A": "evals/reference/ours/mobile/Disassembly_0.png",
+          "B": "evals/reference/source/mobile/Disassembly_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "A": "evals/reference/source/mobile/Disassembly_1.png",
+          "B": "evals/reference/ours/mobile/Disassembly_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "A": "evals/reference/ours/mobile/Hands_0.75.png",
+          "B": "evals/reference/source/mobile/Hands_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "A": "evals/reference/source/mobile/Images_1.png",
+          "B": "evals/reference/ours/mobile/Images_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "A": "evals/reference/ours/mobile/Mechanism_0.25.png",
+          "B": "evals/reference/source/mobile/Mechanism_0.25.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "A": "evals/reference/ours/mobile/MovementWatchRight_0.png",
+          "B": "evals/reference/source/mobile/MovementWatchRight_0.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "A": "evals/reference/source/mobile/MovementWatchRight_1.png",
+          "B": "evals/reference/ours/mobile/MovementWatchRight_1.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "A": "evals/reference/ours/mobile/Straps_0.75.png",
+          "B": "evals/reference/source/mobile/Straps_0.75.png",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "A": "evals/reference/source/mobile/VerticalText_0.75.png",
+          "B": "evals/reference/ours/mobile/VerticalText_0.75.png",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "A": "evals/reference/source/videos/desktop_scroll.webm",
+          "B": "evals/reference/ours/desktop/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "oursIs": "B"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "A": "evals/reference/ours/mobile/videos/scroll_60s.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/videos/mobile_scroll.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "A": "evals/reference/ours/desktop/interactions/explode.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/interactions/explode.webm",
+          "oursIs": "A"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "A": "evals/reference/ours/desktop/interactions/colorway_swap.webm  [MISSING — TODO(P5)]",
+          "B": "evals/reference/source/interactions/colorway_swap.webm",
+          "oursIs": "A"
+        }
+      ]
+    }
+  ]
+}

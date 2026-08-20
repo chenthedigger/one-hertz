@@ -1,0 +1,261 @@
+{
+  "round": "r0",
+  "rubricVersion": "1.0.0",
+  "target": "http://localhost:4973",
+  "ranAt": "2026-08-20T02:41:12.827Z",
+  "items": [
+    {
+      "itemId": "sections-14-order",
+      "pass": false,
+      "evidence": "SKIP — sections[].sourceRole not exposed (manifest still Spike-B shape)",
+      "area": "sections",
+      "severity": "CRITICAL",
+      "skipped": true
+    },
+    {
+      "itemId": "cursor-text-states",
+      "pass": false,
+      "evidence": "SKIP — state().cursor not exposed by __ONE_HERTZ__ yet — cursor state machine",
+      "area": "cursor",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "cursor-icon-states",
+      "pass": false,
+      "evidence": "SKIP — state().cursor not exposed by __ONE_HERTZ__ yet — cursor state machine",
+      "area": "cursor",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "longpress-activation-500ms",
+      "pass": false,
+      "evidence": "SKIP — state().longpress not exposed by __ONE_HERTZ__ yet — longpress system",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "longpress-ramp-reverse",
+      "pass": false,
+      "evidence": "SKIP — state().longpress not exposed by __ONE_HERTZ__ yet — longpress system",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "longpress-lenis-stop",
+      "pass": false,
+      "evidence": "SKIP — state().scroll is a scalar — scroll.enabled flag not exposed yet",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "longpress-zoom-parallax",
+      "pass": false,
+      "evidence": "SKIP — state().camera not exposed by __ONE_HERTZ__ yet — camera snapshot",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-proxy-hitboxes",
+      "pass": false,
+      "evidence": "SKIP — state().explode.parts not exposed by __ONE_HERTZ__ yet",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-lookat-lerp",
+      "pass": false,
+      "evidence": "SKIP — state().explode.parts not exposed by __ONE_HERTZ__ yet",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-idle-rotation",
+      "pass": false,
+      "evidence": "SKIP — explode.selectedRotationY not exposed",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-anchored-overlay",
+      "pass": false,
+      "evidence": "SKIP — [data-explode-overlay] not in DOM",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-close-prevnext",
+      "pass": false,
+      "evidence": "SKIP — state().explode.parts not exposed by __ONE_HERTZ__ yet",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-xplod-all",
+      "pass": false,
+      "evidence": "SKIP — explode.mode not exposed",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-drag-gating",
+      "pass": false,
+      "evidence": "SKIP — explode.clusterRotation not exposed",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "explode-tap-tolerance-15px",
+      "pass": false,
+      "evidence": "SKIP — explode.parts not exposed (mobile)",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "colorway-5param-1s-tween",
+      "pass": false,
+      "evidence": "SKIP — state().config.finishes not exposed by __ONE_HERTZ__ yet",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "colorway-dual-placement",
+      "pass": false,
+      "evidence": "SKIP — [data-colorway-picker] not in DOM",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "colorway-config-consumers",
+      "pass": false,
+      "evidence": "SKIP — state().config.finishes not exposed by __ONE_HERTZ__ yet",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "colorway-gallery-resrc",
+      "pass": false,
+      "evidence": "SKIP — state().config.active not exposed by __ONE_HERTZ__ yet",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "outro-4watch-lineup",
+      "pass": false,
+      "evidence": "SKIP — state().outro.instances not exposed by __ONE_HERTZ__ yet",
+      "area": "outro",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "outro-swap-restart-loop",
+      "pass": false,
+      "evidence": "SKIP — state().config.finishes not exposed by __ONE_HERTZ__ yet",
+      "area": "outro",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "scrub-dual-speeds",
+      "pass": false,
+      "evidence": "SKIP — sections[].scrubChannels not exposed in manifest",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "dual-channel-timelines",
+      "pass": true,
+      "evidence": "15 webgl sections expose extended bounds; 0 violate webglStart<=domStart<=domEnd<=webglEnd",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "lifecycle-events",
+      "pass": false,
+      "evidence": "SKIP — no on()/bus.on() exposed — cannot record lifecycle events",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "sticky-pinning-vh-budget",
+      "pass": true,
+      "evidence": "10 pinned tracks, 0 non-sticky pins [], 0 tracks off vh-budget ±5% [] (iOS jitter is judge-verified)",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "loader-honesty",
+      "pass": true,
+      "evidence": "warm-cache loader ran 2.35s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure",
+      "area": "loader",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "mobile-svh-dvh",
+      "pass": false,
+      "evidence": "svh/dvh rules=3, bare-vh height rules=1, flags.touchResizeFilter not exposed, manifest identical mobile/desktop=true",
+      "area": "mobile",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "mobile-touch-hold",
+      "pass": false,
+      "evidence": "SKIP — state().longpress not exposed (mobile)",
+      "area": "mobile",
+      "severity": "HIGH",
+      "skipped": true
+    },
+    {
+      "itemId": "deeplink-params",
+      "pass": false,
+      "evidence": "1/4 params work — ?scroll: activeSection=Intro (want Timeless); ?autoscroll: y 2236->3361 advancing=true; ?materials: flags.materialsDebug=undefined; ?eval=1: flags.eval=undefined",
+      "area": "debug",
+      "severity": "HIGH",
+      "skipped": false
+    }
+  ],
+  "judgeVerifiedItems": [],
+  "summary": {
+    "total": 29,
+    "passed": 3,
+    "failed": 2,
+    "skipped": 24,
+    "gate": {
+      "criticals": [
+        "sections-14-order",
+        "mechanic-missing:cursor",
+        "mechanic-missing:longpress",
+        "mechanic-missing:explode",
+        "mechanic-missing:colorway",
+        "mechanic-missing:outro"
+      ],
+      "criticalCount": 6,
+      "passRate": 0.103,
+      "passRateMin": 0.9,
+      "pass": false
+    }
+  }
+}

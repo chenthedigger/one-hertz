@@ -1,0 +1,14 @@
+{
+  "//": "MERGE TARGET for the integrate agent — evals lane does not edit package.json (conflict avoidance, see docs/p1/evals.md). Merge `scripts` into package.json scripts and `devDependencies` into package.json devDependencies, then `npm install`. Scripts run evals/*.ts directly via Node >=23.6 native type stripping (repo Node is v24.16.0) — no tsx/ts-node needed.",
+  "scripts": {
+    "eval": "node evals/run.ts",
+    "eval:capture": "node evals/capture.ts",
+    "eval:assert": "node evals/assert.ts",
+    "eval:perf": "node evals/perf.ts",
+    "eval:report": "node evals/report.ts"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.62.1",
+    "yaml": "^2.9.0"
+  }
+}

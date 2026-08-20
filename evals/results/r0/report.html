@@ -1,0 +1,293 @@
+<title>ONE HERTZ · eval r0</title>
+<style>
+  :root { --ink:#0b0b0c; --paper:#ededeb; --red:#ff2d55; --ok:#0a7d33; --bad:#c81e3c; --dim:#77777a; }
+  body { background:var(--paper); color:var(--ink); font:15px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif; margin:0; padding:3rem clamp(1rem,4vw,4rem); }
+  h1 { font-size:2.2rem; letter-spacing:-.02em; margin:0 0 .2rem; }
+  h1 em { color:var(--red); font-style:normal; }
+  h2 { margin:3rem 0 1rem; font-size:1.2rem; text-transform:uppercase; letter-spacing:.08em; }
+  .meta { color:var(--dim); font-family:ui-monospace,monospace; font-size:.8rem; }
+  table { border-collapse:collapse; width:100%; font-size:.85rem; }
+  th,td { text-align:left; padding:.4rem .6rem; border-bottom:1px solid #d8d8d4; vertical-align:top; }
+  th { text-transform:uppercase; font-size:.7rem; letter-spacing:.06em; color:var(--dim); }
+  .wrap { overflow-x:auto; }
+  tr.ok td:nth-child(4) { color:var(--ok); font-weight:600; }
+  tr.bad td:nth-child(4) { color:var(--bad); font-weight:600; }
+  tr.skip td:nth-child(4) { color:var(--dim); font-weight:600; }
+  .ev { color:#3a3a3c; max-width:44rem; }
+  code { font-family:ui-monospace,monospace; font-size:.9em; }
+  .b { padding:.15rem .55rem; border-radius:999px; font-size:.72rem; font-weight:700; letter-spacing:.05em; }
+  .b.pass { background:#d9f0e1; color:var(--ok); } .b.fail { background:#fbdce3; color:var(--bad); }
+  .b.pending { background:#e4e4e0; color:var(--dim); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:1.5rem; }
+  figure { margin:0; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:4px; background:#fff; padding:4px; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  .pair img { width:100%; height:auto; display:block; border-radius:3px; }
+  figcaption { font-family:ui-monospace,monospace; font-size:.72rem; color:var(--dim); margin-top:.35rem; }
+  .lr { float:right; }
+</style>
+<h1>ONE HERTZ <em>·</em> eval report — r0</h1>
+<p class="meta">rubric v1.0.0 (frozen 2026-08-20) · target http://localhost:4973 · generated 2026-08-20T02:41:13.176Z</p>
+
+<h2>Gates</h2>
+<div class="wrap"><table>
+<tr><th>Track</th><th>Gate</th><th>This round</th><th>Verdict</th></tr>
+<tr><td>Likeness</td><td>zero CRITICAL + ≥90% checklist</td><td>6 CRITICAL · pass-rate 10.3%</td><td><span class="b fail">FAIL</span></td></tr>
+<tr><td>Beauty</td><td>win-or-tie ≥60% · no axis &lt;40% · ≥3 axes above source · deception probe</td><td>pending</td><td><span class="b pending">pending</span></td></tr>
+<tr><td>Perf (desktop)</td><td>median ≥55fps · p95 ≤22ms · ≤5 frames &gt;50ms/60s</td><td>120.48fps · p95 9.7ms · 0 long frames</td><td><span class="b pass">PASS</span></td></tr>
+</table></div>
+
+<h2>Structural checklist (3/29 pass · 24 skip)</h2>
+<p class="meta">criticals: sections-14-order, mechanic-missing:cursor, mechanic-missing:longpress, mechanic-missing:explode, mechanic-missing:colorway, mechanic-missing:outro · judge-verified items pending council: —</p>
+<div class="wrap"><table>
+<tr><th>Item</th><th>Area</th><th>Severity</th><th>Result</th><th>Evidence</th></tr>
+<tr class="skip">
+  <td><code>sections-14-order</code></td><td>sections</td><td>CRITICAL</td>
+  <td>SKIP</td><td class="ev">SKIP — sections[].sourceRole not exposed (manifest still Spike-B shape)</td></tr>
+<tr class="skip">
+  <td><code>cursor-text-states</code></td><td>cursor</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().cursor not exposed by __ONE_HERTZ__ yet — cursor state machine</td></tr>
+<tr class="skip">
+  <td><code>cursor-icon-states</code></td><td>cursor</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().cursor not exposed by __ONE_HERTZ__ yet — cursor state machine</td></tr>
+<tr class="skip">
+  <td><code>longpress-activation-500ms</code></td><td>longpress</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().longpress not exposed by __ONE_HERTZ__ yet — longpress system</td></tr>
+<tr class="skip">
+  <td><code>longpress-ramp-reverse</code></td><td>longpress</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().longpress not exposed by __ONE_HERTZ__ yet — longpress system</td></tr>
+<tr class="skip">
+  <td><code>longpress-lenis-stop</code></td><td>longpress</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().scroll is a scalar — scroll.enabled flag not exposed yet</td></tr>
+<tr class="skip">
+  <td><code>longpress-zoom-parallax</code></td><td>longpress</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().camera not exposed by __ONE_HERTZ__ yet — camera snapshot</td></tr>
+<tr class="skip">
+  <td><code>explode-proxy-hitboxes</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().explode.parts not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>explode-lookat-lerp</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().explode.parts not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>explode-idle-rotation</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — explode.selectedRotationY not exposed</td></tr>
+<tr class="skip">
+  <td><code>explode-anchored-overlay</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — [data-explode-overlay] not in DOM</td></tr>
+<tr class="skip">
+  <td><code>explode-close-prevnext</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().explode.parts not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>explode-xplod-all</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — explode.mode not exposed</td></tr>
+<tr class="skip">
+  <td><code>explode-drag-gating</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — explode.clusterRotation not exposed</td></tr>
+<tr class="skip">
+  <td><code>explode-tap-tolerance-15px</code></td><td>explode</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — explode.parts not exposed (mobile)</td></tr>
+<tr class="skip">
+  <td><code>colorway-5param-1s-tween</code></td><td>colorway</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().config.finishes not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>colorway-dual-placement</code></td><td>colorway</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — [data-colorway-picker] not in DOM</td></tr>
+<tr class="skip">
+  <td><code>colorway-config-consumers</code></td><td>colorway</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().config.finishes not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>colorway-gallery-resrc</code></td><td>colorway</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().config.active not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>outro-4watch-lineup</code></td><td>outro</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().outro.instances not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>outro-swap-restart-loop</code></td><td>outro</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().config.finishes not exposed by __ONE_HERTZ__ yet</td></tr>
+<tr class="skip">
+  <td><code>scrub-dual-speeds</code></td><td>scroll</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — sections[].scrubChannels not exposed in manifest</td></tr>
+<tr class="ok">
+  <td><code>dual-channel-timelines</code></td><td>scroll</td><td>HIGH</td>
+  <td>PASS</td><td class="ev">15 webgl sections expose extended bounds; 0 violate webglStart&lt;=domStart&lt;=domEnd&lt;=webglEnd</td></tr>
+<tr class="skip">
+  <td><code>lifecycle-events</code></td><td>scroll</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — no on()/bus.on() exposed — cannot record lifecycle events</td></tr>
+<tr class="ok">
+  <td><code>sticky-pinning-vh-budget</code></td><td>scroll</td><td>HIGH</td>
+  <td>PASS</td><td class="ev">10 pinned tracks, 0 non-sticky pins [], 0 tracks off vh-budget ±5% [] (iOS jitter is judge-verified)</td></tr>
+<tr class="ok">
+  <td><code>loader-honesty</code></td><td>loader</td><td>HIGH</td>
+  <td>PASS</td><td class="ev">warm-cache loader ran 2.35s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure</td></tr>
+<tr class="bad">
+  <td><code>mobile-svh-dvh</code></td><td>mobile</td><td>HIGH</td>
+  <td>FAIL</td><td class="ev">svh/dvh rules=3, bare-vh height rules=1, flags.touchResizeFilter not exposed, manifest identical mobile/desktop=true</td></tr>
+<tr class="skip">
+  <td><code>mobile-touch-hold</code></td><td>mobile</td><td>HIGH</td>
+  <td>SKIP</td><td class="ev">SKIP — state().longpress not exposed (mobile)</td></tr>
+<tr class="bad">
+  <td><code>deeplink-params</code></td><td>debug</td><td>HIGH</td>
+  <td>FAIL</td><td class="ev">1/4 params work — ?scroll: activeSection=Intro (want Timeless); ?autoscroll: y 2236-&gt;3361 advancing=true; ?materials: flags.materialsDebug=undefined; ?eval=1: flags.eval=undefined</td></tr>
+</table></div>
+
+<h2>Performance</h2>
+<div class="wrap"><table>
+<tr><th>Pass</th><th>Config</th><th>Median fps</th><th>p95 ms</th><th>&gt;50ms</th><th>Frames</th><th>Method</th></tr>
+<tr><td>desktop</td><td>1600x900@DPR2</td>
+  <td>120.48</td><td>9.7</td><td>0</td>
+  <td>7232 / 60.27s</td><td class="ev">synthetic-wheel-60hz (fallback — expose lenis on __ONE_HERTZ__ for the contract driver)</td></tr>
+<tr><td>mobileproxy</td><td>390x844@DPR3 · CPU ×6</td>
+  <td>120.48</td><td>10.1</td><td>0</td>
+  <td>3813 / 31.77s</td><td class="ev">synthetic-wheel-60hz (fallback — expose lenis on __ONE_HERTZ__ for the contract driver)<br><em>Mobile proxy = desktop real Chrome + CDP 6x CPU throttle at 390x844 DPR3 — GPU unthrottled.</em></td></tr>
+</table></div>
+
+<h2>Beauty council</h2>
+<pre class="meta">{
+  "round": "r0",
+  "status": "pending",
+  "note": "pairs + prompts ready; seat the council (TODO P5) and drop ballots into judge/ballots/judge&lt;N&gt;.json"
+}</pre>
+
+<h2>Matched-moment pairs (ours · source)</h2>
+<p class="meta">10 ours-frames had no source counterpart (mapping/coverage gaps — see judge/pairs.json)</p>
+<div class="grid">
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Colors_1.png" alt="ours still-desktop-Colors-1">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Colors_1.png" alt="source still-desktop-Colors-1">
+  </div>
+  <figcaption>still-desktop-Colors-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Curves_0.5.png" alt="ours still-desktop-Curves-0.5">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Curves_0.5.png" alt="source still-desktop-Curves-0.5">
+  </div>
+  <figcaption>still-desktop-Curves-0.5 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Footer_0.5.png" alt="ours still-desktop-Footer-0.5">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Footer_0.5.png" alt="source still-desktop-Footer-0.5">
+  </div>
+  <figcaption>still-desktop-Footer-0.5 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Images_0.5.png" alt="ours still-desktop-Images-0.5">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Images_0.5.png" alt="source still-desktop-Images-0.5">
+  </div>
+  <figcaption>still-desktop-Images-0.5 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Intro_1.png" alt="ours still-desktop-Intro-1">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Intro_1.png" alt="source still-desktop-Intro-1">
+  </div>
+  <figcaption>still-desktop-Intro-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Mechanism_0.25.png" alt="ours still-desktop-Mechanism-0.25">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Mechanism_0.25.png" alt="source still-desktop-Mechanism-0.25">
+  </div>
+  <figcaption>still-desktop-Mechanism-0.25 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/MovementWatchRight_0.25.png" alt="ours still-desktop-MovementWatchRight-0.25">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/MovementWatchRight_0.25.png" alt="source still-desktop-MovementWatchRight-0.25">
+  </div>
+  <figcaption>still-desktop-MovementWatchRight-0.25 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Parts_1.png" alt="ours still-desktop-Parts-1">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Parts_1.png" alt="source still-desktop-Parts-1">
+  </div>
+  <figcaption>still-desktop-Parts-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/Straps_0.75.png" alt="ours still-desktop-Straps-0.75">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/Straps_0.75.png" alt="source still-desktop-Straps-0.75">
+  </div>
+  <figcaption>still-desktop-Straps-0.75 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/desktop/VerticalText_1.png" alt="ours still-desktop-VerticalText-1">
+    <img loading="lazy" src="../../../evals/reference/source/desktop/VerticalText_1.png" alt="source still-desktop-VerticalText-1">
+  </div>
+  <figcaption>still-desktop-VerticalText-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Colors_0.75.png" alt="ours still-mobile-Colors-0.75">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Colors_0.75.png" alt="source still-mobile-Colors-0.75">
+  </div>
+  <figcaption>still-mobile-Colors-0.75 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Disassembly_0.png" alt="ours still-mobile-Disassembly-0">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Disassembly_0.png" alt="source still-mobile-Disassembly-0">
+  </div>
+  <figcaption>still-mobile-Disassembly-0 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Disassembly_1.png" alt="ours still-mobile-Disassembly-1">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Disassembly_1.png" alt="source still-mobile-Disassembly-1">
+  </div>
+  <figcaption>still-mobile-Disassembly-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Hands_0.75.png" alt="ours still-mobile-Hands-0.75">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Hands_0.75.png" alt="source still-mobile-Hands-0.75">
+  </div>
+  <figcaption>still-mobile-Hands-0.75 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Images_1.png" alt="ours still-mobile-Images-1">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Images_1.png" alt="source still-mobile-Images-1">
+  </div>
+  <figcaption>still-mobile-Images-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Mechanism_0.25.png" alt="ours still-mobile-Mechanism-0.25">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Mechanism_0.25.png" alt="source still-mobile-Mechanism-0.25">
+  </div>
+  <figcaption>still-mobile-Mechanism-0.25 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/MovementWatchRight_0.png" alt="ours still-mobile-MovementWatchRight-0">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/MovementWatchRight_0.png" alt="source still-mobile-MovementWatchRight-0">
+  </div>
+  <figcaption>still-mobile-MovementWatchRight-0 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/MovementWatchRight_1.png" alt="ours still-mobile-MovementWatchRight-1">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/MovementWatchRight_1.png" alt="source still-mobile-MovementWatchRight-1">
+  </div>
+  <figcaption>still-mobile-MovementWatchRight-1 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/Straps_0.75.png" alt="ours still-mobile-Straps-0.75">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/Straps_0.75.png" alt="source still-mobile-Straps-0.75">
+  </div>
+  <figcaption>still-mobile-Straps-0.75 <span class="lr">ours · source</span></figcaption>
+</figure>
+<figure>
+  <div class="pair">
+    <img loading="lazy" src="../../../evals/reference/ours/mobile/VerticalText_0.75.png" alt="ours still-mobile-VerticalText-0.75">
+    <img loading="lazy" src="../../../evals/reference/source/mobile/VerticalText_0.75.png" alt="source still-mobile-VerticalText-0.75">
+  </div>
+  <figcaption>still-mobile-VerticalText-0.75 <span class="lr">ours · source</span></figcaption>
+</figure>
+</div>
