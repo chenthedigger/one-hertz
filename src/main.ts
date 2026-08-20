@@ -1,27 +1,48 @@
 /**
- * ONE HERTZ — engine bootstrap (Spike B vertical slice).
+ * ONE HERTZ — engine bootstrap (P1 core).
  *
  * Order matters: loader tasks register before heavy work starts so the
- * arc reflects real progress from frame one.
+ * arc reflects real progress from frame one. Query params (params.ts)
+ * route the boot: `?solo=` mounts one sandboxed section, `?eval=1` runs
+ * the determinism kit, `?scroll=` / `?autoscroll` / `?materials` act after
+ * the loader resolves.
  */
 
 import "./style.css";
+import { SECTION_ORDER, type SectionName } from "./core/constants";
+import { getClock, setClock } from "./core/clock";
+import { extendState, installDebugApi } from "./core/debug";
+import { bus, EngineEvent } from "./core/events";
+import { installMaterialsInspector } from "./core/inspector";
 import { Loader } from "./core/loader";
-import { ScrollEngine } from "./core/scroll";
+import { params } from "./core/params";
 import { SectionRegistry } from "./core/registry";
-import { setClock } from "./core/clock";
-import { installDebugApi } from "./core/debug";
-import { Stage } from "./webgl/stage";
+import { ScrollEngine } from "./core/scroll";
+import type { SectionBase } from "./core/section";
+import { StateStore } from "./core/state";
+import { createSection } from "./sections/index";
+import { DialRenderer } from "./dial/renderer";
+import { installCursor } from "./ui/cursor/cursor";
+import { LongpressSystem } from "./ui/cursor/longpress";
 import { CameraRig } from "./webgl/cameraRig";
-import { createHeroSection } from "./sections/hero";
-import { createOneSection } from "./sections/one";
-import type { SectionName } from "./core/constants";
-import { SECTION_VH } from "./core/constants";
+import { Stage } from "./webgl/stage";
 
 function boot(): void {
-  const loader = new Loader();
+  // Deep links + scrollytelling own the scroll position — the browser's
+  // automatic restoration would fight Lenis (and `?scroll=`) after reload.
+  history.scrollRestoration = "manual";
+
+  const store = new StateStore({
+    evalMode: params.eval,
+    autoscroll: params.autoscroll,
+    materialsInspector: params.materials,
+    soloSection: params.solo,
+  });
+
+  const loader = new Loader(params.eval); // ?eval=1 skips choreography
   const fontsTask = loader.task(1);
   const stageTask = loader.task(2);
+  const envTask = loader.task(2); // studio HDR bytes — the heavy real asset in P1
   const settleTask = loader.task(1);
 
   // -- Real asset progress: fonts ------------------------------------------
@@ -32,29 +53,103 @@ function boot(): void {
   if (!(canvas instanceof HTMLCanvasElement)) {
     throw new Error("boot: #stage canvas missing");
   }
-  const stage = new Stage(canvas);
+  const stage = new Stage(canvas, { onEnvProgress: (p) => envTask.report(p) });
   stageTask.report(0.6); // context + env + geometry built
+  // envReady settles on HDR swap OR confirmed fallback — real readiness
+  // either way (loader honesty), so eval capture waits for the final light.
+  stage.envReady.then(() => envTask.done());
   const rig = new CameraRig(stage.camera);
+
+  // -- Dial subsystem → screen seam (hero integration) ----------------------
+  // The live watchface rides the stage's ONE screen material via
+  // `setScreenTexture` (emissive slot, emissiveIntensity 2.8,
+  // toneMapped=false — PLAN §3). flipY default (true) is correct for the
+  // placeholder PlaneGeometry panel; when the GLB screen mesh lands, set
+  // `dial.texture.flipY = false` BEFORE the first render (glTF UV
+  // convention — dial lane pitfall #4).
+  const dial = new DialRenderer();
+  stage.setScreenTexture(dial.texture);
+  // StateStore `dialMode` axis → renderer bridge (P3 mechanics write the
+  // store; the frame loop forwards token changes — one owner, no misses).
+  let dialToken = store.get().dialMode;
+  dial.applyDialToken(dialToken);
+  extendState("dial", () => dial.stats());
+
   stage.renderer.compile(stage.scene, stage.camera);
   stageTask.done();
 
   // -- Scroll engine + sections ---------------------------------------------
   const engine = new ScrollEngine();
-  const registry = new SectionRegistry();
-  registry.register(createHeroSection());
-  registry.register(createOneSection(rig));
+  engine.registerSnappable(rig); // eval settle snaps the camera lerp
+
+  const registry = new SectionRegistry({ solo: params.solo !== null });
+  const sectionsByName = new Map<SectionName, SectionBase>();
+  const mount = (section: SectionBase): void => {
+    sectionsByName.set(section.name, section);
+    registry.register(section);
+  };
+  if (params.solo !== null) {
+    // Section sandbox: mount ONLY the requested section; hide the rest;
+    // stub its requiredEnterState into the live store (PLAN §3 sandbox).
+    for (const el of document.querySelectorAll<HTMLElement>("[data-section]")) {
+      if (el.dataset["section"] !== params.solo) el.remove();
+    }
+    const section = createSection(params.solo, rig);
+    store.apply(section.requiredEnterState);
+    mount(section);
+  } else {
+    for (const name of SECTION_ORDER) mount(createSection(name, rig));
+  }
   registry.measure();
+  engine.refresh(); // tracks were just sized — Lenis must re-learn its limit
+
+  // -- Interaction mechanics (P1 cursor+events lane) --------------------------
+  // Longpress hold-zoom (mechanic 2): arms on ANY pointer type; consumers
+  // wired through the typed bus so P3 mechanics join without touching boot.
+  new LongpressSystem(engine);
+  installCursor(); // mechanic 1 — returns null (no-op) on touch/coarse
+  bus.on(EngineEvent.LongpressToggle, ({ intensity }) => rig.setLongpress(intensity));
+  bus.on(EngineEvent.UpdateRotations, ({ speed }) => stage.setRotationSpeed(speed));
+  // Per-section zoomMultiplier follows the viewport center line (PLAN §1).
+  registry.onLifecycle((e) => {
+    if (e.type !== "enterCenter") return;
+    const section = sectionsByName.get(e.section);
+    if (section) rig.setZoomMultiplier(section.zoomMultiplier);
+  });
+  // Mouse parallax feed (fine pointers only — touch has no resting pointer).
+  if (window.matchMedia("(pointer: fine)").matches) {
+    window.addEventListener(
+      "pointermove",
+      (e) => {
+        rig.setPointer(
+          (e.clientX / window.innerWidth) * 2 - 1,
+          (e.clientY / window.innerHeight) * 2 - 1,
+        );
+      },
+      { passive: true },
+    );
+  }
+  extendState("camera", () => rig.aux());
 
   engine.onResizeSettled(() => {
     stage.resize();
     registry.measure();
+    engine.refresh();
   });
 
-  // Single frame pipeline: raw Lenis scroll in → sections scrubbed →
-  // clock scalar set → WebGL rig lerps its master → render.
+  // Single frame pipeline: raw Lenis scroll in → sections scrubbed (both
+  // channels + lifecycle) → clock scalar set → dial geared off the scalar +
+  // raw Lenis velocity (dirty-flag uploads only) → WebGL rig lerps its
+  // master → render.
   engine.onFrame((rawScroll, dt) => {
     registry.update(rawScroll);
     setClock(rawScroll / registry.totalRange());
+    const dialMode = store.get().dialMode;
+    if (dialMode !== dialToken) {
+      dialToken = dialMode;
+      dial.applyDialToken(dialToken);
+    }
+    dial.update({ clockScalar: getClock(), scrollVelocity: engine.lenis.velocity }, dt);
     rig.update(dt);
     stage.render(dt);
   });
@@ -67,15 +162,23 @@ function boot(): void {
   };
   requestAnimationFrame(settle);
 
-  // -- Debug API + deep link -------------------------------------------------
-  installDebugApi(registry, engine, stage);
+  // -- Debug API + param-routed behaviors ------------------------------------
+  const api = installDebugApi(registry, engine, stage, store);
 
   loader.ready.then(() => {
-    const wanted = new URLSearchParams(location.search).get("scroll");
-    if (wanted && wanted in SECTION_VH) {
-      window.__ONE_HERTZ__.gotoSection(wanted as SectionName, 0);
+    store.uiFlags.loaderDone = true;
+    if (params.scroll !== null && params.solo === null) {
+      api.gotoSection(params.scroll, 0);
     }
+    if (params.autoscroll) engine.startAutoscroll(params.autoscrollSpeed);
+    if (params.materials) installMaterialsInspector(stage);
   });
 }
 
-boot();
+if (params.dial) {
+  // Dial look-dev (`?dial=1`): mount the watchface preview INSTEAD of the
+  // engine. Dynamic import keeps the dial chunk out of the main bundle.
+  void import("./dial/preview").then((m) => m.mountDialPreview());
+} else {
+  boot();
+}

@@ -7,7 +7,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "eval": "node evals/run.ts",
+    "eval:capture": "node evals/capture.ts",
+    "eval:assert": "node evals/assert.ts",
+    "eval:perf": "node evals/perf.ts",
+    "eval:report": "node evals/report.ts"
   },
   "dependencies": {
     "gsap": "^3.15.0",
@@ -15,8 +20,11 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@types/node": "^26.2.0",
     "@types/three": "^0.185.4",
+    "playwright-core": "^1.62.1",
     "typescript": "^7.0.2",
-    "vite": "^8.2.1"
+    "vite": "^8.2.1",
+    "yaml": "^2.9.0"
   }
 }

@@ -1,0 +1,15 @@
+{
+  // ONE HERTZ — Cloudflare Workers static-assets deploy (continuous deploy
+  // per PLAN: every phase redeploys over the same worker; this replaced the
+  // P0 placeholder in infra/placeholder/). Keep the worker name stable:
+  // "one-hertz" is the claimed workers.dev subdomain (TLS cert warmed at P0).
+  //
+  // .assetsignore lesson (infra/placeholder): wrangler uploads EVERYTHING in
+  // the assets directory; the ignore file must live INSIDE that directory.
+  // Ours ships from public/.assetsignore → dist/.assetsignore via Vite.
+  "name": "one-hertz",
+  "compatibility_date": "2026-08-20",
+  "assets": {
+    "directory": "dist"
+  }
+}

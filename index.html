@@ -21,8 +21,14 @@
 
     <canvas id="stage" aria-hidden="true"></canvas>
 
+    <!--
+      Canonical 15-track skeleton (source order per
+      evals/reference/source/sections.json; Nocturne is our additive beat).
+      Track heights come from SECTION_VH via SectionBase — never hardcode
+      them here. P2 agents: replace YOUR track's inner .pin content only.
+    -->
     <main id="app">
-      <section class="track track--hero" data-section="hero">
+      <section class="track" data-section="Intro">
         <div class="pin">
           <header class="hero">
             <p class="hero__eyebrow">CHEN presents</p>
@@ -33,16 +39,111 @@
         </div>
       </section>
 
-      <section class="track track--one" data-section="one">
-        <div class="pin">
-          <div class="one__copy one__copy--a">
+      <section class="track" data-section="Timeless">
+        <div class="pin ph">
+          <p class="ph__name">Timeless</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="VerticalText">
+        <div class="pin ph">
+          <p class="ph__name">VerticalText</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Disassembly">
+        <!-- data-cursor-text: declarative cursor text channel (P1 demo-wire;
+             keys of CURSOR_TEXT in src/ui/cursor/cursor.ts) -->
+        <div class="pin" data-cursor-text="holdToExplore">
+          <div class="copy copy--a">
             <h2>Every mechanism has a pulse.</h2>
             <p>Haute horlogerie worships the 4&nbsp;Hz balance wheel.</p>
           </div>
-          <div class="one__copy one__copy--b">
+          <div class="copy copy--b">
             <h2>This one beats at 1&nbsp;Hz.</h2>
             <p>Where the Always-On floor meets a resting human heart.</p>
           </div>
+        </div>
+      </section>
+
+      <section class="track" data-section="Mechanism">
+        <div class="pin ph">
+          <p class="ph__name">Mechanism</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Movement">
+        <div class="pin ph">
+          <p class="ph__name">Movement</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Curves">
+        <div class="pin ph">
+          <p class="ph__name">Curves</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="MovementWatchRight">
+        <div class="pin ph">
+          <p class="ph__name">MovementWatchRight</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Hands">
+        <div class="pin ph">
+          <p class="ph__name">Hands</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Straps">
+        <div class="pin ph">
+          <p class="ph__name">Straps</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Images">
+        <div class="pin ph">
+          <p class="ph__name">Images</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Nocturne">
+        <div class="pin ph ph--nocturne">
+          <p class="ph__name">Nocturne</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Colors">
+        <div class="pin ph">
+          <p class="ph__name">Colors</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Parts">
+        <div class="pin ph">
+          <p class="ph__name">Parts</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
+        </div>
+      </section>
+
+      <section class="track" data-section="Footer">
+        <!-- Placeholder outro: SELECT MODEL cursor context lands with the
+             real P3 outro build; the attribute demos the channel today. -->
+        <div class="pin ph" data-cursor-text="selectModel">
+          <p class="ph__name">Footer</p>
+          <p class="ph__meta">dom <span data-readout-dom>0.00</span> · webgl <span data-readout-webgl>0.00</span></p>
         </div>
       </section>
     </main>
