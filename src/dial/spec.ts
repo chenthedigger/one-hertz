@@ -4,6 +4,15 @@
  * renderer.ts) reads it and stays dumb. P1.5's dial look-lock edits THIS
  * file (PLAN §3 "dial artboard", §5 P1.5).
  *
+ * Art pass 2026-08-20 (docs/p15/dial-art.md): proportions and rhythm are
+ * now measured against the REAL extracted Wayfinder texture
+ * (research/asset-qa/ultra-3/textures/rIbiCAQPvhuVClj.jpg): stubby
+ * rounded-cap dashes inside a hairline-contained band, degree numerals and
+ * cardinals rotated tangentially OUTSIDE the dash band, slate-teal
+ * secondary ink (#91AFBA-class sampled from the texture), near-white
+ * primary. Our face stays ORIGINAL — analog Wayfinder-class instrument in
+ * Liquid Glass language — but reads native at a glance.
+ *
  * Layout language: Wayfinder / Modular-Ultra class (PLAN §3 dial
  * subsystem). Radial values are fractions of R = canvasWidth / 2, measured
  * from the canvas center; the canvas itself is the Ultra 3 display
@@ -38,52 +47,101 @@ export const DIAL_CORNER = 0.235;
 /* ---- Grid (fractions of R = width/2 unless noted) ------------------------- */
 
 export const GRID = {
-  /** Outer compass-scale ring band (Wayfinder signature). */
+  /**
+   * Outer compass-scale ring band (Wayfinder signature). Measured order,
+   * outside-in: hairline containment ring → rotated numerals/cardinals →
+   * rounded-dash tick band → inner hairline ring.
+   */
   bezel: {
-    outer: 0.985,
-    inner: 0.8,
+    /** Outer hairline containment circle. */
+    ringOuter: 0.985,
+    /** Inner hairline circle closing the band. */
+    ringInner: 0.77,
+    /** Rotated degree numerals + cardinal letters center radius. */
+    numeralR: 0.905,
+    /** Rounded-dash tick band (stubby dashes, NOT hairlines — ref truth). */
+    dashOuter: 0.845,
+    dashInner: 0.802,
+    /** Majors run deeper into the band (native long/short tick rhythm). */
+    dashInnerMajor: 0.786,
     minorEveryDeg: 5,
     majorEveryDeg: 15,
     numeralEveryDeg: 30,
-    numeralSize: 0.062, // ×R
+    /** Dash width ×R (rounded caps make it a capsule). */
+    dashW: 0.014,
+    numeralSize: 0.056, // ×R
+    cardinalSize: 0.07, // ×R — cardinals read a step above degrees
   },
-  /** Minute track inside the bezel. */
-  minute: { outer: 0.775, minorInner: 0.735, majorInner: 0.7 },
+  /** Minute track inside the bezel: minor DOTS, major dashes (watchOS rhythm). */
+  minute: {
+    outer: 0.735,
+    minorDotR: 0.006,
+    majorLen: 0.05,
+    majorW: 0.012,
+  },
   /**
    * Hour numerals 12 / 3 / 9 at cardinal positions. The 6 slot is DROPPED —
    * the hot complication sub-dial takes its sector (watchOS drops numerals
    * under complications; keeps the grid honest).
    */
-  numerals: { radius: 0.565, size: 0.2 },
-  /** Top-center date slot (weekday + day). */
-  date: { y: -0.4, size: 0.075 },
-  /** Hot complication sub-dial (Details hover-swap target). */
-  hot: { x: 0, y: 0.4, r: 0.24 },
+  numerals: { radius: 0.545, size: 0.195 },
+  /** Top-center date pill (weekday + day, hairline capsule outline). */
+  date: { y: -0.38, size: 0.068, padX: 0.055, padY: 0.032 },
+  /** Hot complication sub-dial (Details hover-swap target) — glass slab. */
+  hot: { x: 0, y: 0.4, r: 0.25 },
   /** Four corner complication slots (y in R units too; H/W ≈ 1.218). */
-  corners: { x: 0.68, y: 0.94, r: 0.16 },
-  /** Hands: lengths/widths ×R. */
+  corners: {
+    x: 0.68,
+    y: 0.94,
+    r: 0.155,
+    /** Open-ring gauge: total sweep (deg); the gap faces the display corner. */
+    gaugeSweepDeg: 280,
+    gaugeW: 0.018, // ×R
+  },
+  /** Hands: lengths/widths ×R. Outlined batons + shadow pass (depth). */
   hands: {
-    hour: { len: 0.4, tail: 0.06, w: 0.05 },
-    minute: { len: 0.66, tail: 0.06, w: 0.04 },
-    second: { len: 0.76, tail: 0.16, w: 0.013 },
-    hubR: 0.032,
+    hour: { len: 0.4, stem: 0.055, w: 0.05, outline: 0.012 },
+    minute: { len: 0.665, stem: 0.055, w: 0.04, outline: 0.011 },
+    second: { len: 0.755, tail: 0.16, w: 0.011, ballR: 0.021 },
+    hubR: 0.033,
+    /** AOD hollow-hand rim thickness ×R (watchOS AOD outlines its hands). */
+    aodRim: 0.008,
+    /** Shadow pass under the hands (canvas shadow, redraw-time only). */
+    shadow: { blur: 0.025, dy: 0.014, alpha: 0.55 },
   },
 } as const;
 
-/* ---- Palette (working tokens; the real ramp locks at P1.5) ---------------- */
+/* ---- Liquid Glass overlay (prebaked sprite layer — PLAN §3 sanctioned:
+ * "layered canvas + prebaked glass sprites, no real-time refraction").
+ * Painted ONCE per (mode × size) into a cached canvas, composited last. */
+
+export const GLASS = {
+  /** Inner rim light along the rounded display edge (top bright → bottom). */
+  rim: { w: 0.014, alphaTop: 0.14, alphaBottom: 0.025 },
+  /** Broad diagonal crystal sheen across the upper-left. */
+  sheen: { alpha: 0.055 },
+  /** Soft specular bloom hugging the top-left corner radius. */
+  bloom: { alpha: 0.07, r: 0.55 },
+  /** Radial edge falloff — OLED under curved glass. */
+  vignette: { alpha: 0.14 },
+  /** AOD multiplies every glass alpha by this (glass barely reads in dark). */
+  aodScale: 0.25,
+} as const;
+
+/* ---- Palette (Wayfinder-sampled slate; biosignal red per PLAN §3) --------- */
 
 export interface DialPalette {
   /** OLED ink (INTERNALS-REF §1: off-state #060608). */
   bg: string;
   /** Primary luminous foreground (hands, numerals). */
   fg: string;
-  /** Secondary (major ticks, labels). */
+  /** Secondary — slate-teal instrument ink (sampled #91AFBA-class). */
   dim: string;
-  /** Tertiary (minor ticks, slot outlines). */
+  /** Tertiary (minor ticks, hairlines, slot outlines). */
   faint: string;
   /** Biosignal red — seconds hand + 1 Hz elements ONLY (PLAN §3 color). */
   accent: string;
-  /** Complication semantic colors (watchOS system hues, roughed). */
+  /** Complication semantic colors (watchOS system hues). */
   depth: string;
   heart: string;
   compass: string;
@@ -91,26 +149,26 @@ export interface DialPalette {
 
 export const PALETTE: Record<DialMode, DialPalette> = {
   active: {
-    bg: "#060608",
-    fg: "#E9E9E7",
-    dim: "rgba(233, 233, 231, 0.55)",
-    faint: "rgba(233, 233, 231, 0.18)",
+    bg: "#05060a",
+    fg: "#F2F3F4",
+    dim: "rgba(145, 175, 190, 0.92)",
+    faint: "rgba(145, 175, 190, 0.28)",
     accent: "#FF2D55",
     depth: "#64D2FF",
     heart: "#FF2D55",
     compass: "#FF9F0A",
   },
-  // AOD: dimmed, reduced. Accent uses the brightened Nocturne variant
-  // (PLAN §3: #FF375F-class) because it carries the 1 Hz tick alone.
+  // AOD: dimmed, reduced, hands hollowed. Accent uses the brightened
+  // Nocturne variant (PLAN §3: #FF375F-class) — it carries the 1 Hz tick alone.
   aod: {
-    bg: "#040405",
-    fg: "rgba(233, 233, 231, 0.44)",
-    dim: "rgba(233, 233, 231, 0.26)",
-    faint: "rgba(233, 233, 231, 0.09)",
-    accent: "rgba(255, 55, 95, 0.72)",
-    depth: "rgba(100, 210, 255, 0.4)",
-    heart: "rgba(255, 55, 95, 0.5)",
-    compass: "rgba(255, 159, 10, 0.4)",
+    bg: "#030407",
+    fg: "rgba(242, 243, 244, 0.5)",
+    dim: "rgba(145, 175, 190, 0.34)",
+    faint: "rgba(145, 175, 190, 0.11)",
+    accent: "rgba(255, 55, 95, 0.78)",
+    depth: "rgba(100, 210, 255, 0.35)",
+    heart: "rgba(255, 55, 95, 0.45)",
+    compass: "rgba(255, 159, 10, 0.35)",
   },
 };
 
@@ -157,3 +215,6 @@ export const DIAL_FONT_CANDIDATES = [
 
 /** Fallback family when no SF face resolves (tight tracking applied). */
 export const DIAL_FONT_FALLBACK = "Inter";
+
+/** Wide tracking for small-caps instrument labels (native watchOS feel). */
+export const LABEL_TRACKING = "0.08em";

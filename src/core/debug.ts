@@ -75,12 +75,27 @@ export interface DialStateSnapshot {
   fontName: string;
 }
 
+/** Hero watch asset snapshot (webgl/watch.ts — GLB plumbing lane). */
+export interface WatchStateSnapshot {
+  /** True once the GLB is adopted (false = placeholder/failed load). */
+  loaded: boolean;
+  /** Named nodes indexed from the part_* / grp_* contract. */
+  parts: number;
+  /** True once the live dial rides the GLB's part_screen mesh. */
+  screenAdopted: boolean;
+  /** Dial-normal tilt off world-horizontal, degrees (case-space sanity). */
+  caseTiltDeg: number;
+  /** Active look name ("default" until ?look= or api.look.apply). */
+  look: string;
+}
+
 /** Registry of typed extension keys — P3 mechanics extend this interface. */
 export interface StateExtensions {
   cursor: CursorStateSnapshot;
   longpress: LongpressStateSnapshot;
   camera: CameraAuxSnapshot;
   dial: DialStateSnapshot;
+  watch: WatchStateSnapshot;
 }
 
 const stateExtensions = new Map<string, () => unknown>();
@@ -118,6 +133,7 @@ export interface EngineStateSnapshot {
   longpress?: LongpressStateSnapshot;
   camera?: CameraAuxSnapshot;
   dial?: DialStateSnapshot;
+  watch?: WatchStateSnapshot;
 }
 
 export interface OneHertzDebugApi {
@@ -158,6 +174,16 @@ export interface OneHertzDebugApi {
     setGrainAmount(amount: number): void;
     /** Rotate the environment around Y (lighting-keyframe hook). */
     setEnvRotation(radians: number): void;
+  };
+  /**
+   * Look-config hot-apply (ADDITIVE, hero-plumbing lane; src/gl/look.ts) —
+   * installed by main.ts once the stage exists. `apply` fetches
+   * /assets/looks/<name>.json and hot-applies it; `current` reports the
+   * active look name.
+   */
+  look?: {
+    apply(name: string): Promise<void>;
+    current(): string;
   };
 }
 

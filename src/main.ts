@@ -24,8 +24,10 @@ import { createSection } from "./sections/index";
 import { DialRenderer } from "./dial/renderer";
 import { installCursor } from "./ui/cursor/cursor";
 import { LongpressSystem } from "./ui/cursor/longpress";
+import { applyLook, DEFAULT_LOOK, loadLook, type LookConfig } from "./gl/look";
 import { CameraRig } from "./webgl/cameraRig";
 import { Stage } from "./webgl/stage";
+import { loadWatch, retargetScreenTexture } from "./webgl/watch";
 
 function boot(): void {
   // Deep links + scrollytelling own the scroll position — the browser's
@@ -42,7 +44,8 @@ function boot(): void {
   const loader = new Loader(params.eval); // ?eval=1 skips choreography
   const fontsTask = loader.task(1);
   const stageTask = loader.task(2);
-  const envTask = loader.task(2); // studio HDR bytes — the heavy real asset in P1
+  const envTask = loader.task(2); // studio HDR bytes — the heavy real asset
+  const watchTask = loader.task(2); // hero GLB bytes (real byte progress)
   const settleTask = loader.task(1);
 
   // -- Real asset progress: fonts ------------------------------------------
@@ -64,9 +67,10 @@ function boot(): void {
   // The live watchface rides the stage's ONE screen material via
   // `setScreenTexture` (emissive slot, emissiveIntensity 2.8,
   // toneMapped=false — PLAN §3). flipY default (true) is correct for the
-  // placeholder PlaneGeometry panel; when the GLB screen mesh lands, set
-  // `dial.texture.flipY = false` BEFORE the first render (glTF UV
-  // convention — dial lane pitfall #4).
+  // placeholder PlaneGeometry panel; at GLB adoption `retargetScreenTexture`
+  // flips it to glTF orientation AND copies the baked emissive map's
+  // KHR_texture_transform (gltfpack quantized the screen UVs to ~1/16 —
+  // without the transform the dial tiles 16× too small).
   const dial = new DialRenderer();
   stage.setScreenTexture(dial.texture);
   // StateStore `dialMode` axis → renderer bridge (P3 mechanics write the
@@ -77,6 +81,52 @@ function boot(): void {
 
   stage.renderer.compile(stage.scene, stage.camera);
   stageTask.done();
+
+  // -- Hero watch GLB (the REAL Ultra 3 replaces the torus knot) ------------
+  // Loaded in parallel with the HDR; the loader waits for both (honesty).
+  // Failure keeps the placeholder + warns — never a black canvas
+  // (reviewer-resilience rule); the loader task settles either way.
+  let currentLookName = params.look ?? "default";
+  const watchReady = loadWatch(stage.renderer, (p) => watchTask.report(p))
+    .then((watch) => {
+      retargetScreenTexture(dial.texture, watch.bakedScreenTexture);
+      stage.adoptWatch(watch); // adopts part_screen → placeholder panel dies
+      rig.setCaseSpace(watch.caseSpace);
+      return watch;
+    })
+    .catch((error: unknown) => {
+      console.warn(`watch: hero GLB failed (${String(error)}) — placeholder stays`);
+      return null;
+    });
+  void watchReady.then(() => watchTask.done());
+  extendState("watch", () => ({
+    loaded: stage.watch !== null,
+    parts: stage.watch?.parts.size ?? 0,
+    screenAdopted: stage.watch?.screenMesh != null,
+    caseTiltDeg: stage.watch
+      ? Math.round(((stage.watch.caseSpace.tiltRad * 180) / Math.PI) * 10) / 10
+      : 0,
+    look: currentLookName,
+  }));
+
+  // -- Look config (?look=<name>, default = the built-in TEMP look) ---------
+  // Applied AFTER the watch settles so materialOverrides find their
+  // mat_* targets (applyLook itself tolerates watch=null).
+  const applyLookToStage = async (look: LookConfig): Promise<void> => {
+    const watch = await watchReady;
+    await applyLook(stage, watch, look);
+  };
+  void watchReady.then(async () => {
+    try {
+      const look = params.look !== null ? await loadLook(params.look) : DEFAULT_LOOK;
+      currentLookName = look.name ?? currentLookName;
+      await applyLookToStage(look);
+    } catch (error: unknown) {
+      console.warn(`look: "${String(params.look)}" failed (${String(error)}) — DEFAULT_LOOK applied`);
+      currentLookName = "default";
+      await applyLookToStage(DEFAULT_LOOK);
+    }
+  });
 
   // -- Scroll engine + sections ---------------------------------------------
   const engine = new ScrollEngine();
@@ -164,6 +214,14 @@ function boot(): void {
 
   // -- Debug API + param-routed behaviors ------------------------------------
   const api = installDebugApi(registry, engine, stage, store);
+  api.look = {
+    apply: async (name: string): Promise<void> => {
+      const look = await loadLook(name);
+      currentLookName = look.name ?? name;
+      await applyLookToStage(look);
+    },
+    current: () => currentLookName,
+  };
 
   loader.ready.then(() => {
     store.uiFlags.loaderDone = true;

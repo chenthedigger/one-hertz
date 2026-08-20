@@ -11,6 +11,7 @@
 
 import {
   ACESFilmicToneMapping,
+  Box3,
   Color,
   Group,
   Mesh,
@@ -26,6 +27,7 @@ import {
   type CanvasTexture,
   type Texture,
 } from "three";
+import type { WatchAsset } from "./watch";
 import { uClock } from "../core/clock";
 import { isEvalMode } from "../core/determinism";
 import { createContactShadow } from "../gl/contactShadow";
@@ -82,9 +84,14 @@ export class Stage {
   private readonly governor: QualityGovernor;
   private readonly screenMaterial: MeshStandardMaterial;
   private readonly placeholderDial: CanvasTexture;
+  private readonly contactShadow: Mesh;
   private screenMesh: Mesh;
   private rotationSpeed = 1; // multiplier — UPDATE_ROTATIONS (longpress lane)
   private disposed = false;
+  /** The adopted hero asset (null until the GLB lands / if it fails). */
+  private watchAsset: WatchAsset | null = null;
+  /** True once a look config owns the env (boot HDR must not clobber it). */
+  private envLockedByLook = false;
 
   constructor(canvas: HTMLCanvasElement, options: StageOptions = {}) {
     this.renderer = new WebGLRenderer({
@@ -121,7 +128,8 @@ export class Stage {
     this.screenMesh = createPlaceholderScreenMesh(this.screenMaterial);
     this.product.add(this.screenMesh);
     this.scene.add(this.product);
-    this.scene.add(createContactShadow());
+    this.contactShadow = createContactShadow();
+    this.scene.add(this.contactShadow);
 
     this.post = new PostPipeline(this.renderer, this.scene, this.camera);
     this.post.applyTier(this.qualityTier);
@@ -133,7 +141,9 @@ export class Stage {
   private async upgradeEnvironment(onProgress?: (p: number) => void): Promise<void> {
     const hdr = await loadStudioHdr(this.renderer, onProgress);
     if (hdr === null) return; // fallback stays; page remains presentable
-    if (this.disposed) {
+    if (this.disposed || this.envLockedByLook) {
+      // A look config already swapped its own env in — the boot HDR lost
+      // the race and must not clobber it.
       hdr.dispose();
       return;
     }
@@ -258,6 +268,69 @@ export class Stage {
       this.screenMesh.geometry.dispose();
     }
     this.screenMesh = mesh;
+  }
+
+  /**
+   * Adopt the loaded hero watch (webgl/watch.ts): the placeholder torus
+   * knot + pedestal die; the normalized watch_root joins the product group
+   * (it inherits the idle rotation + rig choreography exactly as the
+   * placeholder did); the GLB's `part_screen` mesh takes the live screen
+   * material; the contact shadow re-grounds under the watch's real bottom.
+   */
+  adoptWatch(watch: WatchAsset): void {
+    // Placeholder body + pedestal die.
+    for (const name of ["placeholder_body", "placeholder_pedestal"]) {
+      const obj = this.product.getObjectByName(name);
+      if (obj instanceof Mesh) {
+        obj.removeFromParent();
+        obj.geometry.dispose();
+        const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+        for (const m of mats) m.dispose();
+      }
+    }
+
+    this.product.add(watch.root);
+    if (watch.screenMesh) this.adoptScreenMesh(watch.screenMesh);
+    this.watchAsset = watch;
+
+    // Ground the contact shadow just under the watch (centered at origin,
+    // so the bottom is at -height/2 of its bbox). Sized to the footprint,
+    // softened — a grounding hint, not a puddle (look-dev owns the final
+    // treatment; gl lane's upgrade path note stands).
+    watch.root.updateWorldMatrix(true, true);
+    const box = new Box3().setFromObject(watch.root);
+    this.contactShadow.position.y = box.min.y - 0.02;
+    const span = Math.max(box.max.x - box.min.x, box.max.z - box.min.z);
+    const targetRadius = span * 0.6;
+    this.contactShadow.scale.setScalar(targetRadius / 2.6); // base radius 2.6
+    const shadowMat = this.contactShadow.material;
+    if (!Array.isArray(shadowMat)) shadowMat.opacity = 0.3;
+  }
+
+  /** The adopted watch asset, if any (case-space + materials live here). */
+  get watch(): WatchAsset | null {
+    return this.watchAsset;
+  }
+
+  /**
+   * Swap the scene environment for a prefiltered texture (look configs).
+   * The previous env is disposed — pass only PMREM'd textures you own.
+   */
+  swapEnvironment(env: Texture): void {
+    this.envLockedByLook = true;
+    const previous = this.scene.environment;
+    this.scene.environment = env;
+    if (previous !== env) previous?.dispose();
+  }
+
+  /** scene.environmentIntensity (look-config lightRig hook). */
+  setEnvIntensity(intensity: number): void {
+    this.scene.environmentIntensity = intensity;
+  }
+
+  /** Stage/porcelain background color (look-config bgTokens hook). */
+  setStageColor(css: string): void {
+    this.scene.background = new Color(css);
   }
 
   /**

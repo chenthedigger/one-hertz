@@ -16,6 +16,12 @@
  *                                  canvas 1:1 INSTEAD of the engine boot
  *                                  (src/dial/preview.ts; combine with
  *                                  ?eval=1 for the frozen 10:09:30 face)
+ *   ?look=<name>                   look config: fetch
+ *                                  /assets/looks/<name>.json and hot-apply
+ *                                  env + light rig + post tune + bg tokens +
+ *                                  material overrides (src/gl/look.ts).
+ *                                  Absent = built-in DEFAULT_LOOK (the
+ *                                  current TEMP studio look).
  */
 
 import { isSectionName, type SectionName } from "./constants";
@@ -35,6 +41,8 @@ export interface EngineParams {
   readonly solo: SectionName | null;
   /** Dial subsystem look-dev page (mounts instead of the engine boot). */
   readonly dial: boolean;
+  /** Look config name (`/assets/looks/<name>.json`); null = built-in default. */
+  readonly look: string | null;
 }
 
 function parse(search: string): EngineParams {
@@ -54,7 +62,14 @@ function parse(search: string): EngineParams {
     eval: q.get("eval") === "1" || q.get("eval") === "true",
     solo: asSection(q.get("solo")),
     dial: q.get("dial") === "1" || q.get("dial") === "true",
+    look: sanitizeLookName(q.get("look")),
   });
+}
+
+/** Look names are file basenames — keep them path-safe. */
+function sanitizeLookName(raw: string | null): string | null {
+  if (raw === null) return null;
+  return /^[a-z0-9][a-z0-9_-]*$/i.test(raw) ? raw : null;
 }
 
 /** The one parsed instance — import this everywhere. */

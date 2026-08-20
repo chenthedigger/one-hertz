@@ -19,6 +19,7 @@ import {
   WEBGL_PROGRESS_LERP,
 } from "../core/constants";
 import type { CameraAuxSnapshot } from "../core/debug";
+import type { CaseSpace } from "./watch";
 
 interface OrbitProxy {
   theta: number; // azimuth, radians
@@ -55,6 +56,14 @@ export class CameraRig {
   private parallaxX = 0;
   private parallaxY = 0;
   private effectiveRadius = 0;
+
+  /* Case-local frame of the hero watch (registered at GLB adoption). The
+   * Ultra 3 case sits tilted ~45° inside the band loop (USDZ AR pose), so
+   * world axes are NOT case axes: beat authors that want "dolly along the
+   * dial normal" or "frame the crown side" express those directions in case
+   * space and convert through this helper (`rig.caseSpace.toWorld(v)`).
+   * Null until the watch lands — beats written against it must guard. */
+  private caseSpaceRef: CaseSpace | null = null;
 
   constructor(private readonly camera: PerspectiveCamera) {
     // Paused timeline — progress() is the ONLY driver.
@@ -104,6 +113,16 @@ export class CameraRig {
   /** Active section's hold-zoom multiplier (wired from lifecycle events). */
   setZoomMultiplier(multiplier: number): void {
     this.zoomMultiplier = Math.max(1, multiplier);
+  }
+
+  /** Register the hero watch's case-local frame (the 45°-tilt correction). */
+  setCaseSpace(caseSpace: CaseSpace): void {
+    this.caseSpaceRef = caseSpace;
+  }
+
+  /** Case-local axis helper — null until the watch GLB is adopted. */
+  get caseSpace(): CaseSpace | null {
+    return this.caseSpaceRef;
   }
 
   /** Normalized pointer position, -1..1 both axes (viewport center = 0). */

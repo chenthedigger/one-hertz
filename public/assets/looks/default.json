@@ -1,0 +1,16 @@
+{
+  "name": "default",
+  "lightRig": { "envRotationDeg": 0, "envIntensity": 1.0, "exposure": 1.0 },
+  "postTune": {
+    "bloomThreshold": 1.0,
+    "bloomStrength": 0.7,
+    "bloomRadius": 0.35,
+    "grainAmount": 0.055,
+    "vignetteNocturne": 0.32
+  },
+  "bgTokens": { "stage": "#EBEBEB", "ink": "#0B0B0C" },
+  "materialOverrides": {
+    "mat_band_ocean": { "color": "#1f6153", "roughness": 0.58, "envMapIntensity": 0.45 },
+    "mat_band_tab": { "color": "#1f6153", "roughness": 0.66, "envMapIntensity": 0.45 }
+  }
+}

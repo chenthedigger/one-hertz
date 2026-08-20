@@ -59,6 +59,20 @@ const BLOOM_THRESHOLD = 1.0;
 const BLOOM_STRENGTH = 0.7;
 const BLOOM_RADIUS = 0.35;
 
+/**
+ * Look-config post tune (PLAN §3 post-stack constants become look-bible
+ * values) — the `postTune` block of the look schema (src/gl/look.ts).
+ * Absent field = leave the current value untouched.
+ */
+export interface PostTune {
+  bloomThreshold?: number;
+  bloomStrength?: number;
+  bloomRadius?: number;
+  grainAmount?: number;
+  /** Vignette strength used when the Nocturne flag turns the vignette on. */
+  vignetteNocturne?: number;
+}
+
 /** MSAA on the beauty target (RT rendering bypasses canvas antialiasing). */
 const BEAUTY_MSAA_SAMPLES = 4;
 
@@ -104,10 +118,13 @@ export class PostPipeline {
 
   private readonly darkMaterial = new MeshBasicMaterial({ color: 0x000000 });
   private readonly materialCache = new Map<Mesh, Material | Material[]>();
+  private readonly visibilityCache = new Map<Mesh, boolean>();
+  private readonly bloomPass: UnrealBloomPass;
 
   private tier = 0;
   private dofRequested = false;
   private grainTime = 0;
+  private vignetteNocturne = VIGNETTE_STRENGTH_DEFAULT;
 
   constructor(
     renderer: WebGLRenderer,
@@ -146,9 +163,13 @@ export class PostPipeline {
     this.bloomComposer = new EffectComposer(renderer);
     this.bloomComposer.renderToScreen = false;
     this.bloomComposer.addPass(new RenderPass(scene, camera));
-    this.bloomComposer.addPass(
-      new UnrealBloomPass(size.clone(), BLOOM_STRENGTH, BLOOM_RADIUS, BLOOM_THRESHOLD),
+    this.bloomPass = new UnrealBloomPass(
+      size.clone(),
+      BLOOM_STRENGTH,
+      BLOOM_RADIUS,
+      BLOOM_THRESHOLD,
     );
+    this.bloomComposer.addPass(this.bloomPass);
     this.uniform(this.bloomMixPass, "tBloom").value =
       this.bloomComposer.renderTarget2.texture;
 
@@ -188,9 +209,31 @@ export class PostPipeline {
     if (f) f.value = focus;
   }
 
-  /** Vignette flag — Nocturne only (PLAN §3); 0 strength = exactly off. */
-  setVignette(enabled: boolean, strength = VIGNETTE_STRENGTH_DEFAULT): void {
-    this.uniform(this.grainPass, "uVignette").value = enabled ? strength : 0;
+  /**
+   * Vignette flag — Nocturne only (PLAN §3); 0 strength = exactly off.
+   * Default strength is the look-tunable Nocturne value (`tune()`).
+   */
+  setVignette(enabled: boolean, strength?: number): void {
+    const s = strength ?? this.vignetteNocturne;
+    this.uniform(this.grainPass, "uVignette").value = enabled ? s : 0;
+  }
+
+  /**
+   * Look-config hot-apply (src/gl/look.ts `postTune`) — retunes bloom
+   * optics, grain base amount, and the Nocturne vignette strength without
+   * touching tier gating or pass order. Absent fields keep current values.
+   */
+  tune(t: PostTune): void {
+    if (t.bloomThreshold !== undefined) this.bloomPass.threshold = t.bloomThreshold;
+    if (t.bloomStrength !== undefined) this.bloomPass.strength = t.bloomStrength;
+    if (t.bloomRadius !== undefined) this.bloomPass.radius = t.bloomRadius;
+    if (t.grainAmount !== undefined) this.setGrainAmount(t.grainAmount);
+    if (t.vignetteNocturne !== undefined) {
+      this.vignetteNocturne = t.vignetteNocturne;
+      // If the vignette is currently on, re-apply so the new strength lands.
+      const current = this.uniform(this.grainPass, "uVignette").value as number;
+      if (current > 0) this.setVignette(true);
+    }
   }
 
   /** Look-dev dial on the grain base amount (weighting stays luminance). */
@@ -220,13 +263,29 @@ export class PostPipeline {
     this.beautyComposer.render(dt);
   }
 
-  /** Darken every non-screen material (occlusion-correct selective bloom). */
+  /**
+   * Darken every non-screen material (occlusion-correct selective bloom).
+   *
+   * TRANSPARENT meshes are HIDDEN instead of darkened: swapping the watch's
+   * sapphire crystal (which sits in FRONT of the emissive screen) to opaque
+   * black would occlude the display in the bloom buffer and kill the halo.
+   * A see-through surface neither blocks nor emits glow, so `visible=false`
+   * is the occlusion-correct treatment for it.
+   */
   private renderBloom(): void {
     const originalBackground = this.scene.background;
     this.scene.background = BLACK;
     this.scene.traverse((obj) => {
-      if (obj instanceof Mesh && !obj.layers.isEnabled(SCREEN_BLOOM_LAYER)) {
-        this.materialCache.set(obj, obj.material as Material | Material[]);
+      if (!(obj instanceof Mesh) || obj.layers.isEnabled(SCREEN_BLOOM_LAYER)) return;
+      const material = obj.material as Material | Material[];
+      const anyTransparent = Array.isArray(material)
+        ? material.some((m) => m.transparent)
+        : material.transparent;
+      if (anyTransparent) {
+        this.visibilityCache.set(obj, obj.visible);
+        obj.visible = false;
+      } else {
+        this.materialCache.set(obj, material);
         obj.material = this.darkMaterial;
       }
     });
@@ -234,7 +293,9 @@ export class PostPipeline {
     this.bloomComposer.render();
 
     for (const [mesh, material] of this.materialCache) mesh.material = material;
+    for (const [mesh, visible] of this.visibilityCache) mesh.visible = visible;
     this.materialCache.clear();
+    this.visibilityCache.clear();
     this.scene.background = originalBackground;
   }
 

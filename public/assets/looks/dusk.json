@@ -1,0 +1,79 @@
+{
+  "name": "dusk",
+
+  "envFile": "/assets/looks/dusk.hdr",
+
+  "lightRig": { "envRotationDeg": 0, "envIntensity": 1.15, "exposure": 1.0 },
+
+  "postTune": {
+    "bloomThreshold": 1.0,
+    "bloomStrength": 0.85,
+    "bloomRadius": 0.4,
+    "grainAmount": 0.07,
+    "vignetteNocturne": 0.34
+  },
+
+  "bgTokens": { "stage": "#E8E1D8", "ink": "#0E0C0A" },
+
+  "materialOverrides": {
+    "mat_titanium_case": { "color": "#c3c4c6", "roughness": 0.38, "metalness": 1.0, "anisotropy": 0.65, "anisotropyRotation": 0, "envMapIntensity": 1.0 },
+    "mat_titanium_brushed": { "color": "#c3c4c6", "roughness": 0.32, "metalness": 1.0, "anisotropy": 0.75, "anisotropyRotation": 0, "envMapIntensity": 1.0 },
+    "mat_case_top": { "color": "#c3c4c6", "roughness": 0.36, "metalness": 1.0, "anisotropy": 0.6, "envMapIntensity": 1.0 },
+    "mat_bezel": { "color": "#c3c4c6", "roughness": 0.3, "metalness": 1.0, "anisotropy": 0.5, "envMapIntensity": 1.0 },
+    "mat_titanium_hardware": { "color": "#c3c4c6", "roughness": 0.34, "metalness": 1.0, "anisotropy": 0.5, "envMapIntensity": 1.0 },
+    "mat_titanium_crown": { "color": "#c3c4c6", "roughness": 0.33, "metalness": 1.0, "anisotropy": 0.45, "envMapIntensity": 1.0 },
+    "mat_crown_knurl": { "color": "#c3c4c6", "roughness": 0.33, "metalness": 1.0, "anisotropy": 0.4, "envMapIntensity": 1.0 },
+    "mat_titanium_polished": { "color": "#c9cacc", "roughness": 0.12, "metalness": 1.0, "anisotropy": 0.3, "envMapIntensity": 1.1 },
+
+    "mat_crystal_sapphire": { "opacity": 0.22, "roughness": 0.03, "clearcoat": 1.0, "clearcoatRoughness": 0.03, "envMapIntensity": 0.7 },
+
+    "mat_back_spun": { "color": "#2c2c2f", "metalness": 1.0, "roughness": 0.3, "anisotropy": 0.9, "envMapIntensity": 0.9 },
+    "mat_back_ceramic": { "color": "#141517", "roughness": 0.32, "clearcoat": 0.6, "clearcoatRoughness": 0.12 },
+    "mat_back_lens": { "color": "#0a0b0d", "roughness": 0.06, "clearcoat": 1.0, "clearcoatRoughness": 0.02 },
+    "mat_back_matte": { "color": "#1e1f22", "roughness": 0.7 },
+
+    "mat_band_ocean": { "color": "#124e47", "roughness": 0.52, "envMapIntensity": 0.5, "clearcoat": 0.12, "clearcoatRoughness": 0.4 },
+    "mat_band_tab": { "color": "#124e47", "roughness": 0.58, "envMapIntensity": 0.5, "clearcoat": 0.12, "clearcoatRoughness": 0.4 },
+
+    "mat_accent_orange_ring": { "roughness": 0.42 },
+    "mat_actionButton_orange": { "roughness": 0.42 }
+  },
+
+  "_comment": "Keys below are outside the LookConfig schema (loader ignores unknown top-level keys by contract) — carried here so the look is one document. See docs/p15/look-dusk.md.",
+
+  "finishVariants": {
+    "blackDlc": {
+      "_applies_to": ["mat_titanium_case", "mat_titanium_brushed", "mat_titanium_crown", "mat_titanium_polished", "mat_titanium_hardware", "mat_crown_knurl", "mat_bezel", "mat_case_top"],
+      "color": "#232426",
+      "roughness": 0.4,
+      "roughnessPolished": 0.3,
+      "metalness": 1.0,
+      "anisotropy": 0.5,
+      "envMapIntensity": 1.1
+    }
+  },
+
+  "desired": {
+    "mat_crystal_sapphire.ior": 1.77,
+    "_note": "ior is not a MaterialOverride field; live value stays the 1.76 first-pass from webgl/watch.ts. Schema gap flagged in look-dusk.md."
+  },
+
+  "sectionKeyframes": {
+    "_semantics": "envRotationDeg = scene env rotation (stage.setEnvRotation), keyIntensity = scene.environmentIntensity target (stage.setEnvIntensity); lerp between section keys with the WebGL master progress; vignette/dof flags stay section-owned (docs/p1/gl.md).",
+    "Intro":              { "envRotationDeg": 0,    "keyIntensity": 1.15 },
+    "Timeless":           { "envRotationDeg": -8,   "keyIntensity": 1.1 },
+    "VerticalText":       { "envRotationDeg": -18,  "keyIntensity": 1.0 },
+    "Disassembly":        { "envRotationDeg": -35,  "keyIntensity": 1.2 },
+    "Mechanism":          { "envRotationDeg": -60,  "keyIntensity": 1.25 },
+    "Movement":           { "envRotationDeg": -80,  "keyIntensity": 1.1 },
+    "Curves":             { "envRotationDeg": -95,  "keyIntensity": 0.95 },
+    "MovementWatchRight": { "envRotationDeg": -115, "keyIntensity": 1.05 },
+    "Hands":              { "envRotationDeg": -130, "keyIntensity": 1.15 },
+    "Straps":             { "envRotationDeg": -150, "keyIntensity": 1.2 },
+    "Images":             { "envRotationDeg": -165, "keyIntensity": 1.0 },
+    "Nocturne":           { "envRotationDeg": -220, "keyIntensity": 0.35 },
+    "Colors":             { "envRotationDeg": -260, "keyIntensity": 1.1 },
+    "Parts":              { "envRotationDeg": -285, "keyIntensity": 1.0 },
+    "Footer":             { "envRotationDeg": -300, "keyIntensity": 0.85 }
+  }
+}

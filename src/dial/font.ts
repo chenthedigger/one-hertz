@@ -82,17 +82,20 @@ export function resolveDialFont(): ResolvedDialFont {
 /**
  * Set ctx.font from the resolved family; applies the fallback's tight
  * tracking via canvas letterSpacing where the browser supports it.
+ * `tracking` (e.g. LABEL_TRACKING for small-caps instrument labels)
+ * overrides the default; every text call goes through here, so the
+ * canvas's persistent letterSpacing state is always reset correctly.
  */
 export function setDialFont(
   ctx: CanvasRenderingContext2D,
   font: ResolvedDialFont,
   sizePx: number,
   weight = 600,
+  tracking?: string,
 ): void {
   ctx.font = `${weight} ${Math.round(sizePx)}px ${font.family}`;
   if ("letterSpacing" in ctx) {
-    (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = font.tight
-      ? "-0.02em"
-      : "0em";
+    (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing =
+      tracking ?? (font.tight ? "-0.02em" : "0em");
   }
 }

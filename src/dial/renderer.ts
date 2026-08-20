@@ -41,7 +41,7 @@ import {
   paintComplication,
   type DialVitals,
 } from "./complications";
-import { paintFace, polar } from "./face";
+import { paintFace, paintGlass, polar } from "./face";
 import { resolveDialFont, setDialFont, type ResolvedDialFont } from "./font";
 import { GearedSeconds, type DialGear } from "./gear";
 import {
@@ -86,6 +86,10 @@ export class DialRenderer {
   private readonly faceLayer: HTMLCanvasElement;
   private readonly faceCtx: CanvasRenderingContext2D;
   private faceMode: DialMode | null = null;
+  /** Prebaked Liquid Glass sprite (PLAN §3) — cached like the face layer. */
+  private readonly glassLayer: HTMLCanvasElement;
+  private readonly glassCtx: CanvasRenderingContext2D;
+  private glassMode: DialMode | null = null;
 
   private mode: DialMode = "active";
   private complication: ComplicationId = "heartRate";
@@ -111,6 +115,11 @@ export class DialRenderer {
     this.faceLayer.width = w;
     this.faceLayer.height = h;
     this.faceCtx = must2d(this.faceLayer);
+
+    this.glassLayer = document.createElement("canvas");
+    this.glassLayer.width = w;
+    this.glassLayer.height = h;
+    this.glassCtx = must2d(this.glassLayer);
 
     this.font = resolveDialFont();
 
@@ -231,31 +240,55 @@ export class DialRenderer {
       paintFace(this.faceCtx, w, h, this.mode, this.font);
       this.faceMode = this.mode;
     }
+    if (this.glassMode !== this.mode) {
+      paintGlass(this.glassCtx, w, h, this.mode);
+      this.glassMode = this.mode;
+    }
 
     ctx.clearRect(0, 0, w, h);
     ctx.drawImage(this.faceLayer, 0, 0);
     paintComplication(ctx, w, h, this.complication, this.mode, this.font, this.vitals);
     this.paintDate(w, h);
     this.paintHands(w, h, wall, seconds);
+    // Crystal LAST — the glass physically sits above the hands (depth pass).
+    ctx.drawImage(this.glassLayer, 0, 0);
   }
 
+  /** Date as a hairline capsule pill under 12 (native watchOS slot). */
   private paintDate(w: number, h: number): void {
     const pal = PALETTE[this.mode];
     const R = w / 2;
     const { weekday, day } = calendarDay();
-    setDialFont(this.ctx, this.font, R * GRID.date.size, 600);
+    const text = `${weekday} ${day}`;
+    const x = w / 2;
+    const y = h / 2 + GRID.date.y * R;
+    setDialFont(this.ctx, this.font, R * GRID.date.size, 600, "0.04em");
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
+
+    if (this.mode === "active") {
+      const tw = this.ctx.measureText(text).width;
+      const ph = R * (GRID.date.size + GRID.date.padY * 2);
+      const pw = tw + R * GRID.date.padX * 2;
+      const r = ph / 2;
+      this.ctx.strokeStyle = pal.faint;
+      this.ctx.lineWidth = R * 0.006;
+      this.ctx.beginPath();
+      this.ctx.roundRect(x - pw / 2, y - ph / 2, pw, ph, r);
+      this.ctx.stroke();
+    }
     this.ctx.fillStyle = pal.dim;
-    this.ctx.fillText(`${weekday} ${day}`, w / 2, h / 2 + GRID.date.y * R);
+    this.ctx.fillText(text, x, y);
   }
 
   private paintHands(w: number, h: number, wall: number, seconds: number): void {
     const pal = PALETTE[this.mode];
+    const ctx = this.ctx;
     const cx = w / 2;
     const cy = h / 2;
     const R = w / 2;
     const { hands } = GRID;
+    const aod = this.mode === "aod";
 
     const minutes = (wall / 60) % 60;
     const hours = (wall / 3600) % 12;
@@ -263,29 +296,58 @@ export class DialRenderer {
     const minuteDeg = minutes * 6;
     const secondDeg = seconds * 6;
 
-    this.baton(cx, cy, hourDeg, hands.hour.tail, hands.hour.len, hands.hour.w, pal.fg);
-    this.baton(cx, cy, minuteDeg, hands.minute.tail, hands.minute.len, hands.minute.w, pal.fg);
+    // Shadow pass — every stroke below casts onto the face (depth illusion;
+    // canvas shadows cost only at redraw time, dirty economics untouched).
+    ctx.save();
+    ctx.shadowColor = `rgba(0, 0, 0, ${aod ? 0.35 : hands.shadow.alpha})`;
+    ctx.shadowBlur = R * hands.shadow.blur;
+    ctx.shadowOffsetY = R * hands.shadow.dy;
 
-    // Seconds — biosignal red, thin, with counterweight tail (1 Hz organ).
-    this.baton(
-      cx,
-      cy,
-      secondDeg,
-      -hands.second.tail,
-      hands.second.len,
-      hands.second.w,
-      pal.accent,
-    );
+    for (const [spec, deg] of [
+      [hands.hour, hourDeg],
+      [hands.minute, minuteDeg],
+    ] as const) {
+      if (aod) {
+        // AOD hollows its hands (native watchOS AOD grammar): rim only.
+        this.baton(cx, cy, deg, spec.stem, spec.len, spec.w, pal.fg);
+        this.baton(
+          cx,
+          cy,
+          deg,
+          spec.stem + 0.015,
+          spec.len - 0.015,
+          spec.w - hands.aodRim * 2,
+          pal.bg,
+        );
+      } else {
+        // Outlined baton: ink outline separates the hand from anything below.
+        this.baton(cx, cy, deg, spec.stem, spec.len, spec.w + spec.outline * 2, pal.bg);
+        this.baton(cx, cy, deg, spec.stem, spec.len, spec.w, pal.fg);
+      }
+    }
 
-    // Hub: accent ring, ink core.
-    this.ctx.fillStyle = pal.accent;
-    this.ctx.beginPath();
-    this.ctx.arc(cx, cy, R * hands.hubR, 0, Math.PI * 2);
-    this.ctx.fill();
-    this.ctx.fillStyle = pal.bg;
-    this.ctx.beginPath();
-    this.ctx.arc(cx, cy, R * hands.hubR * 0.45, 0, Math.PI * 2);
-    this.ctx.fill();
+    // Seconds — biosignal red hairline + counterweight ball (1 Hz organ).
+    this.baton(cx, cy, secondDeg, -hands.second.tail, hands.second.len, hands.second.w, pal.accent);
+    const ball = polar(cx, cy, R * hands.second.tail, secondDeg + 180);
+    ctx.fillStyle = pal.accent;
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, R * hands.second.ballR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Hub: white collar → ink gap → red pin (seconds axle).
+    ctx.fillStyle = pal.fg;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * hands.hubR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore(); // shadows off for the flat pin
+    ctx.fillStyle = pal.bg;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * hands.hubR * 0.62, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = pal.accent;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R * hands.hubR * 0.34, 0, Math.PI * 2);
+    ctx.fill();
   }
 
   /** One hand as a round-capped baton from tail×R to len×R along `deg`. */

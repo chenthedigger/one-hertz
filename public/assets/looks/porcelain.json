@@ -1,0 +1,261 @@
+{
+  "name": "porcelain",
+  "envFile": "/assets/looks/porcelain.hdr",
+  "lightRig": {
+    "envRotationDeg": -120,
+    "envIntensity": 1.0,
+    "exposure": 1.0
+  },
+  "postTune": {
+    "bloomThreshold": 1.0,
+    "bloomStrength": 0.55,
+    "bloomRadius": 0.3,
+    "grainAmount": 0.018,
+    "vignetteNocturne": 0.26
+  },
+  "bgTokens": {
+    "stage": "#EDEDEB",
+    "ink": "#0B0B0C"
+  },
+  "materialOverrides": {
+    "mat_titanium_case": {
+      "color": "#cfccc6",
+      "roughness": 0.34,
+      "metalness": 1.0,
+      "envMapIntensity": 1.15,
+      "anisotropy": 0.55,
+      "anisotropyRotation": 0.0
+    },
+    "mat_titanium_brushed": {
+      "color": "#c9c6c0",
+      "roughness": 0.42,
+      "metalness": 1.0,
+      "envMapIntensity": 1.1,
+      "anisotropy": 0.6,
+      "anisotropyRotation": 0.0
+    },
+    "mat_titanium_polished": {
+      "color": "#dbd9d4",
+      "roughness": 0.16,
+      "metalness": 1.0,
+      "envMapIntensity": 1.25,
+      "anisotropy": 0.3
+    },
+    "mat_titanium_crown": {
+      "color": "#cfccc6",
+      "roughness": 0.32,
+      "metalness": 1.0,
+      "envMapIntensity": 1.15,
+      "anisotropy": 0.5
+    },
+    "mat_titanium_hardware": {
+      "color": "#c6c3bd",
+      "roughness": 0.38,
+      "metalness": 1.0,
+      "envMapIntensity": 1.05
+    },
+    "mat_crown_knurl": {
+      "color": "#cfccc6",
+      "roughness": 0.3,
+      "metalness": 1.0,
+      "envMapIntensity": 1.2,
+      "anisotropy": 0.45
+    },
+    "mat_bezel": {
+      "color": "#c9c6c1",
+      "roughness": 0.36,
+      "metalness": 1.0,
+      "envMapIntensity": 1.1
+    },
+    "mat_case_top": {
+      "color": "#cbc8c2",
+      "roughness": 0.35,
+      "metalness": 1.0,
+      "envMapIntensity": 1.1
+    },
+    "mat_crystal_sapphire": {
+      "roughness": 0.03,
+      "clearcoat": 1.0,
+      "clearcoatRoughness": 0.04,
+      "opacity": 0.2,
+      "envMapIntensity": 1.2
+    },
+    "mat_back_spun": {
+      "color": "#9a9a9c",
+      "roughness": 0.26,
+      "metalness": 1.0,
+      "anisotropy": 0.9,
+      "envMapIntensity": 1.0
+    },
+    "mat_back_ceramic": {
+      "color": "#232326",
+      "roughness": 0.3,
+      "metalness": 0.0,
+      "clearcoat": 0.5,
+      "clearcoatRoughness": 0.12,
+      "envMapIntensity": 0.9
+    },
+    "mat_back_matte": {
+      "color": "#2b2b2e",
+      "roughness": 0.65,
+      "metalness": 0.0,
+      "envMapIntensity": 0.7
+    },
+    "mat_back_lens": {
+      "roughness": 0.05,
+      "clearcoat": 1.0,
+      "clearcoatRoughness": 0.05,
+      "opacity": 0.35,
+      "envMapIntensity": 1.1
+    },
+    "mat_back_ring": {
+      "color": "#7c7c80",
+      "roughness": 0.3,
+      "metalness": 1.0,
+      "envMapIntensity": 0.95
+    },
+    "mat_band_ocean": {
+      "color": "#1f6153",
+      "roughness": 0.6,
+      "metalness": 0.0,
+      "envMapIntensity": 0.5
+    },
+    "mat_band_tab": {
+      "color": "#1c574b",
+      "roughness": 0.66,
+      "metalness": 0.0,
+      "envMapIntensity": 0.5
+    },
+    "mat_band_hardware_dark": {
+      "color": "#77756f",
+      "roughness": 0.36,
+      "metalness": 1.0,
+      "envMapIntensity": 0.9
+    },
+    "mat_accent_orange_ring": {
+      "roughness": 0.34,
+      "clearcoat": 0.3,
+      "clearcoatRoughness": 0.2,
+      "envMapIntensity": 1.1
+    },
+    "mat_actionButton_orange": {
+      "roughness": 0.42,
+      "envMapIntensity": 1.0
+    },
+    "mat_case_ao": {
+      "roughness": 1.0,
+      "metalness": 0.0,
+      "envMapIntensity": 0.0
+    }
+  },
+  "finishVariants": {
+    "_comment": "P3 CONFIG_CHANGE payloads \u2014 black DLC is a material-only swap on the titanium set (DEVICE-DECISION \u00a74). Ignored by the v1 look loader (unknown top-level key).",
+    "black-dlc": {
+      "mat_titanium_case": {
+        "color": "#2e2e31",
+        "roughness": 0.3,
+        "metalness": 1.0,
+        "anisotropy": 0.5
+      },
+      "mat_titanium_brushed": {
+        "color": "#2c2c2f",
+        "roughness": 0.36,
+        "metalness": 1.0,
+        "anisotropy": 0.55
+      },
+      "mat_titanium_polished": {
+        "color": "#3a3a3e",
+        "roughness": 0.18,
+        "metalness": 1.0
+      },
+      "mat_titanium_crown": {
+        "color": "#2e2e31",
+        "roughness": 0.3,
+        "metalness": 1.0
+      },
+      "mat_titanium_hardware": {
+        "color": "#2b2b2e",
+        "roughness": 0.36,
+        "metalness": 1.0
+      },
+      "mat_crown_knurl": {
+        "color": "#2e2e31",
+        "roughness": 0.28,
+        "metalness": 1.0
+      },
+      "mat_bezel": {
+        "color": "#2c2c2f",
+        "roughness": 0.34,
+        "metalness": 1.0
+      },
+      "mat_case_top": {
+        "color": "#2d2d30",
+        "roughness": 0.33,
+        "metalness": 1.0
+      }
+    }
+  },
+  "sectionKeyframes": {
+    "_comment": "Per-section lighting keyframes (deliverable 6): env rotation sweeps the key strip with the story; keyIntensity maps to scene.environmentIntensity. Drive via stage.setEnvRotation + setEnvIntensity off the clock scalar; values lerp between section boundaries. Ignored by the v1 look loader (unknown top-level key).",
+    "Intro": {
+      "envRotationDeg": -120,
+      "keyIntensity": 1.0
+    },
+    "Timeless": {
+      "envRotationDeg": -128,
+      "keyIntensity": 1.0
+    },
+    "VerticalText": {
+      "envRotationDeg": -138,
+      "keyIntensity": 0.95
+    },
+    "Disassembly": {
+      "envRotationDeg": -155,
+      "keyIntensity": 1.05
+    },
+    "Mechanism": {
+      "envRotationDeg": -175,
+      "keyIntensity": 1.1
+    },
+    "Movement": {
+      "envRotationDeg": -190,
+      "keyIntensity": 1.0
+    },
+    "Curves": {
+      "envRotationDeg": -210,
+      "keyIntensity": 1.05
+    },
+    "MovementWatchRight": {
+      "envRotationDeg": -230,
+      "keyIntensity": 1.0
+    },
+    "Hands": {
+      "envRotationDeg": -245,
+      "keyIntensity": 0.95
+    },
+    "Straps": {
+      "envRotationDeg": -260,
+      "keyIntensity": 1.0
+    },
+    "Images": {
+      "envRotationDeg": -270,
+      "keyIntensity": 0.9
+    },
+    "Nocturne": {
+      "envRotationDeg": -280,
+      "keyIntensity": 0.12
+    },
+    "Colors": {
+      "envRotationDeg": -300,
+      "keyIntensity": 1.05
+    },
+    "Parts": {
+      "envRotationDeg": -310,
+      "keyIntensity": 1.0
+    },
+    "Footer": {
+      "envRotationDeg": -320,
+      "keyIntensity": 1.0
+    }
+  }
+}

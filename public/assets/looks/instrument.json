@@ -1,0 +1,328 @@
+{
+  "name": "instrument",
+  "envFile": "/assets/looks/instrument.hdr",
+  "lightRig": {
+    "envRotationDeg": 0,
+    "envIntensity": 1.0,
+    "exposure": 1.05
+  },
+  "postTune": {
+    "bloomThreshold": 1.0,
+    "bloomStrength": 0.6,
+    "bloomRadius": 0.3,
+    "grainAmount": 0.048,
+    "vignetteNocturne": 0.36
+  },
+  "bgTokens": {
+    "stage": "#E8EAED",
+    "ink": "#0A0B0D"
+  },
+  "materialOverrides": {
+    "mat_titanium_case": {
+      "color": "#cfccc6",
+      "metalness": 1.0,
+      "roughness": 0.34,
+      "envMapIntensity": 1.15
+    },
+    "mat_titanium_brushed": {
+      "color": "#d2cfc9",
+      "metalness": 1.0,
+      "roughness": 0.3,
+      "envMapIntensity": 1.2
+    },
+    "mat_titanium_polished": {
+      "color": "#dcdad6",
+      "metalness": 1.0,
+      "roughness": 0.1,
+      "envMapIntensity": 1.3,
+      "anisotropy": 0.3
+    },
+    "mat_titanium_crown": {
+      "color": "#cfccc6",
+      "metalness": 1.0,
+      "roughness": 0.32,
+      "envMapIntensity": 1.2,
+      "anisotropy": 0.7
+    },
+    "mat_crown_knurl": {
+      "color": "#c9c6c0",
+      "metalness": 1.0,
+      "roughness": 0.36,
+      "envMapIntensity": 1.25,
+      "anisotropy": 0.5
+    },
+    "mat_titanium_hardware": {
+      "color": "#c5c2bc",
+      "metalness": 1.0,
+      "roughness": 0.42,
+      "envMapIntensity": 1.1
+    },
+    "mat_bezel": {
+      "color": "#b9b6b0",
+      "metalness": 1.0,
+      "roughness": 0.3,
+      "envMapIntensity": 1.2,
+      "anisotropy": 0.8,
+      "anisotropyRotation": 1.5708
+    },
+    "mat_case_top": {
+      "color": "#cfccc6",
+      "metalness": 1.0,
+      "roughness": 0.32,
+      "envMapIntensity": 1.15
+    },
+    "mat_case_ao": {
+      "roughness": 0.34,
+      "envMapIntensity": 1.1
+    },
+    "mat_crystal_sapphire": {
+      "color": "#f4f6f9",
+      "opacity": 0.16,
+      "roughness": 0.02,
+      "clearcoat": 1.0,
+      "clearcoatRoughness": 0.03,
+      "envMapIntensity": 1.4
+    },
+    "mat_back_spun": {
+      "color": "#34363a",
+      "metalness": 1.0,
+      "roughness": 0.32,
+      "envMapIntensity": 1.1,
+      "anisotropy": 0.85,
+      "anisotropyRotation": 1.5708
+    },
+    "mat_back_ceramic": {
+      "color": "#121316",
+      "roughness": 0.24,
+      "clearcoat": 0.7,
+      "clearcoatRoughness": 0.12,
+      "envMapIntensity": 1.0
+    },
+    "mat_back_lens": {
+      "color": "#08090b",
+      "roughness": 0.06,
+      "clearcoat": 1.0,
+      "clearcoatRoughness": 0.02,
+      "envMapIntensity": 1.3
+    },
+    "mat_back_matte": {
+      "color": "#17181a",
+      "roughness": 0.8
+    },
+    "mat_back_ring": {
+      "color": "#d5d3cf",
+      "metalness": 1.0,
+      "roughness": 0.18,
+      "envMapIntensity": 1.2,
+      "anisotropy": 0.6,
+      "anisotropyRotation": 1.5708
+    },
+    "mat_sensor_dark": {
+      "color": "#0c0d0f",
+      "roughness": 0.5
+    },
+    "mat_sensor_trim": {
+      "color": "#9fa0a3",
+      "metalness": 1.0,
+      "roughness": 0.3
+    },
+    "mat_cavity_black": {
+      "color": "#060708",
+      "roughness": 0.9
+    },
+    "mat_band_ocean": {
+      "color": "#2a5f55",
+      "roughness": 0.56,
+      "envMapIntensity": 0.4
+    },
+    "mat_band_tab": {
+      "color": "#2a5f55",
+      "roughness": 0.62,
+      "envMapIntensity": 0.4
+    },
+    "mat_band_hardware_dark": {
+      "color": "#3a3c40",
+      "metalness": 1.0,
+      "roughness": 0.35
+    },
+    "mat_accent_orange_ring": {
+      "color": "#e04f18",
+      "metalness": 0.4,
+      "roughness": 0.42
+    },
+    "mat_actionButton_orange": {
+      "color": "#d94a16",
+      "roughness": 0.5
+    },
+    "mat_button_trim": {
+      "color": "#b6b3ad",
+      "metalness": 1.0,
+      "roughness": 0.35
+    }
+  },
+  "x_dlcVariant": {
+    "comment": "Black-DLC titanium — P3 colorway-swap payload (same MaterialOverride shape). Loader ignores x_* keys by design.",
+    "materialOverrides": {
+      "mat_titanium_case": {
+        "color": "#17181b",
+        "metalness": 1.0,
+        "roughness": 0.3,
+        "envMapIntensity": 1.0,
+        "anisotropy": 0.85
+      },
+      "mat_titanium_brushed": {
+        "color": "#191a1d",
+        "metalness": 1.0,
+        "roughness": 0.27,
+        "envMapIntensity": 1.05,
+        "anisotropy": 0.9
+      },
+      "mat_titanium_polished": {
+        "color": "#1e1f23",
+        "metalness": 1.0,
+        "roughness": 0.09,
+        "envMapIntensity": 1.15,
+        "anisotropy": 0.3
+      },
+      "mat_titanium_crown": {
+        "color": "#17181b",
+        "metalness": 1.0,
+        "roughness": 0.28,
+        "envMapIntensity": 1.05,
+        "anisotropy": 0.7
+      },
+      "mat_crown_knurl": {
+        "color": "#151619",
+        "metalness": 1.0,
+        "roughness": 0.32,
+        "envMapIntensity": 1.1,
+        "anisotropy": 0.5
+      },
+      "mat_titanium_hardware": {
+        "color": "#1a1b1e",
+        "metalness": 1.0,
+        "roughness": 0.38,
+        "envMapIntensity": 1.0
+      },
+      "mat_bezel": {
+        "color": "#141518",
+        "metalness": 1.0,
+        "roughness": 0.26,
+        "envMapIntensity": 1.1,
+        "anisotropy": 0.8,
+        "anisotropyRotation": 1.5708
+      },
+      "mat_case_top": {
+        "color": "#17181b",
+        "metalness": 1.0,
+        "roughness": 0.28,
+        "envMapIntensity": 1.0,
+        "anisotropy": 0.85
+      }
+    }
+  },
+  "x_sectionLightKeyframes": {
+    "comment": "Per-section lighting choreography (env rotation + intensity + exposure), driven off the clock scalar via stage.setEnvRotation/setEnvIntensity/toneMappingExposure. Linear interp between section centers; full 360 revolution over the page so the outro restart loops seamlessly. P2 sections own the wiring.",
+    "keyframes": [
+      {
+        "section": "Intro",
+        "envRotationDeg": 0,
+        "envIntensity": 1.0,
+        "exposure": 1.05,
+        "note": "hero pose — key upper-left, rim behind right"
+      },
+      {
+        "section": "Timeless",
+        "envRotationDeg": 15,
+        "envIntensity": 1.0,
+        "exposure": 1.05
+      },
+      {
+        "section": "VerticalText",
+        "envRotationDeg": 35,
+        "envIntensity": 0.95,
+        "exposure": 1.05,
+        "note": "light quiets under the word stack"
+      },
+      {
+        "section": "Disassembly",
+        "envRotationDeg": 70,
+        "envIntensity": 1.1,
+        "exposure": 1.1,
+        "note": "key sweeps across the exploded parts, hardest read of the page"
+      },
+      {
+        "section": "Mechanism",
+        "envRotationDeg": 110,
+        "envIntensity": 1.05,
+        "exposure": 1.05
+      },
+      {
+        "section": "Movement",
+        "envRotationDeg": 140,
+        "envIntensity": 0.95,
+        "exposure": 1.05
+      },
+      {
+        "section": "Curves",
+        "envRotationDeg": 170,
+        "envIntensity": 1.0,
+        "exposure": 1.05,
+        "note": "streak strip grazes the chamfer — the signature spec crawl"
+      },
+      {
+        "section": "MovementWatchRight",
+        "envRotationDeg": 200,
+        "envIntensity": 1.0,
+        "exposure": 1.05
+      },
+      {
+        "section": "Hands",
+        "envRotationDeg": 225,
+        "envIntensity": 0.9,
+        "exposure": 1.05
+      },
+      {
+        "section": "Straps",
+        "envRotationDeg": 250,
+        "envIntensity": 1.05,
+        "exposure": 1.05,
+        "note": "band macro — fill side faces camera, fluoroelastomer stays matte"
+      },
+      {
+        "section": "Images",
+        "envRotationDeg": 250,
+        "envIntensity": 1.05,
+        "exposure": 1.05,
+        "note": "DOM section — hold"
+      },
+      {
+        "section": "Nocturne",
+        "envRotationDeg": 290,
+        "envIntensity": 0.12,
+        "exposure": 0.9,
+        "note": "env hands light to the emissive dial; vignette flag on"
+      },
+      {
+        "section": "Colors",
+        "envRotationDeg": 330,
+        "envIntensity": 1.0,
+        "exposure": 1.05,
+        "note": "recovery ramp out of Nocturne"
+      },
+      {
+        "section": "Parts",
+        "envRotationDeg": 350,
+        "envIntensity": 1.0,
+        "exposure": 1.05
+      },
+      {
+        "section": "Footer",
+        "envRotationDeg": 360,
+        "envIntensity": 1.0,
+        "exposure": 1.05,
+        "note": "full revolution — restart loop lands on the Intro pose"
+      }
+    ]
+  }
+}
