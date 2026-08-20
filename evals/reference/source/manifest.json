@@ -1,0 +1,1553 @@
+{
+  "name": "ONE HERTZ reference capture kit \u2014 source site frozen snapshot",
+  "url": "https://thewatch.60fps.fr",
+  "capturedAt": "2026-08-20T02:08:18.906Z",
+  "frozen": true,
+  "policy": "All future evals compare against these files, never the live site.",
+  "tooling": {
+    "browser": "Google Chrome (channel:chrome) via playwright-core, headless (WebGL verified non-blank)",
+    "node": "v24.16.0",
+    "machine": "macOS arm64"
+  },
+  "viewports": {
+    "desktop": {
+      "width": 1600,
+      "height": 900,
+      "deviceScaleFactor": 2
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 3,
+      "touch": true,
+      "ua": "iPhone Safari 17.5"
+    }
+  },
+  "method": {
+    "sections": "Enumerated live [data-section] and [data-webgl] elements; offsets in CSS px per viewport. See sections.json.",
+    "frameGrid": "Per [data-section] x localProgress {0,.25,.5,.75,1}: y = offsetTop + p*(height - viewportHeight), window.scrollTo(0,y), 3s Lenis-lerp settle, viewport screenshot. Deep link ?scroll=<name> was probed but did NOT persist scroll position after load (scrollY stayed 0), so absolute offsets are the method of record.",
+    "videos": "Site's own ?autoscroll&autoscrollspeed=<pxPerFrame> (speed computed for ~60s bottom-reach at 60fps: desktop 10, mobile see sections.json), recordVideo context. Clip includes loader + 2.5s delay + 4s speed ramp-in (site behavior), then constant rate to bottom.",
+    "interactions": "longpress: mousedown center held 3s mid-Presentation (frames every 500ms + release). explode: Disassembly mid, fast drag rotate then click part(s). colorway_swap: outro (page bottom), hover watch instance #3 (custom cursor SWAP), click -> config applies + site restarts at top. Each interaction also recorded as .webm clip."
+  },
+  "scrollHeight": {
+    "desktop": 35100,
+    "mobile": 31592
+  },
+  "videoRuns": {
+    "desktop_scroll": {
+      "autoscrollspeed": 4,
+      "rAFfps": 120,
+      "scrollDurationSec": 64.1
+    },
+    "mobile_scroll": {
+      "autoscrollspeed": 4,
+      "rAFfps": 120,
+      "scrollDurationSec": 56.6
+    },
+    "note": "Headless rAF runs ~120fps (unthrottled), speed calibrated per run; clip head includes loader + autoscroll ramp-in (2.5s delay + 4s ease)."
+  },
+  "sections": {
+    "dataSection": [
+      "Intro",
+      "Timeless",
+      "VerticalText",
+      "Disassembly",
+      "Mechanism",
+      "Movement",
+      "Curves",
+      "MovementWatchRight",
+      "Hands",
+      "Straps",
+      "Images",
+      "Colors",
+      "Parts",
+      "Footer"
+    ],
+    "dataWebgl": [
+      "Intro",
+      "Disassembly",
+      "Particles",
+      "Presentation",
+      "Straps",
+      "Images",
+      "Colors",
+      "Parts",
+      "Footer"
+    ]
+  },
+  "blankFrameCheck": {
+    "method": "PNG luma histogram (mean<4 or range<3 flagged)",
+    "flagged": []
+  },
+  "files": {
+    "desktop": [
+      {
+        "file": "desktop/Colors_0.25.png",
+        "bytes": 1606708,
+        "lumaMean": 122.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Colors_0.5.png",
+        "bytes": 1509085,
+        "lumaMean": 110.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Colors_0.75.png",
+        "bytes": 1674883,
+        "lumaMean": 102.5,
+        "lumaRange": [
+          3,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Colors_0.png",
+        "bytes": 3394387,
+        "lumaMean": 153.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Colors_1.png",
+        "bytes": 1064343,
+        "lumaMean": 166.5,
+        "lumaRange": [
+          76.168,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Curves_0.25.png",
+        "bytes": 1085219,
+        "lumaMean": 202.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Curves_0.5.png",
+        "bytes": 1065107,
+        "lumaMean": 205.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Curves_0.75.png",
+        "bytes": 1091769,
+        "lumaMean": 202.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Curves_0.png",
+        "bytes": 1146646,
+        "lumaMean": 200.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Curves_1.png",
+        "bytes": 1165001,
+        "lumaMean": 195,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Disassembly_0.25.png",
+        "bytes": 1006500,
+        "lumaMean": 137.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Disassembly_0.5.png",
+        "bytes": 801719,
+        "lumaMean": 139.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Disassembly_0.75.png",
+        "bytes": 784110,
+        "lumaMean": 147.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Disassembly_0.png",
+        "bytes": 603369,
+        "lumaMean": 134.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Disassembly_1.png",
+        "bytes": 785651,
+        "lumaMean": 149,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Footer_0.25.png",
+        "bytes": 1660830,
+        "lumaMean": 179.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Footer_0.5.png",
+        "bytes": 1698091,
+        "lumaMean": 175.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Footer_0.75.png",
+        "bytes": 1711853,
+        "lumaMean": 170.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Footer_0.png",
+        "bytes": 1629317,
+        "lumaMean": 184.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Footer_1.png",
+        "bytes": 1735867,
+        "lumaMean": 177.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Hands_0.25.png",
+        "bytes": 1240058,
+        "lumaMean": 188.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Hands_0.5.png",
+        "bytes": 1090671,
+        "lumaMean": 190.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Hands_0.75.png",
+        "bytes": 1402574,
+        "lumaMean": 174.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Hands_0.png",
+        "bytes": 1178102,
+        "lumaMean": 196.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Hands_1.png",
+        "bytes": 214973,
+        "lumaMean": 218,
+        "lumaRange": [
+          1.9999999999999998,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Images_0.25.png",
+        "bytes": 430015,
+        "lumaMean": 196.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Images_0.5.png",
+        "bytes": 376666,
+        "lumaMean": 199.6,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Images_0.75.png",
+        "bytes": 622769,
+        "lumaMean": 196.9,
+        "lumaRange": [
+          0,
+          239
+        ]
+      },
+      {
+        "file": "desktop/Images_0.png",
+        "bytes": 453999,
+        "lumaMean": 197.9,
+        "lumaRange": [
+          0,
+          244
+        ]
+      },
+      {
+        "file": "desktop/Images_1.png",
+        "bytes": 828757,
+        "lumaMean": 183.3,
+        "lumaRange": [
+          0,
+          237
+        ]
+      },
+      {
+        "file": "desktop/Intro_0.25.png",
+        "bytes": 804308,
+        "lumaMean": 190,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Intro_0.5.png",
+        "bytes": 816202,
+        "lumaMean": 181.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Intro_0.75.png",
+        "bytes": 807676,
+        "lumaMean": 187.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Intro_0.png",
+        "bytes": 749672,
+        "lumaMean": 193,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Intro_1.png",
+        "bytes": 792522,
+        "lumaMean": 196.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Mechanism_0.25.png",
+        "bytes": 2345628,
+        "lumaMean": 17.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Mechanism_0.5.png",
+        "bytes": 2556835,
+        "lumaMean": 19.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Mechanism_0.75.png",
+        "bytes": 2279618,
+        "lumaMean": 16.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Mechanism_0.png",
+        "bytes": 578071,
+        "lumaMean": 62.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Mechanism_1.png",
+        "bytes": 2411381,
+        "lumaMean": 16.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/MovementWatchRight_0.25.png",
+        "bytes": 1853315,
+        "lumaMean": 185.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/MovementWatchRight_0.5.png",
+        "bytes": 1864079,
+        "lumaMean": 188,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/MovementWatchRight_0.75.png",
+        "bytes": 1859816,
+        "lumaMean": 199.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/MovementWatchRight_0.png",
+        "bytes": 1862285,
+        "lumaMean": 182,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/MovementWatchRight_1.png",
+        "bytes": 2250907,
+        "lumaMean": 188,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Movement_0.25.png",
+        "bytes": 890203,
+        "lumaMean": 26.4,
+        "lumaRange": [
+          0,
+          234
+        ]
+      },
+      {
+        "file": "desktop/Movement_0.5.png",
+        "bytes": 968919,
+        "lumaMean": 16.4,
+        "lumaRange": [
+          0,
+          229
+        ]
+      },
+      {
+        "file": "desktop/Movement_0.75.png",
+        "bytes": 917306,
+        "lumaMean": 54.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Movement_0.png",
+        "bytes": 835277,
+        "lumaMean": 20.4,
+        "lumaRange": [
+          0,
+          251
+        ]
+      },
+      {
+        "file": "desktop/Movement_1.png",
+        "bytes": 818665,
+        "lumaMean": 141.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Parts_0.25.png",
+        "bytes": 512360,
+        "lumaMean": 190,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Parts_0.5.png",
+        "bytes": 359281,
+        "lumaMean": 200.7,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Parts_0.75.png",
+        "bytes": 294527,
+        "lumaMean": 209.4,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Parts_0.png",
+        "bytes": 504971,
+        "lumaMean": 198,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Parts_1.png",
+        "bytes": 184407,
+        "lumaMean": 224,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "desktop/Straps_0.25.png",
+        "bytes": 2220358,
+        "lumaMean": 180.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Straps_0.5.png",
+        "bytes": 2217837,
+        "lumaMean": 180.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Straps_0.75.png",
+        "bytes": 2238921,
+        "lumaMean": 172.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Straps_0.png",
+        "bytes": 1938542,
+        "lumaMean": 191.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Straps_1.png",
+        "bytes": 1268703,
+        "lumaMean": 187.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Timeless_0.25.png",
+        "bytes": 899016,
+        "lumaMean": 201.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Timeless_0.5.png",
+        "bytes": 570219,
+        "lumaMean": 208.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Timeless_0.75.png",
+        "bytes": 749222,
+        "lumaMean": 200.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Timeless_0.png",
+        "bytes": 909620,
+        "lumaMean": 205.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/Timeless_1.png",
+        "bytes": 809816,
+        "lumaMean": 197.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/VerticalText_0.25.png",
+        "bytes": 792132,
+        "lumaMean": 209,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/VerticalText_0.5.png",
+        "bytes": 799598,
+        "lumaMean": 212.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/VerticalText_0.75.png",
+        "bytes": 917066,
+        "lumaMean": 203.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/VerticalText_0.png",
+        "bytes": 745120,
+        "lumaMean": 210.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "desktop/VerticalText_1.png",
+        "bytes": 762863,
+        "lumaMean": 179.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      }
+    ],
+    "mobile": [
+      {
+        "file": "mobile/Colors_0.25.png",
+        "bytes": 1147159,
+        "lumaMean": 127,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Colors_0.5.png",
+        "bytes": 1057320,
+        "lumaMean": 111.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Colors_0.75.png",
+        "bytes": 1134253,
+        "lumaMean": 95.3,
+        "lumaRange": [
+          3,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Colors_0.png",
+        "bytes": 1005484,
+        "lumaMean": 176.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Colors_1.png",
+        "bytes": 661818,
+        "lumaMean": 161.5,
+        "lumaRange": [
+          84.16799999999999,
+          235
+        ]
+      },
+      {
+        "file": "mobile/Curves_0.25.png",
+        "bytes": 1058999,
+        "lumaMean": 175.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Curves_0.5.png",
+        "bytes": 1037311,
+        "lumaMean": 177.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Curves_0.75.png",
+        "bytes": 1032567,
+        "lumaMean": 179.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Curves_0.png",
+        "bytes": 1052381,
+        "lumaMean": 171.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Curves_1.png",
+        "bytes": 1043794,
+        "lumaMean": 179.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Disassembly_0.25.png",
+        "bytes": 428335,
+        "lumaMean": 132.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Disassembly_0.5.png",
+        "bytes": 376193,
+        "lumaMean": 139.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Disassembly_0.75.png",
+        "bytes": 440585,
+        "lumaMean": 141.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Disassembly_0.png",
+        "bytes": 445214,
+        "lumaMean": 136.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Disassembly_1.png",
+        "bytes": 336625,
+        "lumaMean": 150.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Footer_0.25.png",
+        "bytes": 837662,
+        "lumaMean": 194,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Footer_0.5.png",
+        "bytes": 859297,
+        "lumaMean": 186.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Footer_0.75.png",
+        "bytes": 872935,
+        "lumaMean": 186.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Footer_0.png",
+        "bytes": 867795,
+        "lumaMean": 187.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Footer_1.png",
+        "bytes": 873507,
+        "lumaMean": 178,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Hands_0.25.png",
+        "bytes": 539790,
+        "lumaMean": 192.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Hands_0.5.png",
+        "bytes": 450846,
+        "lumaMean": 192.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Hands_0.75.png",
+        "bytes": 722781,
+        "lumaMean": 142,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Hands_0.png",
+        "bytes": 518207,
+        "lumaMean": 199.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Hands_1.png",
+        "bytes": 214948,
+        "lumaMean": 199.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Images_0.25.png",
+        "bytes": 492778,
+        "lumaMean": 188.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Images_0.5.png",
+        "bytes": 484056,
+        "lumaMean": 193.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Images_0.75.png",
+        "bytes": 455893,
+        "lumaMean": 198.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Images_0.png",
+        "bytes": 401718,
+        "lumaMean": 180.4,
+        "lumaRange": [
+          0,
+          248
+        ]
+      },
+      {
+        "file": "mobile/Images_1.png",
+        "bytes": 445435,
+        "lumaMean": 198.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Intro_0.25.png",
+        "bytes": 572184,
+        "lumaMean": 196.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Intro_0.5.png",
+        "bytes": 570457,
+        "lumaMean": 189.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Intro_0.75.png",
+        "bytes": 570473,
+        "lumaMean": 188.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Intro_0.png",
+        "bytes": 551871,
+        "lumaMean": 198.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Intro_1.png",
+        "bytes": 594917,
+        "lumaMean": 195.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Mechanism_0.25.png",
+        "bytes": 1181833,
+        "lumaMean": 23.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Mechanism_0.5.png",
+        "bytes": 1237395,
+        "lumaMean": 24.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Mechanism_0.75.png",
+        "bytes": 1352736,
+        "lumaMean": 25.2,
+        "lumaRange": [
+          0,
+          254
+        ]
+      },
+      {
+        "file": "mobile/Mechanism_0.png",
+        "bytes": 524618,
+        "lumaMean": 62.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Mechanism_1.png",
+        "bytes": 1278500,
+        "lumaMean": 28.3,
+        "lumaRange": [
+          0,
+          254
+        ]
+      },
+      {
+        "file": "mobile/MovementWatchRight_0.25.png",
+        "bytes": 989048,
+        "lumaMean": 177,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/MovementWatchRight_0.5.png",
+        "bytes": 967100,
+        "lumaMean": 184.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/MovementWatchRight_0.75.png",
+        "bytes": 1032102,
+        "lumaMean": 190.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/MovementWatchRight_0.png",
+        "bytes": 949399,
+        "lumaMean": 191.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/MovementWatchRight_1.png",
+        "bytes": 1694179,
+        "lumaMean": 169.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Movement_0.25.png",
+        "bytes": 720743,
+        "lumaMean": 21.5,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Movement_0.5.png",
+        "bytes": 709435,
+        "lumaMean": 19.9,
+        "lumaRange": [
+          0,
+          185
+        ]
+      },
+      {
+        "file": "mobile/Movement_0.75.png",
+        "bytes": 679322,
+        "lumaMean": 60,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Movement_0.png",
+        "bytes": 800098,
+        "lumaMean": 22.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Movement_1.png",
+        "bytes": 635580,
+        "lumaMean": 139.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Parts_0.25.png",
+        "bytes": 630878,
+        "lumaMean": 179.7,
+        "lumaRange": [
+          0,
+          253
+        ]
+      },
+      {
+        "file": "mobile/Parts_0.5.png",
+        "bytes": 610135,
+        "lumaMean": 179,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Parts_0.75.png",
+        "bytes": 241869,
+        "lumaMean": 197,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "mobile/Parts_0.png",
+        "bytes": 620738,
+        "lumaMean": 181.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Parts_1.png",
+        "bytes": 218609,
+        "lumaMean": 206.5,
+        "lumaRange": [
+          0,
+          235
+        ]
+      },
+      {
+        "file": "mobile/Straps_0.25.png",
+        "bytes": 602987,
+        "lumaMean": 196.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Straps_0.5.png",
+        "bytes": 620399,
+        "lumaMean": 189.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Straps_0.75.png",
+        "bytes": 613926,
+        "lumaMean": 191.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Straps_0.png",
+        "bytes": 559490,
+        "lumaMean": 199.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Straps_1.png",
+        "bytes": 499975,
+        "lumaMean": 183.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Timeless_0.25.png",
+        "bytes": 716439,
+        "lumaMean": 206.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Timeless_0.5.png",
+        "bytes": 716926,
+        "lumaMean": 201.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Timeless_0.75.png",
+        "bytes": 651501,
+        "lumaMean": 204.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Timeless_0.png",
+        "bytes": 724201,
+        "lumaMean": 204.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/Timeless_1.png",
+        "bytes": 618981,
+        "lumaMean": 191.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/VerticalText_0.25.png",
+        "bytes": 626885,
+        "lumaMean": 204.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/VerticalText_0.5.png",
+        "bytes": 627677,
+        "lumaMean": 204.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/VerticalText_0.75.png",
+        "bytes": 744699,
+        "lumaMean": 195.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/VerticalText_0.png",
+        "bytes": 545752,
+        "lumaMean": 199.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "mobile/VerticalText_1.png",
+        "bytes": 659711,
+        "lumaMean": 175.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      }
+    ],
+    "videos": [
+      {
+        "file": "videos/desktop_scroll.webm",
+        "bytes": 10897089
+      },
+      {
+        "file": "videos/mobile_scroll.webm",
+        "bytes": 7588540
+      }
+    ],
+    "interactions": [
+      {
+        "file": "interactions/colorway_00_outro.png",
+        "bytes": 1705819,
+        "lumaMean": 172,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/colorway_01_hover.png",
+        "bytes": 1694461,
+        "lumaMean": 171.1,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/colorway_02_after_click.png",
+        "bytes": 36984,
+        "lumaMean": 17.3,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/colorway_03_restart.png",
+        "bytes": 848141,
+        "lumaMean": 190.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/colorway_04_restarted_top.png",
+        "bytes": 748955,
+        "lumaMean": 199.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/colorway_swap.webm",
+        "bytes": 2735951
+      },
+      {
+        "file": "interactions/explode.webm",
+        "bytes": 2384997
+      },
+      {
+        "file": "interactions/explode_00_initial.png",
+        "bytes": 717649,
+        "lumaMean": 141.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/explode_01_after_drag.png",
+        "bytes": 725249,
+        "lumaMean": 142,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/explode_02_hover_center.png",
+        "bytes": 750371,
+        "lumaMean": 141.9,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/explode_03_part_clicked.png",
+        "bytes": 748514,
+        "lumaMean": 136.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/explode_04_part_settled.png",
+        "bytes": 785043,
+        "lumaMean": 133.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/explode_05_next_part.png",
+        "bytes": 627281,
+        "lumaMean": 136.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress.webm",
+        "bytes": 2358464
+      },
+      {
+        "file": "interactions/longpress_00_before.png",
+        "bytes": 1773993,
+        "lumaMean": 194.4,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_hold_1000ms.png",
+        "bytes": 1787014,
+        "lumaMean": 191.2,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_hold_1500ms.png",
+        "bytes": 1798565,
+        "lumaMean": 188.6,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_hold_2000ms.png",
+        "bytes": 1821164,
+        "lumaMean": 187.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_hold_2500ms.png",
+        "bytes": 1850365,
+        "lumaMean": 188.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_hold_3000ms.png",
+        "bytes": 1830768,
+        "lumaMean": 189.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_hold_500ms.png",
+        "bytes": 1783467,
+        "lumaMean": 193.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_release_2000ms.png",
+        "bytes": 1843084,
+        "lumaMean": 184.7,
+        "lumaRange": [
+          0,
+          255
+        ]
+      },
+      {
+        "file": "interactions/longpress_release_600ms.png",
+        "bytes": 1817326,
+        "lumaMean": 189.8,
+        "lumaRange": [
+          0,
+          255
+        ]
+      }
+    ]
+  },
+  "captureScripts": "capture-scripts/ (playwright-core, node v24.16.0); npm i playwright-core pngjs; run grid.mjs -> videos.mjs -> interactions.mjs -> manifest.mjs"
+}

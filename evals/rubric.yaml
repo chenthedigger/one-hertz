@@ -1,0 +1,494 @@
+# ONE HERTZ · eval rubric — FROZEN AT P0
+# Contract for every likeness / beauty / perf round. docs/PLAN.md §6 is the parent spec.
+# Amendments after P0 freeze require design-council sign-off + version bump here;
+# every results/<round>/report.md must cite the rubric version it ran against.
+
+meta:
+  project: one-hertz
+  version: 1.0.0
+  frozen: 2026-08-20
+  source: "https://thewatch.60fps.fr (evidence: scratchpad/watchrecon/, frozen captures: evals/reference/source/)"
+  note: >
+    All likeness comparisons run against the frozen reference captures under
+    evals/reference/source/ (P0 capture kit), never against the live site.
+
+# ---------------------------------------------------------------------------
+# Debug API surface every automated assertion is allowed to touch (built P1).
+# ---------------------------------------------------------------------------
+debug_api:
+  global: "window.__ONE_HERTZ__"
+  members:
+    - "sections            # ordered manifest: [{id, sourceRole, trackVh, webglStart, webglEnd, scrubChannels}]"
+    - "gotoSection(id, localProgress)   # deterministic addressing, localProgress in [0,1]"
+    - "state()             # full snapshot: scroll, cursor, longpress, explode, config, camera, dial, outro, flags"
+    - "freezeClock(seed)   # deterministic clock + RNG"
+    - "forceQualityTier(n) # per-tier perf measurement"
+  events:  # typed enum replicated from source recon; assertions may subscribe/emit
+    - CONFIG_CHANGE
+    - SET_CURSOR_ICON
+    - SET_CLICKED_MESH
+    - LEAVE_CLICKED_MESH
+    - NEXT_PREVIOUS_CLICKED_MESH
+    - XPLOD_ALL
+    - LONGPRESS_TOGGLE
+    - HOVER_POSITION
+    - UPDATE_ROTATIONS
+
+# ---------------------------------------------------------------------------
+# (a) Structural likeness checklist — binary items, automated where possible.
+#     assertion prefix: "auto:" = assert.ts via __ONE_HERTZ__ / DOM / synthetic input,
+#                       "judge:" = vision-judge verified, "auto+judge:" = both must pass.
+# ---------------------------------------------------------------------------
+structural_checklist:
+  gate:
+    critical_count: 0
+    pass_rate_min: 0.90
+  clip_similarity: "tracked per round as trend diagnostic only — NEVER gated"
+
+  items:
+    # -- section inventory -------------------------------------------------
+    - id: sections-14-order
+      area: sections
+      description: >
+        All 14 source section roles present in source order: loader, intro, timeless,
+        vertical, disassembly, mechanism, movement, curves, details, profile, bracelet,
+        gallery, parts-table, outro. Additive sections (e.g. Nocturne) allowed but must
+        not break the source-relative order.
+      assertion: >
+        auto: __ONE_HERTZ__.sections[].sourceRole contains the 14 canonical roles as an
+        ordered subsequence, each exactly once, none missing.
+      severity_if_fail: CRITICAL
+
+    # -- mechanic 1 · cursor state machine ---------------------------------
+    - id: cursor-text-states
+      area: cursor
+      description: >
+        Cursor text channel shows the three context labels (source: HOLD TO EXPLORE /
+        SELECT MODEL / SWAP; our re-copy mapped in engine constants) in the correct
+        contexts: hold-explore over 3D stage, select-model in outro, swap on picker hover.
+      assertion: >
+        auto: for each context, gotoSection + synthetic pointermove over target, then
+        state().cursor.label === constants.cursorLabels[context].
+      severity_if_fail: HIGH
+
+    - id: cursor-icon-states
+      area: cursor
+      description: >
+        Cursor icon channel supports finish-swatch, cross, arrow-left, arrow-right and
+        select states, driven by SET_CURSOR_ICON events (16 emit sites in source).
+      assertion: >
+        auto: emit SET_CURSOR_ICON for each enum value -> state().cursor.icon reflects it;
+        real triggers spot-checked (hover picker -> swatch, part selected -> cross,
+        prev/next hover -> arrows).
+      severity_if_fail: HIGH
+
+    # -- mechanic 2 · longpress hold-zoom (signature) -----------------------
+    - id: longpress-activation-500ms
+      area: longpress
+      description: "Hold >=500ms anywhere on the stage activates hold-zoom; shorter press never does."
+      assertion: >
+        auto: synthetic pointerdown; at t=450ms state().longpress.active === false;
+        at t=550ms === true; pointerup at 300ms never activates.
+      severity_if_fail: HIGH
+
+    - id: longpress-ramp-reverse
+      area: longpress
+      description: >
+        Intensity ramps 0 -> 1 over ~2s (power3.inOut) while held; release reverses the
+        ramp back to 0 (no snap). Mechanism rotations accelerate with intensity
+        (UPDATE_ROTATIONS path).
+      assertion: >
+        auto: sample state().longpress.intensity at 0/0.5/1/2s -> strictly increasing,
+        reaches 1 +-0.05 at ~2s (tolerance miss -> MEDIUM); after release intensity
+        decays monotonically to 0.
+      severity_if_fail: HIGH
+
+    - id: longpress-lenis-stop
+      area: longpress
+      description: >
+        Scroll is arbitrated during hold: LONGPRESS_TOGGLE(true) fires, lenis.stop()
+        engages (source: longpressData.scrollEnabled=false), wheel/touch scroll input is
+        inert; release re-enables scroll.
+      assertion: >
+        auto: subscribe LONGPRESS_TOGGLE; during hold state().scroll.enabled === false and
+        synthetic wheel delta moves nothing; after release scroll resumes.
+      severity_if_fail: HIGH
+
+    - id: longpress-zoom-parallax
+      area: longpress
+      description: >
+        Camera dollies in by the per-section zoomMultiplier (source values 0.3 vs 1) and
+        mouse-parallax gain scales by (1 + intensity); both reverse on release.
+      assertion: >
+        auto: hold in two sections with different constants.zoomMultiplier ->
+        state().camera.dolly deltas proportional to multipliers; state().camera.parallaxGain
+        === base * (1 + intensity). judge: feel check on the interaction clip vs source.
+      severity_if_fail: HIGH
+
+    # -- mechanic 3 · exploded view -----------------------------------------
+    - id: explode-proxy-hitboxes
+      area: explode
+      description: >
+        Every exploded part is clickable via an invisible bounding-box proxy hitbox
+        (not the raw high-poly mesh); click selects the part (SET_CLICKED_MESH).
+      assertion: >
+        auto: state().explode.parts[] all report hasProxyHitbox === true; scripted click
+        at each part's projected center -> state().explode.selected === that part id.
+      severity_if_fail: HIGH
+
+    - id: explode-lookat-lerp
+      area: explode
+      description: "Camera lookAt lerps smoothly to the clicked part — an eased transition, never a snap."
+      assertion: >
+        auto: after select, sample state().camera.lookAt over 10 frames -> monotonic
+        approach to the part anchor with no single-frame jump >30% of total distance.
+      severity_if_fail: HIGH
+
+    - id: explode-idle-rotation
+      area: explode
+      description: "Selected part idle-rotates at rotation.y += dt * 0.15 rad/s while selected."
+      assertion: >
+        auto: with a part selected, state().explode.selectedRotationY delta over 1s of
+        frozen-clock frames === 0.15 rad +-10% (tolerance miss -> MEDIUM).
+      severity_if_fail: HIGH
+
+    - id: explode-anchored-overlay
+      area: explode
+      description: >
+        Part-detail DOM overlay is anchored to the part's projected screen position and
+        tracks it as the camera settles (HOVER_POSITION-style projection).
+      assertion: >
+        auto: overlay bounding-box anchor vs state().explode.selectedScreenPos within 8px
+        on 3 frames sampled during and after the camera lerp.
+      severity_if_fail: HIGH
+
+    - id: explode-close-prevnext
+      area: explode
+      description: >
+        Overlay close button deselects (LEAVE_CLICKED_MESH); prev/next arrows cycle
+        through parts in order (NEXT_PREVIOUS_CLICKED_MESH) with arrow cursor icons.
+      assertion: >
+        auto: click next -> state().explode.selected advances in manifest part order and
+        wraps; click close -> selected === null and camera returns to section framing.
+      severity_if_fail: HIGH
+
+    - id: explode-xplod-all
+      area: explode
+      description: "XPLOD_ALL state exists: all parts spread simultaneously (source scroll-driven full-explode)."
+      assertion: >
+        auto: drive the disassembly timeline to its XPLOD_ALL beat via gotoSection ->
+        state().explode.mode === 'all' and every part offset from rest pose.
+      severity_if_fail: HIGH
+
+    - id: explode-drag-gating
+      area: explode
+      description: "Drag-pan of the exploded cluster is gated OFF while a part is selected, ON when nothing is selected."
+      assertion: >
+        auto: with selected part, synthetic drag changes no cluster rotation in state();
+        after close, identical drag rotates the cluster.
+      severity_if_fail: HIGH
+
+    - id: explode-tap-tolerance-15px
+      area: explode
+      description: >
+        On touch, a press that moves <=15px still counts as a part-select tap; movement
+        beyond 15px becomes a drag and never selects.
+      assertion: >
+        auto (390x844 touch emulation): 10px-move tap -> part selected; 20px-move
+        gesture -> no selection.
+      severity_if_fail: HIGH
+
+    # -- mechanic 4 · colorway swap -----------------------------------------
+    - id: colorway-5param-1s-tween
+      area: colorway
+      description: >
+        Finish swap tweens all five material params {color, roughness, metalness,
+        envMapIntensity, metalnessMapIntensity} per material over 1s — a graded material
+        transition, never an instant repaint. >=4 finishes available.
+      assertion: >
+        auto: state().config.finishes.length >= 4; trigger swap, sample one tracked
+        material via state().materials at t=0/0.5/1s -> all 5 params interpolate between
+        finish presets; completion at 1s +-0.15 (tolerance miss -> MEDIUM).
+      severity_if_fail: HIGH
+
+    - id: colorway-dual-placement
+      area: colorway
+      description: "The finish picker is rendered in TWO places — parts-table section and outro — and both drive the same config."
+      assertion: >
+        auto: DOM query finds picker in both section roots; activating either emits
+        CONFIG_CHANGE and updates state().config.active identically.
+      severity_if_fail: HIGH
+
+    - id: colorway-config-consumers
+      area: colorway
+      description: >
+        CONFIG_CHANGE fans out to every consumer: 3D materials, dial/screen canvas accent,
+        and UI accent tokens all reflect the active finish.
+      assertion: >
+        auto: after swap, state().materials preset id, state().dial.accent and the
+        resolved CSS accent custom property all equal the new finish.
+      severity_if_fail: HIGH
+
+    - id: colorway-gallery-resrc
+      area: colorway
+      description: >
+        Gallery <picture> sets are per-finish (source pattern `${config}_${n}.webp`) and
+        are live-rewritten on CONFIG_CHANGE, preserving the min-width:1024 art-direction
+        sources.
+      assertion: >
+        auto: after swap, every gallery <source>/<img> URL contains the active finish
+        token; each <picture> keeps a media="(min-width: 1024px)" source.
+      severity_if_fail: HIGH
+
+    # -- mechanic 5 · outro --------------------------------------------------
+    - id: outro-4watch-lineup
+      area: outro
+      description: >
+        Outro raises 4 watch instances with staggered entrance (source: power4.out,
+        delay 0.7 + i*0.1s), one per finish, each hoverable for SELECT MODEL.
+      assertion: >
+        auto+judge: state().outro.instances === 4 and timeline manifest encodes the
+        0.1s stagger (tolerance miss -> MEDIUM); judge confirms staggered rise on the
+        scripted interaction clip vs source.
+      severity_if_fail: HIGH
+
+    - id: outro-swap-restart-loop
+      area: outro
+      description: >
+        Selecting a model then SWAP applies that config and hard-restarts the experience:
+        lenis.scrollTo(0, immediate) — the site replays from the top in the chosen finish
+        (credits slate overlays this loop point).
+      assertion: >
+        auto: scripted select+swap -> scroll position === 0 without smooth animation,
+        state().config.active === chosen finish, intro renders with that finish's materials.
+      severity_if_fail: HIGH
+
+    # -- scroll system --------------------------------------------------------
+    - id: scrub-dual-speeds
+      area: scroll
+      description: >
+        Standalone text triggers run at two scrub speeds like source: scrub:true
+        (immediate) for transform moves and scrub:2 (lagged) for grey-line color reveals.
+      assertion: >
+        auto: sections manifest declares both scrubChannels; scripted constant-velocity
+        scroll -> transform channel tracks master progress ~1:1 while reveal channel lags
+        with measured catch-up ratio ~2x (tolerance miss -> MEDIUM).
+      severity_if_fail: HIGH
+
+    - id: dual-channel-timelines
+      area: scroll
+      description: >
+        Every WebGL section owns TWO scrub timelines: a WebGL timeline over
+        offset-extended bounds (webglStart/webglEnd, first/last viewport-clamped) plus a
+        separate DOM timeline over the section's own bounds.
+      assertion: >
+        auto: for each webgl section, manifest exposes distinct webgl and dom timelines
+        with webglStart <= domStart and webglEnd >= domEnd (clamped at page ends);
+        gotoSection sets both progresses consistently in state().
+      severity_if_fail: HIGH
+
+    - id: lifecycle-events
+      area: scroll
+      description: >
+        Each section fires enter / leave / enterCenter / leaveCenter lifecycle events at
+        the +-0.5vh center-band boundaries, exactly once per directional pass.
+      assertion: >
+        auto: event recorder during one scripted top-to-bottom pass -> every section logs
+        enter -> enterCenter -> leaveCenter -> leave in order, each exactly once.
+      severity_if_fail: HIGH
+
+    - id: sticky-pinning-vh-budget
+      area: scroll
+      description: >
+        Pinning is CSS position:sticky inside tall tracks per the engine vh-budget table
+        (recon: 300vh x6, 400vh x2, 450vh x1) — no ScrollTrigger pinning; no pin jitter,
+        including iOS Safari.
+      assertion: >
+        auto: computed style of each pin container === sticky and track heights match the
+        constants table +-5% (deliberate deviations, e.g. Nocturne, must be flagged in the
+        table; unflagged deviation -> MEDIUM). judge: zero visible pin jitter on the iOS
+        real-device capture.
+      severity_if_fail: HIGH
+
+    # -- loader ---------------------------------------------------------------
+    - id: loader-honesty
+      area: loader
+      description: >
+        Loader progress is a smoothed blend of REAL asset byte progress and a
+        choreographed ~2.5s minimum: it never completes before assets are ready, never
+        stalls at fake 99%, and always plays >=~2.5s even from warm cache.
+      assertion: >
+        auto (throttled network run): loader completion timestamp >= GLB-ready timestamp
+        AND >= 2.5s -10%; displayed progress is monotonic; warm-cache run still >=~2.5s
+        (tolerance miss -> MEDIUM).
+      severity_if_fail: HIGH
+
+    # -- mobile ---------------------------------------------------------------
+    - id: mobile-svh-dvh
+      area: mobile
+      description: >
+        Sections are sized in svh (source uses 100svh/85svh with dvh where needed) so iOS
+        URL-bar churn cannot resize tracks; height-only resizes <120px are ignored on
+        touch; the full experience (not a cut-down) runs at mobile viewport.
+      assertion: >
+        auto: stylesheet scan finds svh/dvh units on all section tracks (no bare 100vh on
+        pinned tracks); state().flags.touchResizeFilter === true under touch emulation;
+        sections manifest identical at 390x844 to desktop.
+      severity_if_fail: HIGH
+
+    - id: mobile-touch-hold
+      area: mobile
+      description: >
+        The signature hold-zoom works via touch-hold on mobile (same 500ms activation,
+        ramp, scroll-stop, preventDefault during hold — no page scroll or context menu).
+      assertion: >
+        auto (390x844 touch emulation): synthetic touch-hold >=500ms ->
+        state().longpress.active === true, page scroll frozen during hold, released
+        cleanly after.
+      severity_if_fail: HIGH
+
+    # -- deep links / debug transport ------------------------------------------
+    - id: deeplink-params
+      area: debug
+      description: >
+        URL params replicate source debug transport and add our eval mode:
+        ?scroll=<section> jumps to a section, ?autoscroll plays through, ?materials opens
+        material debug, ?eval=1 arms determinism mode.
+      assertion: >
+        auto: load each param -> ?scroll: state().activeSection === target;
+        ?autoscroll: scroll position advances unattended; ?materials:
+        state().flags.materialsDebug === true; ?eval=1: state().flags.eval === true with
+        the determinism block below in effect.
+      severity_if_fail: HIGH
+
+# ---------------------------------------------------------------------------
+# (b) Severity taxonomy + gate (PLAN §6)
+# ---------------------------------------------------------------------------
+severity:
+  CRITICAL:
+    meaning: >
+      Any of the 14 source sections missing or broken; any of the 5 mechanics wholly
+      non-functional (every checklist item of that mechanic's area fails); page crash or
+      WebGL-init failure without the stills/video fallback path; desktop perf floor
+      breached (median <55fps).
+    action: "blocks ship — gate requires zero"
+  HIGH:
+    meaning: "A structural checklist item fails (behavior missing or functionally wrong)."
+    action: "counts against the >=90% checklist pass rate"
+  MEDIUM:
+    meaning: >
+      Behavior present but misses a stated numeric tolerance (e.g. ramp reaches 1 at 2.4s,
+      tween completes at 1.2s, idle rotation off by 15%).
+    action: "reported; does not fail the item outright but is listed in the round report"
+  escalation_rule: >
+    If ALL items sharing an area tag within a mechanic fail, the mechanic is deemed
+    missing and the failure set escalates to one CRITICAL.
+  gate: "zero CRITICAL AND checklist pass rate >= 90%"
+
+# ---------------------------------------------------------------------------
+# (c) Beauty protocol (gate — replaces any /10 averaging)
+# ---------------------------------------------------------------------------
+beauty:
+  judges:
+    count: 5
+    kind: "vision judges"
+    context: "fresh context per judge per round — no judge sees prior rounds or others' ballots"
+  materials:
+    still_pairs: 20      # matched-moment pairs: same (sectionId, localProgress, viewport) ours vs source
+    video_pairs: 4       # identical scripted 60s lenis scrolls, ours vs source, both viewports;
+                         # same videos double as P3 motion-tuning reference and demo-reel source
+  presentation:
+    left_right: "randomized per pair per judge"
+    blind: "no branding of which side is ours beyond what the frames themselves show"
+  axes:
+    stills: [light, material, typography, composition]
+    video: [light, material, typography, composition, motion]
+  ballot:
+    choice: "forced A / B / tie per axis per pair"
+    evidence: >
+      one sentence of concrete visual evidence per choice; an evidence-less ballot is
+      VOID and that judge's round is re-run
+  gates:
+    overall: "ours win-or-tie >= 60% of all axis-choices"
+    axis_floor: "no single axis wins+ties below 40%"
+    exceed_clause: >
+      >= 3 named axes where ours is scored ABOVE the source (claimed levers: post stack,
+      per-part copy, screen liveness)
+  deception_probe:
+    question: "Which of these is the shipping professional site?"
+    fail_rule: "judges reliably picking ours as the amateur build = fail -> loop"
+  anchored_scale:
+    role: "diagnostic only — never a gate"
+    anchors:
+      5: "competent agency work"
+      7: "Awwwards Honorable Mention"
+      8: "Site of the Day"
+      9: "source craft level"
+      10: "exceeds source"
+  inter_judge_agreement: "reported every round; < 70% flagged for protocol review"
+  transparency: "judge prompts, raw rationales and verdicts published in the round report"
+  rounds_ceiling: 4   # then stop and report (house two-stops rule)
+
+# ---------------------------------------------------------------------------
+# (d) Perf gates (beauty floor)
+# ---------------------------------------------------------------------------
+perf:
+  method:
+    recorder: "in-page rAF delta recorder -> JSON frame-time array committed per round"
+    scroll_script: "lenis.scrollTo(end) over ~60s scripted pass — NEVER window.scrollTo"
+    exemptions: "loader shader-precompile frames excluded from long-frame counts"
+    mobile_inner_loop: >
+      desktop real Chrome + CDP 6x CPU throttle at 390x844 DPR3 as proxy — caveat 'GPU
+      unthrottled' published verbatim in every report that uses it
+    real_device: >
+      named real device via remote debugging once per round; device names recorded below
+      once chosen (field TBD at P0 freeze)
+    trace_crosscheck: "one CDP Performance trace per round cross-checks the rAF recorder"
+    tiers: "each quality tier measured separately via __ONE_HERTZ__.forceQualityTier(n)"
+  gates:
+    desktop:
+      median_fps_min: 55
+      p95_frame_ms_max: 22
+      frames_over_50ms_max_per_60s: 5
+    mobile_flagship:
+      median_fps_min: 55
+    mobile_midtier:
+      median_fps_min: 40
+  named_devices:
+    desktop: "TBD — recorded at first perf round (this machine: macOS arm64)"
+    mobile_flagship: "TBD — named at first real-device round"
+    mobile_midtier: "TBD — named at first real-device round"
+  lighthouse: "tracked per round, never gating"
+  rounds_ceiling: 3   # then ship with published deltas (house two-stops rule)
+
+# ---------------------------------------------------------------------------
+# (e) Determinism + capture addressing
+# ---------------------------------------------------------------------------
+determinism:
+  eval_param: "?eval=1"
+  effects:
+    seeded_rng: true
+    clock_frozen: "dial reads 10:09:30"
+    bpm_frozen: 64
+    ecg_phase: 0
+    loader: "skipped (loader's own canonical frames captured in choreographed mode under the frozen clock)"
+  capture_ready_condition: "document.fonts.ready AND GLB loaded AND 3 consecutive settled rAF frames"
+  addressing:
+    api: "__ONE_HERTZ__.gotoSection(sectionId, localProgress)"
+    local_progress_steps: [0, 0.25, 0.5, 0.75, 1]
+  canonical_frames:
+    formula: "14 sections x 5 progress steps = 70 frames per viewport"
+    viewports:
+      - { name: desktop, size: 1600x900, dpr: 2 }
+      - { name: mobile, size: 390x844, dpr: 3 }
+    total_stills: 140
+  interaction_frames:
+    count: "~10 per viewport set"
+    list:
+      - "exploded view open (part selected, overlay visible)"
+      - "each colorway applied (>=4 frames)"
+      - "Nocturne mid-transition"
+      - "BPM high (fast scroll) and BPM low (rest)"
+  reference_layout:
+    source: "evals/reference/source/   # frozen P0 capture kit + manifest"
+    ours: "evals/reference/ours/       # regenerated every round by capture.ts"

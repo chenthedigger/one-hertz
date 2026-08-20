@@ -1,0 +1,379 @@
+{
+  "capturedAt": "2026-08-20T01:57:48.045Z",
+  "url": "https://thewatch.60fps.fr",
+  "note": "offsetTop/height in CSS px at each viewport; scrollHeight = document total. Desktop is the canonical enumeration.",
+  "scrollHeight": 35100,
+  "dataSection": [
+    {
+      "name": "Intro",
+      "offsetTop": 0,
+      "height": 900
+    },
+    {
+      "name": "Timeless",
+      "offsetTop": 900,
+      "height": 1878
+    },
+    {
+      "name": "VerticalText",
+      "offsetTop": 2778,
+      "height": 2700
+    },
+    {
+      "name": "Disassembly",
+      "offsetTop": 5478,
+      "height": 2700
+    },
+    {
+      "name": "Mechanism",
+      "offsetTop": 8178,
+      "height": 3600
+    },
+    {
+      "name": "Movement",
+      "offsetTop": 11778,
+      "height": 2700
+    },
+    {
+      "name": "Curves",
+      "offsetTop": 14478,
+      "height": 2700
+    },
+    {
+      "name": "MovementWatchRight",
+      "offsetTop": 17178,
+      "height": 2700
+    },
+    {
+      "name": "Hands",
+      "offsetTop": 19878,
+      "height": 2700
+    },
+    {
+      "name": "Straps",
+      "offsetTop": 22578,
+      "height": 3600
+    },
+    {
+      "name": "Images",
+      "offsetTop": 26178,
+      "height": 1806
+    },
+    {
+      "name": "Colors",
+      "offsetTop": 27983,
+      "height": 4050
+    },
+    {
+      "name": "Parts",
+      "offsetTop": 32033,
+      "height": 1447
+    },
+    {
+      "name": "Footer",
+      "offsetTop": 34200,
+      "height": 900
+    }
+  ],
+  "dataWebgl": [
+    {
+      "name": "Intro",
+      "offsetTop": 0,
+      "height": 5478
+    },
+    {
+      "name": "Disassembly",
+      "offsetTop": 5478,
+      "height": 2700
+    },
+    {
+      "name": "Particles",
+      "offsetTop": 8178,
+      "height": 6300
+    },
+    {
+      "name": "Presentation",
+      "offsetTop": 14478,
+      "height": 8100
+    },
+    {
+      "name": "Straps",
+      "offsetTop": 22578,
+      "height": 3600
+    },
+    {
+      "name": "Images",
+      "offsetTop": 26178,
+      "height": 1806
+    },
+    {
+      "name": "Colors",
+      "offsetTop": 27983,
+      "height": 4050
+    },
+    {
+      "name": "Parts",
+      "offsetTop": 32033,
+      "height": 1447
+    },
+    {
+      "name": "Footer",
+      "offsetTop": 34200,
+      "height": 900
+    }
+  ],
+  "viewports": {
+    "desktop": {
+      "viewport": {
+        "width": 1600,
+        "height": 900
+      },
+      "scrollHeight": 35100,
+      "dataSection": [
+        {
+          "name": "Intro",
+          "offsetTop": 0,
+          "height": 900
+        },
+        {
+          "name": "Timeless",
+          "offsetTop": 900,
+          "height": 1878
+        },
+        {
+          "name": "VerticalText",
+          "offsetTop": 2778,
+          "height": 2700
+        },
+        {
+          "name": "Disassembly",
+          "offsetTop": 5478,
+          "height": 2700
+        },
+        {
+          "name": "Mechanism",
+          "offsetTop": 8178,
+          "height": 3600
+        },
+        {
+          "name": "Movement",
+          "offsetTop": 11778,
+          "height": 2700
+        },
+        {
+          "name": "Curves",
+          "offsetTop": 14478,
+          "height": 2700
+        },
+        {
+          "name": "MovementWatchRight",
+          "offsetTop": 17178,
+          "height": 2700
+        },
+        {
+          "name": "Hands",
+          "offsetTop": 19878,
+          "height": 2700
+        },
+        {
+          "name": "Straps",
+          "offsetTop": 22578,
+          "height": 3600
+        },
+        {
+          "name": "Images",
+          "offsetTop": 26178,
+          "height": 1806
+        },
+        {
+          "name": "Colors",
+          "offsetTop": 27983,
+          "height": 4050
+        },
+        {
+          "name": "Parts",
+          "offsetTop": 32033,
+          "height": 1447
+        },
+        {
+          "name": "Footer",
+          "offsetTop": 34200,
+          "height": 900
+        }
+      ],
+      "dataWebgl": [
+        {
+          "name": "Intro",
+          "offsetTop": 0,
+          "height": 5478
+        },
+        {
+          "name": "Disassembly",
+          "offsetTop": 5478,
+          "height": 2700
+        },
+        {
+          "name": "Particles",
+          "offsetTop": 8178,
+          "height": 6300
+        },
+        {
+          "name": "Presentation",
+          "offsetTop": 14478,
+          "height": 8100
+        },
+        {
+          "name": "Straps",
+          "offsetTop": 22578,
+          "height": 3600
+        },
+        {
+          "name": "Images",
+          "offsetTop": 26178,
+          "height": 1806
+        },
+        {
+          "name": "Colors",
+          "offsetTop": 27983,
+          "height": 4050
+        },
+        {
+          "name": "Parts",
+          "offsetTop": 32033,
+          "height": 1447
+        },
+        {
+          "name": "Footer",
+          "offsetTop": 34200,
+          "height": 900
+        }
+      ]
+    },
+    "mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "scrollHeight": 31592,
+      "dataSection": [
+        {
+          "name": "Intro",
+          "offsetTop": 0,
+          "height": 844
+        },
+        {
+          "name": "Timeless",
+          "offsetTop": 844,
+          "height": 1072
+        },
+        {
+          "name": "VerticalText",
+          "offsetTop": 1916,
+          "height": 2532
+        },
+        {
+          "name": "Disassembly",
+          "offsetTop": 4448,
+          "height": 2532
+        },
+        {
+          "name": "Mechanism",
+          "offsetTop": 6980,
+          "height": 3376
+        },
+        {
+          "name": "Movement",
+          "offsetTop": 10356,
+          "height": 2532
+        },
+        {
+          "name": "Curves",
+          "offsetTop": 12888,
+          "height": 2532
+        },
+        {
+          "name": "MovementWatchRight",
+          "offsetTop": 15420,
+          "height": 2532
+        },
+        {
+          "name": "Hands",
+          "offsetTop": 17952,
+          "height": 2532
+        },
+        {
+          "name": "Straps",
+          "offsetTop": 20484,
+          "height": 3376
+        },
+        {
+          "name": "Images",
+          "offsetTop": 23860,
+          "height": 1008
+        },
+        {
+          "name": "Colors",
+          "offsetTop": 24868,
+          "height": 3798
+        },
+        {
+          "name": "Parts",
+          "offsetTop": 28666,
+          "height": 1407
+        },
+        {
+          "name": "Footer",
+          "offsetTop": 30748,
+          "height": 844
+        }
+      ],
+      "dataWebgl": [
+        {
+          "name": "Intro",
+          "offsetTop": 0,
+          "height": 4448
+        },
+        {
+          "name": "Disassembly",
+          "offsetTop": 4448,
+          "height": 2532
+        },
+        {
+          "name": "Particles",
+          "offsetTop": 6980,
+          "height": 5908
+        },
+        {
+          "name": "Presentation",
+          "offsetTop": 12888,
+          "height": 7596
+        },
+        {
+          "name": "Straps",
+          "offsetTop": 20484,
+          "height": 3376
+        },
+        {
+          "name": "Images",
+          "offsetTop": 23860,
+          "height": 1008
+        },
+        {
+          "name": "Colors",
+          "offsetTop": 24868,
+          "height": 3798
+        },
+        {
+          "name": "Parts",
+          "offsetTop": 28666,
+          "height": 1407
+        },
+        {
+          "name": "Footer",
+          "offsetTop": 30748,
+          "height": 844
+        }
+      ]
+    }
+  }
+}
