@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ONE HERTZ</title>
+<style>
+  :root { color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #000;
+    color: #f4f4f2;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, sans-serif;
+    display: grid;
+    place-items: center;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+  main { text-align: center; user-select: none; }
+  h1 {
+    font-size: clamp(2.6rem, 11vw, 9rem);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    margin-right: -0.14em; /* optically recenter last letter's tracking */
+    line-height: 1;
+    white-space: nowrap;
+  }
+  h1 .dot {
+    display: inline-block;
+    width: 0.11em;
+    height: 0.11em;
+    margin-left: 0.18em;
+    border-radius: 50%;
+    background: #f4f4f2;
+    vertical-align: baseline;
+    animation: hz 1s steps(1) infinite; /* one hertz */
+  }
+  @keyframes hz { 0% { opacity: 1; } 50% { opacity: 0.12; } }
+  @media (prefers-reduced-motion: reduce) { h1 .dot { animation: none; } }
+  p {
+    margin-top: clamp(1rem, 3vh, 1.75rem);
+    font-size: clamp(0.7rem, 1.6vw, 0.9rem);
+    font-weight: 400;
+    letter-spacing: 0.42em;
+    margin-right: -0.42em;
+    text-transform: uppercase;
+    color: #6f6f6c;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>ONE HERTZ<span class="dot" aria-hidden="true"></span></h1>
+  <p>by CHEN</p>
+</main>
+</body>
+</html>

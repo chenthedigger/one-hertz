@@ -1,0 +1,10 @@
+{
+  // Placeholder deploy — claims one-hertz.workers.dev and warms the TLS cert
+  // ahead of ship day (fresh workers.dev subdomains have a cert-provisioning delay).
+  // Real site replaces this in P6; keep the worker name stable: "one-hertz".
+  "name": "one-hertz",
+  "compatibility_date": "2026-08-20",
+  "assets": {
+    "directory": "."
+  }
+}
