@@ -21,12 +21,49 @@ import {
 import type { CameraAuxSnapshot } from "../core/debug";
 import type { CaseSpace } from "./watch";
 
-interface OrbitProxy {
+export interface OrbitProxy {
   theta: number; // azimuth, radians
   phi: number; // polar, radians (0 = top-down)
   radius: number; // dolly distance
+  targetX: number; // look-at x (decenters the subject in frame; default 0)
   targetY: number; // look-at height
   fov: number;
+  /**
+   * Mouse-parallax gate 0..1 (motion bible §4: "parallax is gated OFF
+   * during macros and drag beats"). Section-authored timelines tween this;
+   * 1 = full base amplitude.
+   */
+  parallaxMultiplier: number;
+}
+
+/**
+ * Per-section camera-pose override (P2 section recipes — ADDITIVE API,
+ * composes with `authorTimeline`, it does not replace it).
+ *
+ * For beats whose pose cannot be a static timeline of proxy values — e.g.
+ * the Mechanism back-crystal macro, whose azimuth CHASES the product's
+ * clock-derived attitude — the section computes a pose each frame (a pure
+ * function of its scrubbed recipe + the clock scalar) and blends it over
+ * whatever the base timeline poses. `blend` ramps 0→1→0 inside the
+ * section's own scrub window, so handoffs are seamless and the override is
+ * inert whenever the section does not own the frame. Longpress dolly-in and
+ * mouse parallax still apply ON TOP of the blended pose; `parallaxScale`
+ * gates parallax off during macros (motion bible law 7). No internal lerp
+ * is added — eval settling stays a fixed point of update().
+ */
+export interface CameraPoseOverride {
+  theta: number;
+  phi: number;
+  radius: number;
+  /** Look-at target, world space (base pose uses (0, targetY, 0)). */
+  targetX: number;
+  targetY: number;
+  targetZ: number;
+  fov: number;
+  /** Mouse-parallax gain scale while blended (0 = off — macro law). */
+  parallaxScale: number;
+  /** 0..1 — how much of this override wins over the base timeline pose. */
+  blend: number;
 }
 
 export class CameraRig {
@@ -34,10 +71,12 @@ export class CameraRig {
     theta: 0.2,
     phi: 1.35,
     radius: 6,
+    targetX: 0,
     targetY: 0.2,
     fov: 35,
+    parallaxMultiplier: 1,
   };
-  private readonly timeline: gsap.core.Timeline;
+  private timeline: gsap.core.Timeline;
   private readonly target = new Vector3();
   private lerpedProgress = 0;
   private targetProgress = 0;
@@ -64,6 +103,9 @@ export class CameraRig {
    * space and convert through this helper (`rig.caseSpace.toWorld(v)`).
    * Null until the watch lands — beats written against it must guard. */
   private caseSpaceRef: CaseSpace | null = null;
+
+  /* Section pose override (null/blend-0 = inert; see CameraPoseOverride). */
+  private poseOverride: CameraPoseOverride | null = null;
 
   constructor(private readonly camera: PerspectiveCamera) {
     // Paused timeline — progress() is the ONLY driver.
@@ -103,6 +145,35 @@ export class CameraRig {
   /** Set the scrub target (webgl-channel section progress, 0..1). */
   setProgress(p: number): void {
     this.targetProgress = p;
+  }
+
+  /**
+   * P2 section camera authorship: replace the rig's beat timeline with a
+   * section-authored one (the constructor beats are the Spike-B proving
+   * grounds — docs/p1/engine.md notes the real P2 build replaces them,
+   * keeping this wiring). The builder receives the live proxy and must
+   * return a PAUSED timeline in the scrub-fraction domain (padded to 1,
+   * motion-bible law 4). Beat 0 inherits the proxy's current (hero) pose —
+   * author `.to()` tweens and the handoff is seamless. ONE owner at a time:
+   * whichever section drives `setProgress` should be the one that authored
+   * the beats (today: Disassembly, the only rig driver).
+   */
+  authorTimeline(build: (proxy: OrbitProxy) => gsap.core.Timeline): void {
+    const tl = build(this.proxy);
+    if (!tl.paused()) tl.pause();
+    this.timeline.kill();
+    this.timeline = tl;
+    this.timeline.progress(this.lerpedProgress);
+    this.apply();
+  }
+
+  /**
+   * Blend a section-computed pose over the base timeline (see
+   * CameraPoseOverride). Pass the SAME object every frame (the rig only
+   * reads it) and null when the section leaves; blend 0 is equally inert.
+   */
+  setPoseOverride(override: CameraPoseOverride | null): void {
+    this.poseOverride = override;
   }
 
   /** Longpress ramp intensity 0..1 (wired from LONGPRESS_TOGGLE in main.ts). */
@@ -170,28 +241,63 @@ export class CameraRig {
   }
 
   private apply(): void {
-    const { theta: baseTheta, phi: basePhi, radius: baseRadius, targetY, fov } = this.proxy;
+    // Base pose from the scrubbed proxy, then an optional section override
+    // blended over it (angles on the shortest path — no 2π whips).
+    let poseTheta = this.proxy.theta;
+    let posePhi = this.proxy.phi;
+    let poseRadius = this.proxy.radius;
+    let fov = this.proxy.fov;
+    let tx = this.proxy.targetX;
+    let ty = this.proxy.targetY;
+    let tz = 0;
+    let parallaxScale = this.proxy.parallaxMultiplier;
+    const o = this.poseOverride;
+    if (o !== null && o.blend > 0) {
+      const b = Math.min(1, Math.max(0, o.blend));
+      poseTheta = lerpAngle(poseTheta, o.theta, b);
+      posePhi = lerp(posePhi, o.phi, b);
+      poseRadius = lerp(poseRadius, o.radius, b);
+      fov = lerp(fov, o.fov, b);
+      tx = lerp(tx, o.targetX, b);
+      ty = lerp(ty, o.targetY, b);
+      tz = o.targetZ * b;
+      parallaxScale = lerp(parallaxScale, o.parallaxScale, b);
+    }
     // Dolly-in: full intensity divides the radius by the section multiplier.
     const zoom = 1 + this.longpressIntensity * (this.zoomMultiplier - 1);
-    const radius = baseRadius / zoom;
+    const radius = poseRadius / zoom;
     this.effectiveRadius = radius;
-    // Parallax: small orbital nudge, amplified while holding.
-    const gain = PARALLAX_BASE_RAD * this.parallaxGain;
-    const theta = baseTheta + this.parallaxX * gain;
+    // Parallax: small orbital nudge, amplified while holding, gated per
+    // beat by the authored parallaxMultiplier (OFF during macros).
+    const gain = PARALLAX_BASE_RAD * this.parallaxGain * parallaxScale;
+    const theta = poseTheta + this.parallaxX * gain;
     const phi = Math.min(
       Math.PI - 0.15,
-      Math.max(0.15, basePhi + this.parallaxY * gain * 0.6),
+      Math.max(0.15, posePhi + this.parallaxY * gain * 0.6),
     );
     this.camera.position.set(
-      radius * Math.sin(phi) * Math.sin(theta),
-      radius * Math.cos(phi) + targetY,
-      radius * Math.sin(phi) * Math.cos(theta),
+      tx + radius * Math.sin(phi) * Math.sin(theta),
+      ty + radius * Math.cos(phi),
+      tz + radius * Math.sin(phi) * Math.cos(theta),
     );
-    this.target.set(0, targetY, 0);
+    this.target.set(tx, ty, tz);
     this.camera.lookAt(this.target);
     if (this.camera.fov !== fov) {
       this.camera.fov = fov;
       this.camera.updateProjectionMatrix();
     }
   }
+}
+
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+/** Shortest-path angular lerp (radians) — override blends never whip 2π. */
+function lerpAngle(a: number, b: number, t: number): number {
+  const tau = Math.PI * 2;
+  let d = (b - a) % tau;
+  if (d > Math.PI) d -= tau;
+  if (d < -Math.PI) d += tau;
+  return a + d * t;
 }

@@ -14,7 +14,7 @@ import { isEvalMode, seedRandom } from "./determinism";
 import { bus, type EventBus } from "./events";
 import type { SectionManifestEntry, PinState, SectionRegistry } from "./registry";
 import type { ScrollEngine } from "./scroll";
-import type { StateStore, UiFlags } from "./state";
+import type { PartialState, StateStore, UiFlags } from "./state";
 import type { CameraPose, Stage } from "../webgl/stage";
 
 /** Bump on any breaking change to the state() shape (SPIKE-B Q9). */
@@ -89,6 +89,16 @@ export interface WatchStateSnapshot {
   look: string;
 }
 
+/** Disassembly section telemetry (P2 — eval captures wait on readiness). */
+export interface DisassemblyStateSnapshot {
+  /** Internals wrappers attached under the watch root (0..3). */
+  internals: number;
+  /** All roster slots resolved — loaded GLB or contract-named stub. */
+  internalsReady: boolean;
+  /** Live explode scalar 0..1 (webgl-channel authored beat value). */
+  explode: number;
+}
+
 /** Registry of typed extension keys — P3 mechanics extend this interface. */
 export interface StateExtensions {
   cursor: CursorStateSnapshot;
@@ -96,6 +106,7 @@ export interface StateExtensions {
   camera: CameraAuxSnapshot;
   dial: DialStateSnapshot;
   watch: WatchStateSnapshot;
+  disassembly: DisassemblyStateSnapshot;
 }
 
 const stateExtensions = new Map<string, () => unknown>();
@@ -109,6 +120,19 @@ export function extendState<K extends keyof StateExtensions>(
   provider: () => StateExtensions[K],
 ): void {
   stateExtensions.set(key, provider);
+}
+
+/**
+ * Read ONE registered extension without building a full state() snapshot —
+ * the cheap per-frame consumer hook (e.g. the Mechanism seconds readout
+ * gearing to `dial.stats().seconds`, motion bible §5: the readout binds to
+ * the dial gear, never UPDATE_ROTATIONS). Null until the system installs.
+ */
+export function readStateExtension<K extends keyof StateExtensions>(
+  key: K,
+): StateExtensions[K] | null {
+  const provider = stateExtensions.get(key);
+  return provider ? (provider() as StateExtensions[K]) : null;
 }
 
 export interface EngineStateSnapshot {
@@ -134,6 +158,7 @@ export interface EngineStateSnapshot {
   camera?: CameraAuxSnapshot;
   dial?: DialStateSnapshot;
   watch?: WatchStateSnapshot;
+  disassembly?: DisassemblyStateSnapshot;
 }
 
 export interface OneHertzDebugApi {
@@ -156,6 +181,13 @@ export interface OneHertzDebugApi {
   /** Force a quality tier (tiers shed post, never smoothness). */
   forceQualityTier(tier: number): void;
   /**
+   * Apply a partial to the live StateStore (ADDITIVE — Nocturne lane).
+   * Sections/mechanics write contract axes through this one owner; the boot
+   * frame loop bridges `dialMode` token changes to the dial renderer. The
+   * state() SHAPE is unchanged (schema stays v1).
+   */
+  applyState(partial: PartialState): void;
+  /**
    * The shared typed event bus (ADDITIVE — evals/assert.ts drives mechanics
    * through `api.bus.emit(...)` / records via `api.bus.on(...)`).
    */
@@ -174,6 +206,11 @@ export interface OneHertzDebugApi {
     setGrainAmount(amount: number): void;
     /** Rotate the environment around Y (lighting-keyframe hook). */
     setEnvRotation(radians: number): void;
+    /**
+     * scene.environmentIntensity (lighting-keyframe hook — LOOKBIBLE §1.4
+     * fix 3; symmetric with setEnvRotation for sweeps + eval wiring).
+     */
+    setEnvIntensity(intensity: number): void;
   };
   /**
    * Look-config hot-apply (ADDITIVE, hero-plumbing lane; src/gl/look.ts) —
@@ -240,6 +277,9 @@ export function installDebugApi(
     forceQualityTier(tier) {
       stage.forceQualityTier(tier);
     },
+    applyState(partial) {
+      store.apply(partial);
+    },
     bus,
     gl: {
       setDof: (enabled, focus) => stage.post.setDof(enabled, focus),
@@ -249,6 +289,7 @@ export function installDebugApi(
           : stage.post.setVignette(enabled, strength),
       setGrainAmount: (amount) => stage.post.setGrainAmount(amount),
       setEnvRotation: (radians) => stage.setEnvRotation(radians),
+      setEnvIntensity: (intensity) => stage.setEnvIntensity(intensity),
     },
   };
   window.__ONE_HERTZ__ = api;

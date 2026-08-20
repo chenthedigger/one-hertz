@@ -1,14 +1,125 @@
-/* ONE HERTZ — Spike B styles.
-   Tokens are working defaults from PLAN §3; the real ramp locks at P1.5. */
+/* ONE HERTZ — tokens + type law per docs/LOOKBIBLE.md §2/§4 (P2 infra-type lane).
+   Fonts are self-hosted latin-subset woff2 (public/assets/fonts/); licenses +
+   sources recorded in docs/p2/infra-type.md. */
+
+/* ---- Faces (LOOKBIBLE §4 integration: font-display block — the loader owns
+   first paint via document.fonts.ready, so the swap frame never shows). ------ */
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/assets/fonts/ClashDisplay-300.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/assets/fonts/ClashDisplay-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url("/assets/fonts/ClashDisplay-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/Inter-var-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/assets/fonts/GeistMono-var-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+/* Serif accent — Fraunces Italic variable (opsz/wght/SOFT/WONK axes live).
+   Spent exactly ONCE sitewide, ≥40px (LOOKBIBLE §4); loads lazily on first use. */
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces-italic-var-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: block;
+}
+
+/* Metric-matched local fallbacks (size-adjust measured in real Chrome against
+   the shipped woff2s — layout holds even if a face is evicted/unavailable). */
+
+@font-face {
+  font-family: "Clash Display Fallback";
+  src: local("Helvetica Neue");
+  size-adjust: 103.62%;
+  ascent-override: 85.89%;
+  descent-override: 24.13%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Helvetica Neue");
+  size-adjust: 104.19%;
+  ascent-override: 93.1%;
+  descent-override: 23.03%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local("Menlo");
+  size-adjust: 99.66%;
+  ascent-override: 101.35%;
+  descent-override: 29.1%;
+  line-gap-override: 0%;
+}
 
 :root {
   --clock: 0; /* written by src/core/clock.ts every frame */
-  --porcelain: #ebebeb;
-  --ink: #0b0b0c;
+
+  /* Ground tokens — LOOKBIBLE §2 (instrument.json bgTokens re-writes these live). */
+  --porcelain: #e8eaed;
+  --ink: #0a0b0d;
   --biosignal: #ff2d55;
-  --font-display: "Clash Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-body: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --biosignal-nocturne: #ff375f;
+
+  --font-display: "Clash Display", "Clash Display Fallback", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-serif: "Fraunces", Georgia, serif;
+
+  /* Modular scale — LOOKBIBLE §4: 212/104/46/30/26/22/15 px @1600 ref.
+     vw term hits the px value exactly at 1600; clamps guard both ends. */
+  --type-colossal: clamp(3.5rem, 13.25vw, 13.25rem); /* 212 */
+  --type-display: clamp(2.5rem, 6.5vw, 6.5rem); /* 104 */
+  --type-headline: clamp(1.75rem, 2.875vw, 2.875rem); /* 46 */
+  --type-title: clamp(1.375rem, 1.875vw, 1.875rem); /* 30 */
+  --type-lead: clamp(1.1875rem, 1.625vw, 1.625rem); /* 26 */
+  --type-body: clamp(1.0625rem, 1.375vw, 1.375rem); /* 22 */
+  --type-micro: 0.9375rem; /* 15 */
+
+  /* Tracking — LOOKBIBLE §4 bands. */
+  --track-colossal: -0.025em; /* ≥160px */
+  --track-display: -0.02em; /* 64–160px */
+  --track-title: -0.01em; /* 32–64px */
+  --track-caps: 0.08em; /* caps labels, tight end */
+  --track-caps-wide: 0.14em; /* caps labels, wide end */
+}
+
+/* Data voice: mono numerals are always tabular (LOOKBIBLE §4 tnum law). */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
 
 *,
@@ -90,7 +201,10 @@ body::after {
 }
 
 .loader-arc__track {
-  stroke: rgb(11 11 12 / 8%);
+  /* Ink-derived hairline track — no off-token greys (LOOKBIBLE §2).
+     Full activity-rings treatment is P3 match-cut work; this stub stays
+     one biosignal arc on a faint ink track. */
+  stroke: color-mix(in srgb, var(--ink) 8%, transparent);
 }
 
 .loader-arc__fill {
@@ -101,7 +215,8 @@ body::after {
 .loader__label {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: 0.35em;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
   color: var(--ink);
 }
 
@@ -142,29 +257,31 @@ main {
 .hero__eyebrow {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: 0.4em;
+  letter-spacing: var(--track-caps-wide);
   text-transform: uppercase;
-  color: rgb(11 11 12 / 55%);
+  /* dim label = 55% of the ground's counter-color (LOOKBIBLE §4 tone law) */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
 }
 
 .hero__title {
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 12vw, 9rem);
-  font-weight: 600;
+  font-size: var(--type-colossal);
+  /* LOOKBIBLE §4: colossal/hero = 300; weight 600 is BANNED at display sizes */
+  font-weight: 300;
   line-height: 0.95;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--track-colossal);
 }
 
 .hero__sub {
   font-size: clamp(1rem, 2vw, 1.25rem);
-  color: rgb(11 11 12 / 70%);
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
 }
 
 .hero__hint {
   margin-top: 3rem;
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  letter-spacing: 0.3em;
+  letter-spacing: var(--track-caps-wide);
   text-transform: uppercase;
   color: var(--biosignal);
   animation: hint-pulse 1s steps(2, jump-none) infinite; /* 1 Hz, of course */
@@ -192,21 +309,27 @@ main {
   padding-inline: 1.5rem;
   opacity: 0;
   will-change: transform, opacity;
-  /* Text-legibility scrim over the 3D stage (PLAN §3 post stack rule). */
-  background: radial-gradient(60% 140% at 50% 100%, rgb(235 235 235 / 80%), transparent 70%);
+  /* Text-legibility scrim from the ground token — never a hard panel
+     (LOOKBIBLE §7.1; tracks the live --porcelain when a look re-tokens it). */
+  background: radial-gradient(
+    60% 140% at 50% 100%,
+    color-mix(in srgb, var(--porcelain) 80%, transparent),
+    transparent 70%
+  );
   padding-block: 3rem 1rem;
 }
 
 .copy h2 {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4.5vw, 3.25rem);
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: var(--type-headline);
+  /* Section headlines run 300–400, never 600 (LOOKBIBLE §4). */
+  font-weight: 300;
+  letter-spacing: var(--track-title);
 }
 
 .copy p {
   font-size: clamp(0.95rem, 1.6vw, 1.15rem);
-  color: rgb(11 11 12 / 65%);
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
 }
 
 /* ---- Placeholder sections (die as P2 sections land) ------------------------ */

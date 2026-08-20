@@ -103,6 +103,13 @@ export const GRID = {
     hour: { len: 0.4, stem: 0.055, w: 0.05, outline: 0.012 },
     minute: { len: 0.665, stem: 0.055, w: 0.04, outline: 0.011 },
     second: { len: 0.755, tail: 0.16, w: 0.011, ballR: 0.021 },
+    /**
+     * Dark stem segment near the pivot (LOOKBIBLE §5 tune 3): the lume
+     * baton starts `len` ×R past the stem root; a narrower ink-metal stem
+     * (`wScale` × hand width, palette `handStem`) rides inside the outline
+     * below it — real Ultra hands never run solid white to the hub.
+     */
+    stemDark: { len: 0.115, wScale: 0.5 },
     hubR: 0.033,
     /** AOD hollow-hand rim thickness ×R (watchOS AOD outlines its hands). */
     aodRim: 0.008,
@@ -141,6 +148,8 @@ export interface DialPalette {
   faint: string;
   /** Biosignal red — seconds hand + 1 Hz elements ONLY (PLAN §3 color). */
   accent: string;
+  /** Dark metal stem near the hand pivot (LOOKBIBLE §5 tune 3, active mode). */
+  handStem: string;
   /** Complication semantic colors (watchOS system hues). */
   depth: string;
   heart: string;
@@ -154,18 +163,22 @@ export const PALETTE: Record<DialMode, DialPalette> = {
     dim: "rgba(145, 175, 190, 0.92)",
     faint: "rgba(145, 175, 190, 0.28)",
     accent: "#FF2D55",
+    handStem: "#15181d",
     depth: "#64D2FF",
     heart: "#FF2D55",
     compass: "#FF9F0A",
   },
-  // AOD: dimmed, reduced, hands hollowed. Accent uses the brightened
-  // Nocturne variant (PLAN §3: #FF375F-class) — it carries the 1 Hz tick alone.
+  // AOD: dimmed, reduced, hands hollowed, seconds hand DROPPED entirely
+  // (LOOKBIBLE §5 tune 1 — real watchOS AOD grammar). Accent uses the
+  // brightened Nocturne variant (PLAN §3: #FF375F-class) for the N cardinal;
+  // the 1 Hz life is the whole-minute hand step, not a sweeping second.
   aod: {
     bg: "#030407",
     fg: "rgba(242, 243, 244, 0.5)",
     dim: "rgba(145, 175, 190, 0.34)",
     faint: "rgba(145, 175, 190, 0.11)",
     accent: "rgba(255, 55, 95, 0.78)",
+    handStem: "#0a0c10", // unused — AOD hands are hollow rims (tune 1)
     depth: "rgba(100, 210, 255, 0.35)",
     heart: "rgba(255, 55, 95, 0.45)",
     compass: "rgba(255, 159, 10, 0.35)",

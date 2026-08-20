@@ -28,7 +28,9 @@ import {
   type Texture,
   type WebGLRenderer,
 } from "three";
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+// HDRLoader is the r185+ name for the Radiance loader (RGBELoader is the
+// deprecated alias — LOOKBIBLE §1.4 fix 6). Same API, same DataTexture out.
+import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
 
 /** TEMP — Poly Haven CC0, replaced by the authored rig at P1.5 (see above). */
 export const ENV_HDR_URL = "/assets/env/studio_small_03_2k.hdr";
@@ -131,7 +133,7 @@ export async function loadHdrEnv(
   onProgress?: (p: number) => void,
 ): Promise<Texture | null> {
   try {
-    const equirect = await new RGBELoader().loadAsync(url, (e) => {
+    const equirect = await new HDRLoader().loadAsync(url, (e) => {
       if (e.lengthComputable && onProgress) onProgress(e.loaded / e.total);
     });
     equirect.mapping = EquirectangularReflectionMapping;

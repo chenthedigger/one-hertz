@@ -226,12 +226,15 @@ function paintNumerals(
   }
 }
 
-/** Static rough content for the four corner slots (live data lands in P3). */
+/** Static rough content for the four corner slots (live data lands in P3).
+ * Labels are unit glyphs, never words (LOOKBIBLE §5 tune 2 — Apple puts no
+ * words in gauge corners; UTC is the one native-sanctioned exception, the
+ * world-clock city code). */
 const CORNER_ROUGHS: [big: string, small: string, frac: number][] = [
-  ["87", "PWR", 0.87], // top-left
-  ["23°", "AIR", 0.34], // top-right
-  ["214M", "ALT", 0.58], // bottom-left
-  ["18:42", "SET", 0.76], // bottom-right
+  ["87", "%", 0.87], // top-left — battery
+  ["23", "°C", 0.34], // top-right — air temp
+  ["214", "M", 0.58], // bottom-left — altitude
+  ["18:42", "UTC", 0.76], // bottom-right — world clock
 ];
 
 /**

@@ -21,6 +21,8 @@
  *                  "bloomRadius": 0.35, "grainAmount": 0.055,
  *                  "vignetteNocturne": 0.32 },
  *   "bgTokens":  { "stage": "#EBEBEB", "ink": "#0B0B0C" },
+ *   "contactShadow": { "opacity": 0.3, "radius": 1.1, "falloff": 2.0 },
+ *   "x_sectionLightKeyframes": { "keyframes": [ ... ] },  // gl/lightKeyframes.ts
  *   "materialOverrides": {
  *     "mat_band_ocean": { "color": "#2f7d6b", "roughness": 0.6, ... }
  *   }
@@ -32,11 +34,13 @@
  */
 
 import { Color, MeshPhysicalMaterial } from "three";
+import type { ContactShadowTune } from "./contactShadow";
 import {
   buildProceduralEnv,
   loadHdrEnv,
   type ProceduralEnvParams,
 } from "./env";
+import type { SectionLightKeyframe } from "./lightKeyframes";
 import type { PostTune } from "./post";
 import type { Stage } from "../webgl/stage";
 import { ensurePhysical, type WatchAsset } from "../webgl/watch";
@@ -93,8 +97,25 @@ export interface LookConfig {
   lightRig?: LightRigParams;
   postTune?: PostTune;
   bgTokens?: BgTokens;
+  /**
+   * Contact-shadow treatment (LOOKBIBLE §1.4 fix 2): `{opacity, radius,
+   * falloff}` — opacity on the material, radius as absolute world radius
+   * (overrides the footprint-derived default), falloff as the exponent on
+   * the pixel-wise `(1-r)^falloff` alpha curve (gl/contactShadow.ts).
+   */
+  contactShadow?: ContactShadowTune;
   /** Keyed by `mat_*` material name from the hero GLB naming contract. */
   materialOverrides?: Record<string, MaterialOverride>;
+  /**
+   * Per-section lighting keyframes (LOOKBIBLE §1.5 — DATA in the look
+   * JSON, wired by gl/lightKeyframes.ts off the raw scroll). The `x_`
+   * prefix is historical (the key predates driver support); it is now a
+   * first-class schema field. Other `x_*` keys remain ignored-by-design.
+   */
+  x_sectionLightKeyframes?: {
+    comment?: string;
+    keyframes?: SectionLightKeyframe[];
+  };
 }
 
 /**
@@ -165,6 +186,9 @@ export async function applyLook(
 
   // ---- Post tune -----------------------------------------------------------
   if (look.postTune) stage.post.tune(look.postTune);
+
+  // ---- Contact shadow (LOOKBIBLE §1.4 fix 2) -------------------------------
+  if (look.contactShadow) stage.tuneContactShadow(look.contactShadow);
 
   // ---- Background tokens (scene + CSS custom properties) --------------------
   const bg = look.bgTokens;

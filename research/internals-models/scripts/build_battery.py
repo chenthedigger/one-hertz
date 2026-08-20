@@ -56,10 +56,15 @@ for sx in (-1, 1):
     parts.append(seam)
 
 # ---------------------------------------------------------------- steel carrier
-# satin steel top face (the printed face in the iFixit photo)
+# satin steel top face (the printed face in the iFixit photo).
+# §9 tune 3: dedicated linear-brushed mat, aniso 0 — the kit steel's
+# UV-radial tangent gave battery_b_top its spun-metal radial highlight.
+steel_carrier = lib.steel_satin_mat("steel_carrier", rough=0.38,
+                                    color="#C2C4C6", streaks=True,
+                                    aniso=0.0, streak_axis="Y")
 carrier = lib.box("carrier", (23.6 * MM, 28.4 * MM, 0.45 * MM),
                   (0, 0, 5.15 * MM), bevel=0.18 * MM, segments=3,
-                  mat=kit["steel_satin"])
+                  mat=steel_carrier)
 parts.append(carrier)
 
 # two brass ENIG screw ears on +X edge (spot-welded, Y000 screw holes)
@@ -103,10 +108,11 @@ ink = lib.box("ink_tape", (18 * MM, 3.5 * MM, 0.1 * MM),
 parts += [strip_top, strip_side, ink]
 
 # flex ribbon: kapton S-fall off the terrace to the connector
+# §9 tune 2: film thickness (0.06 mm), flattened bend profile
 flex = lib.s_curve_ribbon(
-    "flex", [(16.8 * MM, 3.2 * MM), (18.6 * MM, 4.8 * MM),
-             (20.4 * MM, 2.6 * MM), (22.6 * MM, 1.4 * MM)],
-    half_width=2.6 * MM, thickness=0.12 * MM, mat=kit["kapton"])
+    "flex", [(16.8 * MM, 3.0 * MM), (18.8 * MM, 4.0 * MM),
+             (20.8 * MM, 2.4 * MM), (22.8 * MM, 1.6 * MM)],
+    half_width=2.6 * MM, thickness=0.06 * MM, mat=kit["kapton"])
 # built in XY-as-(Y,Z) plane: rotate so S stands vertical along +Y off the terrace
 flex.rotation_euler = (math.radians(90), 0, math.radians(90))
 flex.location = (2 * MM, 0, 0)
@@ -143,12 +149,16 @@ lib.rewire_baked_normal(kit["graphite_pouch"], img)
 # terrace shares the material -> gets the baked map via its own UVs
 lib.smart_uv(terrace)
 
-# ---------------------------------------------------------------- studio + renders
-lib.studio(kit, floor_z=0.0)
+# ------------------------------------------------- instrument rig + renders
+# §9 tune 4: instrument.hdr world env (shipped look continuity), ink stage
+REPO = os.path.abspath(os.path.join(ROOT, "..", ".."))
+HDR = os.path.join(REPO, "public", "assets", "looks", "instrument.hdr")
+lib.instrument_world(scene, HDR, rot_deg=25.0, strength=1.0)
+# no floor: the env's near-black gradient IS the stage (shootout parity)
 
-# A: three-quarter hero (graphite flank + carrier face + ears)
+# A: three-quarter hero (graphite flank + carrier face + ears; DOF reined in)
 cam_a = lib.camera_shot("cam_hero", (0.085, -0.095, 0.070), (0, 0, 0.0025),
-                        lens=85, fstop=16.0)
+                        lens=85, fstop=32.0)
 lib.render_to(scene, cam_a, os.path.join(RENDERS, "battery_a_hero.png"))
 
 # B: top-front elevation (carrier face + text + ears)
@@ -159,7 +169,7 @@ lib.render_to(scene, cam_b, os.path.join(RENDERS, "battery_b_top.png"))
 # C: MACRO — terrace + terminal welds + kapton S-fall, shallow-but-valid DOF
 lib.macro_key((0.075, 0.095, 0.085), (0.002, 0.016, 0.0035), power=1.0)
 cam_c = lib.camera_shot("cam_macro", (0.034, 0.056, 0.036),
-                        (0.002, 0.016, 0.0038), lens=40, fstop=11.0, sensor=16)
+                        (0.002, 0.016, 0.0038), lens=40, fstop=16.0, sensor=16)
 lib.render_to(scene, cam_c, os.path.join(RENDERS, "battery_c_macro.png"))
 
 # ---------------------------------------------------------------- save + export

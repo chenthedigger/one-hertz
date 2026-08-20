@@ -320,21 +320,31 @@ export class DialRenderer {
           pal.bg,
         );
       } else {
-        // Outlined baton: ink outline separates the hand from anything below.
+        // Outlined baton with a dark stem near the pivot (LOOKBIBLE §5
+        // tune 3): ink outline over the full run separates the hand from
+        // anything below; the narrower metal stem sits inside it; the lume
+        // baton starts past the stem — never solid white to the hub.
+        const stemEnd = spec.stem + hands.stemDark.len;
         this.baton(cx, cy, deg, spec.stem, spec.len, spec.w + spec.outline * 2, pal.bg);
-        this.baton(cx, cy, deg, spec.stem, spec.len, spec.w, pal.fg);
+        this.baton(cx, cy, deg, spec.stem, stemEnd, spec.w * hands.stemDark.wScale, pal.handStem);
+        this.baton(cx, cy, deg, stemEnd, spec.len, spec.w, pal.fg);
       }
     }
 
     // Seconds — biosignal red hairline + counterweight ball (1 Hz organ).
-    this.baton(cx, cy, secondDeg, -hands.second.tail, hands.second.len, hands.second.w, pal.accent);
-    const ball = polar(cx, cy, R * hands.second.tail, secondDeg + 180);
-    ctx.fillStyle = pal.accent;
-    ctx.beginPath();
-    ctx.arc(ball.x, ball.y, R * hands.second.ballR, 0, Math.PI * 2);
-    ctx.fill();
+    // AOD drops the seconds hand entirely (LOOKBIBLE §5 tune 1 — real
+    // watchOS AOD grammar); the dirty key still ticks 1/s for the minute step.
+    if (!aod) {
+      this.baton(cx, cy, secondDeg, -hands.second.tail, hands.second.len, hands.second.w, pal.accent);
+      const ball = polar(cx, cy, R * hands.second.tail, secondDeg + 180);
+      ctx.fillStyle = pal.accent;
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, R * hands.second.ballR, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
-    // Hub: white collar → ink gap → red pin (seconds axle).
+    // Hub: white collar → ink gap → red pin (seconds axle). With the AOD
+    // seconds hand dropped (tune 1), the red axle pin goes with it.
     ctx.fillStyle = pal.fg;
     ctx.beginPath();
     ctx.arc(cx, cy, R * hands.hubR, 0, Math.PI * 2);
@@ -344,10 +354,12 @@ export class DialRenderer {
     ctx.beginPath();
     ctx.arc(cx, cy, R * hands.hubR * 0.62, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = pal.accent;
-    ctx.beginPath();
-    ctx.arc(cx, cy, R * hands.hubR * 0.34, 0, Math.PI * 2);
-    ctx.fill();
+    if (!aod) {
+      ctx.fillStyle = pal.accent;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R * hands.hubR * 0.34, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   /** One hand as a round-capped baton from tail×R to len×R along `deg`. */

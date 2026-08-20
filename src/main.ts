@@ -21,9 +21,11 @@ import { ScrollEngine } from "./core/scroll";
 import type { SectionBase } from "./core/section";
 import { StateStore } from "./core/state";
 import { createSection } from "./sections/index";
+import { provideStage } from "./sections/stageRef";
 import { DialRenderer } from "./dial/renderer";
 import { installCursor } from "./ui/cursor/cursor";
 import { LongpressSystem } from "./ui/cursor/longpress";
+import { LightKeyframeDriver } from "./gl/lightKeyframes";
 import { applyLook, DEFAULT_LOOK, loadLook, type LookConfig } from "./gl/look";
 import { CameraRig } from "./webgl/cameraRig";
 import { Stage } from "./webgl/stage";
@@ -57,6 +59,7 @@ function boot(): void {
     throw new Error("boot: #stage canvas missing");
   }
   const stage = new Stage(canvas, { onEnvProgress: (p) => envTask.report(p) });
+  provideStage(stage); // section-module stage seam (sections/stageRef.ts)
   stageTask.report(0.6); // context + env + geometry built
   // envReady settles on HDR swap OR confirmed fallback — real readiness
   // either way (loader honesty), so eval capture waits for the final light.
@@ -114,9 +117,15 @@ function boot(): void {
   // (fetch failure never leaves the stage unstyled).
   // Applied AFTER the watch settles so materialOverrides find their
   // mat_* targets (applyLook itself tolerates watch=null).
+  // Per-section lighting keyframe driver (LOOKBIBLE §1.4 fix 1 / §1.5):
+  // reads the active look's x_sectionLightKeyframes and drives env rotation
+  // + intensity + exposure + bloom + bgStage off the raw scroll, per frame.
+  // Inert until a look with keyframes lands (DEFAULT_LOOK has none).
+  const lightDriver = new LightKeyframeDriver(stage);
   const applyLookToStage = async (look: LookConfig): Promise<void> => {
     const watch = await watchReady;
     await applyLook(stage, watch, look);
+    lightDriver.setLook(look);
   };
   void watchReady.then(async () => {
     try {
@@ -154,6 +163,7 @@ function boot(): void {
   }
   registry.measure();
   engine.refresh(); // tracks were just sized — Lenis must re-learn its limit
+  lightDriver.setGeometry(registry.manifest()); // keyframe anchors = section centers
 
   // -- Interaction mechanics (P1 cursor+events lane) --------------------------
   // Longpress hold-zoom (mechanic 2): arms on ANY pointer type; consumers
@@ -187,6 +197,7 @@ function boot(): void {
     stage.resize();
     registry.measure();
     engine.refresh();
+    lightDriver.setGeometry(registry.manifest());
   });
 
   // Single frame pipeline: raw Lenis scroll in → sections scrubbed (both
@@ -202,6 +213,7 @@ function boot(): void {
       dial.applyDialToken(dialToken);
     }
     dial.update({ clockScalar: getClock(), scrollVelocity: engine.lenis.velocity }, dt);
+    lightDriver.update(rawScroll); // pure function of scroll — eval-settles
     rig.update(dt);
     stage.render(dt);
   });

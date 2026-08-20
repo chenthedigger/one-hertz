@@ -37,8 +37,12 @@ shell_parts = []   # joined into part_taptic
 mass_parts = []    # joined into taptic_mass (child, animatable)
 
 # ---------------------------------------------------------------- shell
-steel_shell = lib.steel_satin_mat("steel_shell", rough=0.42, color="#B4B6B8",
-                                  streaks=True)
+# LOOKBIBLE §9 tune 1: bead-blasted steel ~#b0b6ba, rough 0.35-0.45 micro
+# variation, mild brushed aniso, parting/weld band low on the drawn shell
+# (shell local origin is z=3mm -> band at world z 1.2mm = local -0.0018)
+steel_shell = lib.steel_bead_mat("steel_shell", color="#AAB0B4",
+                                 rough_center=0.42, parting_z=-0.0015,
+                                 parting_width=0.00018)
 shell = lib.box("shell", (28 * MM, 12 * MM, 6 * MM), (0, 0, 3 * MM),
                 bevel=2.0 * MM, segments=6, mat=steel_shell)
 cavity = lib.box("cavity", (27.3 * MM, 11.3 * MM, 5.3 * MM), (0, 0, 3 * MM),
@@ -105,10 +109,11 @@ for sx in (1, -1):
     shell_parts.append(spring)
 
 # ---------------------------------------------------------------- flex tail
+# §9 tune 2: kapton-film thickness (0.06 mm), flattened bend profile
 flex = lib.s_curve_ribbon(
-    "flex_tail", [(-14.0 * MM, 1.2 * MM), (-16.2 * MM, 2.4 * MM),
-                  (-18.2 * MM, 0.8 * MM), (-20.2 * MM, 1.4 * MM)],
-    half_width=1.6 * MM, thickness=0.12 * MM, mat=kit["kapton"])
+    "flex_tail", [(-14.0 * MM, 1.0 * MM), (-16.4 * MM, 1.8 * MM),
+                  (-18.4 * MM, 0.8 * MM), (-20.4 * MM, 1.1 * MM)],
+    half_width=1.6 * MM, thickness=0.06 * MM, mat=kit["kapton"])
 flex.rotation_euler = (math.radians(90), 0, 0)
 flex.location = (0, 2.5 * MM, 0)
 conn = lib.box("conn", (2.6 * MM, 3.6 * MM, 1.1 * MM),
@@ -117,14 +122,16 @@ conn = lib.box("conn", (2.6 * MM, 3.6 * MM, 1.1 * MM),
 shell_parts += [flex, conn]
 
 # ---------------------------------------------------------------- markings
+# §9 tune 1: raise etch contrast — dark laser-annealed marks on bead steel
+etch_mark = lib.simple_mat("etch_mark", "#1E2023", 0.3, 0.4)
 etch = lib.text_mesh("etch_main", "TAPTIC ENGINE", 1.0 * MM,
                      (0, 6.02 * MM, 1.30 * MM),
                      rot=(math.radians(90), 0, math.radians(180)),
-                     mat=kit["etch_dark"], extrude=0.01 * MM, align="CENTER")
+                     mat=etch_mark, extrude=0.012 * MM, align="CENTER")
 etch2 = lib.text_mesh("etch_pn", "FG551251 · 9.8 g", 0.55 * MM,
                       (0, 6.02 * MM, 0.62 * MM),
                       rot=(math.radians(90), 0, math.radians(180)),
-                      mat=kit["etch_dark"], extrude=0.01 * MM, align="CENTER")
+                      mat=etch_mark, extrude=0.012 * MM, align="CENTER")
 shell_parts += [etch, etch2]
 
 # spot-weld row along the front-bottom seam
@@ -149,14 +156,19 @@ img = lib.bake_normal(coil, "taptic_coil_nrm", 1024,
                       os.path.join(TEX, "taptic_coil_nrm.png"))
 lib.rewire_baked_normal(copper_x, img)
 
-# ---------------------------------------------------------------- studio + renders
-lib.studio(kit, floor_z=0.0)
-# interior light: rakes into the 45° window from overhead-front
+# ------------------------------------------------- instrument rig + renders
+# §9 tune 4: instrument.hdr world env (shipped look continuity), ink stage
+REPO = os.path.abspath(os.path.join(ROOT, "..", ".."))
+HDR = os.path.join(REPO, "public", "assets", "looks", "instrument.hdr")
+lib.instrument_world(scene, HDR, rot_deg=205.0, strength=1.0)
+# no floor: the env's near-black gradient IS the stage (shootout parity —
+# grade_and_render.py stages nothing either; a lit plane washes the frame)
+# interior fill: rakes into the 45° window from overhead-front
 lib.macro_key((0.015, 0.045, 0.100), (0, 0, 3 * MM), power=0.5, size=0.10)
 
-# A: three-quarter hero into the cutaway
+# A: three-quarter hero into the cutaway (§9 tune 4: DOF reined in)
 cam_a = lib.camera_shot("cam_hero", (0.040, 0.045, 0.052), (0, 0, 0.0025),
-                        lens=85, fstop=16.0)
+                        lens=85, fstop=32.0)
 lib.render_to(scene, cam_a, os.path.join(RENDERS, "taptic_a_hero.png"))
 
 # B: top-down — shell top, cut edge, coil through the window
@@ -166,7 +178,7 @@ lib.render_to(scene, cam_b, os.path.join(RENDERS, "taptic_b_top.png"))
 
 # C: MACRO — copper winding + tungsten cut face + spring end
 cam_c = lib.camera_shot("cam_macro", (0.026, 0.030, 0.024),
-                        (0.006, 0.0005, 0.0032), lens=40, fstop=11.0,
+                        (0.006, 0.0005, 0.0032), lens=40, fstop=16.0,
                         sensor=16)
 lib.render_to(scene, cam_c, os.path.join(RENDERS, "taptic_c_macro.png"))
 

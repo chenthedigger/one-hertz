@@ -30,7 +30,12 @@ import {
 import type { WatchAsset } from "./watch";
 import { uClock } from "../core/clock";
 import { isEvalMode } from "../core/determinism";
-import { createContactShadow } from "../gl/contactShadow";
+import {
+  CONTACT_SHADOW_BASE_RADIUS,
+  createContactShadow,
+  tuneContactShadow,
+  type ContactShadowTune,
+} from "../gl/contactShadow";
 import { buildProceduralEnv, loadStudioHdr } from "../gl/env";
 import { PostPipeline } from "../gl/post";
 import { detectInitialTier, QualityGovernor, TIER_FULL } from "../gl/quality";
@@ -87,11 +92,14 @@ export class Stage {
   private readonly contactShadow: Mesh;
   private screenMesh: Mesh;
   private rotationSpeed = 1; // multiplier — UPDATE_ROTATIONS (longpress lane)
+  private holdSpin = 0; // decaying longpress spin offset (live mode only)
   private disposed = false;
   /** The adopted hero asset (null until the GLB lands / if it fails). */
   private watchAsset: WatchAsset | null = null;
   /** True once a look config owns the env (boot HDR must not clobber it). */
   private envLockedByLook = false;
+  /** Active look's contactShadow tune (survives a later watch adoption). */
+  private contactShadowTune: ContactShadowTune | null = null;
 
   constructor(canvas: HTMLCanvasElement, options: StageOptions = {}) {
     this.renderer = new WebGLRenderer({
@@ -218,17 +226,23 @@ export class Stage {
 
   render(dt: number): void {
     if (this.disposed) return;
-    // Idle life driven by the clock scalar + time: the placeholder slowly
-    // turns; the clock scalar biases its attitude so the WebGL layer
-    // visibly consumes the same scalar the CSS layer does.
-    // Eval determinism: idle motion derives from the (freezable) clock
-    // scalar only — never from accumulated wall time (PLAN §6).
+    // Idle life derives from the clock scalar in BOTH modes (motion bible
+    // law 9: wall time is banned — the old live-mode `+= dt` accumulation
+    // was a placeholder-era violation). Live now equals eval attitude-wise
+    // (LOOKBIBLE §1.4 live-parity theme), and section camera recipes can
+    // chase the pose through `productAttitude` (Mechanism back macro). The
+    // longpress "rotations accelerate" mechanic survives as an additive
+    // offset in the interaction-intensity domain that decays once the hold
+    // releases, so composition-critical beats stay predictable at rest.
+    const attitude = productAttitude(uClock.value);
     if (isEvalMode) {
-      this.product.rotation.y = uClock.value * Math.PI * 2;
+      this.product.rotation.y = attitude.rotY;
     } else {
-      this.product.rotation.y += dt * 0.15 * this.rotationSpeed;
+      this.holdSpin += dt * 0.15 * (this.rotationSpeed - 1);
+      this.holdSpin *= Math.exp(-dt * 0.8);
+      this.product.rotation.y = attitude.rotY + this.holdSpin;
     }
-    this.product.rotation.x = -0.15 + uClock.value * 0.3;
+    this.product.rotation.x = attitude.rotX;
 
     // fps governor: shed one tier per bad window in live mode (inert when
     // forced or in eval mode — QualityGovernor.force()).
@@ -302,9 +316,23 @@ export class Stage {
     this.contactShadow.position.y = box.min.y - 0.02;
     const span = Math.max(box.max.x - box.min.x, box.max.z - box.min.z);
     const targetRadius = span * 0.6;
-    this.contactShadow.scale.setScalar(targetRadius / 2.6); // base radius 2.6
+    this.contactShadow.scale.setScalar(targetRadius / CONTACT_SHADOW_BASE_RADIUS);
     const shadowMat = this.contactShadow.material;
     if (!Array.isArray(shadowMat)) shadowMat.opacity = 0.3;
+    // A look's contactShadow tune outranks the footprint defaults — re-apply
+    // it if one already landed (applyLook normally runs after adoption, but
+    // the order must not matter).
+    if (this.contactShadowTune) tuneContactShadow(this.contactShadow, this.contactShadowTune);
+  }
+
+  /**
+   * Look-config `contactShadow {opacity, radius, falloff}` hot-apply
+   * (LOOKBIBLE §1.4 fix 2). Remembered so a later watch adoption re-applies
+   * it over the footprint defaults.
+   */
+  tuneContactShadow(tune: ContactShadowTune): void {
+    this.contactShadowTune = { ...this.contactShadowTune, ...tune };
+    tuneContactShadow(this.contactShadow, tune);
   }
 
   /** The adopted watch asset, if any (case-space + materials live here). */
@@ -396,4 +424,15 @@ export class Stage {
 
 function round5(v: number): number {
   return Math.round(v * 1e5) / 1e5;
+}
+
+/**
+ * Product-group attitude as a pure function of the page clock scalar — the
+ * ONE source of truth for the hero's idle pose (render() applies it every
+ * frame; section camera recipes chase it, e.g. the Mechanism back-crystal
+ * macro). One full revolution over the page, mirroring the env-rotation
+ * loop (LOOKBIBLE §1.5), so the outro restart lands on the hero pose.
+ */
+export function productAttitude(clock: number): { rotX: number; rotY: number } {
+  return { rotX: -0.15 + clock * 0.3, rotY: clock * Math.PI * 2 };
 }

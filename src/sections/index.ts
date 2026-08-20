@@ -9,6 +9,8 @@ import type { SectionBase } from "../core/section";
 import type { CameraRig } from "../webgl/cameraRig";
 import { DisassemblySection } from "./disassembly";
 import { IntroSection } from "./intro";
+import { MechanismSection } from "./mechanism";
+import { NocturneSection } from "./nocturne";
 import { PlaceholderSection } from "./placeholder";
 
 export function createSection(name: SectionName, rig: CameraRig): SectionBase {
@@ -17,6 +19,10 @@ export function createSection(name: SectionName, rig: CameraRig): SectionBase {
       return new IntroSection();
     case "Disassembly":
       return new DisassemblySection(rig);
+    case "Mechanism":
+      return new MechanismSection(rig);
+    case "Nocturne":
+      return new NocturneSection(rig);
     default:
       return new PlaceholderSection(name);
   }

@@ -17,6 +17,11 @@
     "stage": "#E8EAED",
     "ink": "#0A0B0D"
   },
+  "contactShadow": {
+    "opacity": 0.3,
+    "radius": 1.15,
+    "falloff": 2.4
+  },
   "materialOverrides": {
     "mat_titanium_case": {
       "color": "#cfccc6",

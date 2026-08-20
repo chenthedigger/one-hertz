@@ -1,0 +1,196 @@
+/* Mechanism — "Electrical Heart" (the dark beat). Scoped styles, imported by
+   src/sections/mechanism.ts only (zero contention with style.css lanes).
+
+   Ground law: during this beat the keyframe driver rewrites --porcelain to
+   the bgStage ink (#101216, LOOKBIBLE §1.5 #5), so every scrim below tracks
+   the LIVE ground token (§7.1). Type on this dark ground uses the bible's
+   porcelain constant directly (--mech-light) — the token itself is the
+   stage color here, not the counter-color. */
+
+.mech {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (and a sticky box is already the containing block for the absolute
+     children below). */
+  --mech-light: #e8eaed; /* LOOKBIBLE §2 porcelain constant (type on ink) */
+}
+
+/* ---- ECG trace (the particle-trails translation) ------------------------- */
+
+.mech__ecg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.mech__ecg-echo {
+  fill: none;
+  stroke: color-mix(in srgb, var(--mech-light) 15%, transparent);
+  stroke-width: 1.5;
+}
+
+.mech__ecg-echo--b {
+  stroke: color-mix(in srgb, var(--mech-light) 9%, transparent);
+  stroke-width: 2.5;
+}
+
+.mech__ecg-main {
+  fill: none;
+  stroke: var(--biosignal);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 14px color-mix(in srgb, var(--biosignal) 45%, transparent));
+}
+
+/* ---- Legibility scrim (§7.1 — gradient from the live ground token) ------- */
+
+.mech__scrim {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 58%;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* ---- Monumental split-char title ----------------------------------------- */
+
+.mech__copy {
+  position: absolute;
+  left: 6vw;
+  top: 27%;
+  pointer-events: none;
+}
+
+.mech__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mech-light) 55%, transparent);
+  margin-bottom: 1.1rem;
+  will-change: transform, opacity;
+}
+
+.mech__title {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: colossal/display = 300, 600 banned */
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+.mech__line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+}
+
+/* ghost layer: 31% of the ground's counter-color (§4 tone hierarchy) */
+.mech__line--ghost {
+  color: color-mix(in srgb, var(--mech-light) 31%, transparent);
+}
+
+.mech__line--solid {
+  color: var(--mech-light);
+  /* staggered second line: indent ≈ 0.55 × cap-height of the line above */
+  margin-left: 0.4em;
+}
+
+.mech__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ---- Left stats rail ------------------------------------------------------ */
+
+.mech__rail {
+  position: absolute;
+  left: 6vw;
+  top: 54%;
+  display: grid;
+  gap: 0.55rem;
+  max-width: 30rem;
+  pointer-events: none;
+}
+
+.mech__pulse {
+  width: 26px;
+  height: 26px;
+  margin-bottom: 0.7rem;
+  opacity: 0.5;
+}
+
+.mech__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--mech-light) 55%, transparent);
+}
+
+.mech__label:not(:first-of-type) {
+  margin-top: 1.4rem;
+}
+
+/* reveal lines start at the motion-bible dark-ground grey; the scrub-2 lag
+   drives them to #FFFFFF (colors are law — §7.3) */
+.mech__value {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  color: #bcbcbc;
+}
+
+.mech__body {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.5;
+  max-width: 36ch;
+  color: #bcbcbc;
+  margin-top: 0.35rem;
+}
+
+/* ---- Giant geared seconds readout ---------------------------------------- */
+
+.mech__sec {
+  position: absolute;
+  right: 4vw;
+  bottom: 1vh;
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: var(--type-colossal);
+  letter-spacing: var(--track-colossal);
+  line-height: 0.85;
+  color: color-mix(in srgb, var(--mech-light) 30%, transparent);
+  pointer-events: none;
+}
+
+.mech__sec .tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Small screens: keep the frame breathing ------------------------------ */
+
+@media (max-width: 720px) {
+  .mech__copy {
+    top: 18%;
+  }
+
+  .mech__rail {
+    top: 46%;
+    max-width: 72vw;
+  }
+
+  .mech__sec {
+    bottom: 3vh;
+  }
+}

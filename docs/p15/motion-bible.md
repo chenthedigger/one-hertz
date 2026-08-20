@@ -175,6 +175,7 @@ OUR rig (all frame-rate-independent `1−exp(−dt·k)`): camera master **k=8** 
 7. **Autoscroll pace:** ours defaults to full page in ~60 s (eval capture pace) vs source ~29 s; `?autoscrollspeed` overrides.
 8. **Loader floor:** choreography minimum **2.5 s** (`MIN_DURATION_S`, integrate.md #4; source parity ~2.5 s delay before autoscroll implies the same idle beat), arc still honest (min(real, curve)); `?eval=1` skips choreography, never readiness.
 9. **DOF rack (ours only):** source has no DOF. Ours exists at tier 0 on macro pinned sections (`setDof(true)`, `setDofFocus` racks). Motion law: focus racks ride the SAME beat fractions as the dolly they accompany (a rack without a dolly is noise), duration ≥.2 of the window, power3.inOut.
+10. **Grey-line reveal lag expressed as windows, not a second smoother (Nocturne, P2).** The source's `scrub: 2` catch-up is ScrollTrigger machinery our engine deliberately lacks (ONE smoothing owner, law 5; section ticks receive raw progress, no dt, and any private lerp would need Snappable access sections don't have). Nocturne's grey-line color reveals keep the grammar's essence — per-line STAGGERED windows (offsets alternating on the 15/25 pattern), `#BCBCBC→#FFFFFF` on dark, power3.inOut — driven directly by raw progress; Lenis's 4 s glide supplies the trailing feel. Any later section wanting the literal 2 s lag must add an engine-level smoothed channel (registry-owned, Snappable), never a per-section lerp.
 
 ---
 

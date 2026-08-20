@@ -82,13 +82,18 @@ def simple_mat(name, color, metallic=0.0, rough=0.5, **kw):
 
 
 def graphite_pouch_mat():
-    """Aluminized-polymer pouch laminate: graphite sheen + micro-wrinkle bump."""
+    """Aluminized-polymer pouch laminate: MATTE wrinkled foil (LOOKBIBLE §9
+    tune 3 — the old metallic 0.65 / rough 0.42 grade read as clear acrylic
+    under a bright env). Sheen rides the wrinkle ridges only."""
     mat, bsdf = _principled("graphite_pouch")
     nt = mat.node_tree
-    _set(bsdf, "Base Color", hexc("#3A3C3E"))
-    _set(bsdf, "Metallic", 0.65)
-    _set(bsdf, "Roughness", 0.42)
-    _set(bsdf, "Sheen Weight", 0.15)
+    # metallic-dark: aluminized laminate. Dielectric grades lift milky-white
+    # at grazing (frosted-acrylic read); metal fresnel keeps the grazing
+    # tint dark. Matte roughness carries the "foil, never gloss" law.
+    _set(bsdf, "Base Color", hexc("#35373A"))
+    _set(bsdf, "Metallic", 0.55)
+    _set(bsdf, "Roughness", 0.60)
+    _set(bsdf, "Sheen Weight", 0.06)
 
     tc = nt.nodes.new("ShaderNodeTexCoord")
     # large soft wrinkles (~1.5 mm features)
@@ -105,8 +110,8 @@ def graphite_pouch_mat():
     b2.inputs["Strength"].default_value = 0.06
     b2.inputs["Distance"].default_value = 0.00004
     b1 = nt.nodes.new("ShaderNodeBump")
-    b1.inputs["Strength"].default_value = 0.28
-    b1.inputs["Distance"].default_value = 0.00012
+    b1.inputs["Strength"].default_value = 0.5
+    b1.inputs["Distance"].default_value = 0.00016
 
     nt.links.new(tc.outputs["Object"], n1.inputs["Vector"])
     nt.links.new(tc.outputs["Object"], n2.inputs["Vector"])
@@ -115,12 +120,13 @@ def graphite_pouch_mat():
     nt.links.new(b2.outputs["Normal"], b1.inputs["Normal"])
     nt.links.new(b1.outputs["Normal"], bsdf.inputs["Normal"])
 
-    # roughness rides the wrinkles: sheen concentrates on ridges
+    # roughness rides the wrinkles: sheen concentrates on ridges,
+    # valleys go fully matte (foil, never gloss)
     ramp = nt.nodes.new("ShaderNodeValToRGB")
     ramp.color_ramp.elements[0].position = 0.35
-    ramp.color_ramp.elements[0].color = (0.34, 0.34, 0.34, 1)  # rough 0.34
+    ramp.color_ramp.elements[0].color = (0.50, 0.50, 0.50, 1)  # ridge rough
     ramp.color_ramp.elements[1].position = 0.75
-    ramp.color_ramp.elements[1].color = (0.52, 0.52, 0.52, 1)
+    ramp.color_ramp.elements[1].color = (0.72, 0.72, 0.72, 1)  # valley rough
     nt.links.new(n1.outputs["Fac"], ramp.inputs["Fac"])
     nt.links.new(ramp.outputs["Color"], bsdf.inputs["Roughness"])
     return mat
@@ -161,32 +167,83 @@ def copper_coil_mat(winding_axis="Y", pitch=0.00013):
     return mat
 
 
-def kapton_mat():
+def kapton_film_mat():
+    """Polyimide FPC film (LOOKBIBLE §9 tune 2). Transmission renders bubbly
+    on thin solids (P1 open debt) -> transmission 0; translucency faked with
+    fresnel-driven lightening; fine copper trace lines across the film."""
     mat, bsdf = _principled("kapton")
-    _set(bsdf, "Base Color", hexc("#D9822F"))
+    nt = mat.node_tree
     _set(bsdf, "Metallic", 0.0)
-    _set(bsdf, "Roughness", 0.32)
-    _set(bsdf, "Transmission Weight", 0.12)
-    _set(bsdf, "IOR", 1.6)
+    _set(bsdf, "Roughness", 0.30)
+    _set(bsdf, "IOR", 1.7)
+    _set(bsdf, "Sheen Weight", 0.08)
+
+    # facing = lit amber film, grazing = deeper amber edge (fake depth)
+    lw = nt.nodes.new("ShaderNodeLayerWeight")
+    lw.inputs["Blend"].default_value = 0.5
+    fres = nt.nodes.new("ShaderNodeMix")
+    fres.data_type = "RGBA"
+    fres.inputs["A"].default_value = hexc("#BC6418")  # facing: lit film
+    fres.inputs["B"].default_value = hexc("#8A3F0C")  # grazing: deep edge
+    nt.links.new(lw.outputs["Facing"], fres.inputs["Factor"])
+
+    # copper trace lines: stripes across the ribbon width (local Z of the
+    # s_curve_ribbon extrusion), pitch 0.4 mm, subtle color + bump
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(tc.outputs["Object"], sep.inputs["Vector"])
+    mul = nt.nodes.new("ShaderNodeMath")
+    mul.operation = "MULTIPLY"
+    mul.inputs[1].default_value = 2.0 * math.pi / 0.0003
+    nt.links.new(sep.outputs["Z"], mul.inputs[0])
+    sin = nt.nodes.new("ShaderNodeMath")
+    sin.operation = "SINE"
+    nt.links.new(mul.outputs[0], sin.inputs[0])
+    lvl = nt.nodes.new("ShaderNodeMath")
+    lvl.operation = "MULTIPLY_ADD"
+    lvl.inputs[1].default_value = 0.03   # +-3% brightness stripes
+    lvl.inputs[2].default_value = 0.97
+    nt.links.new(sin.outputs[0], lvl.inputs[0])
+    comb = nt.nodes.new("ShaderNodeCombineColor")
+    for sock in ("Red", "Green", "Blue"):
+        nt.links.new(lvl.outputs[0], comb.inputs[sock])
+    tint = nt.nodes.new("ShaderNodeMix")
+    tint.data_type = "RGBA"
+    tint.blend_type = "MULTIPLY"
+    tint.inputs["Factor"].default_value = 1.0
+    nt.links.new(fres.outputs["Result"], tint.inputs["A"])
+    nt.links.new(comb.outputs["Color"], tint.inputs["B"])
+    nt.links.new(tint.outputs["Result"], bsdf.inputs["Base Color"])
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.06
+    bump.inputs["Distance"].default_value = 0.00001
+    nt.links.new(sin.outputs[0], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
     return mat
 
 
 def steel_satin_mat(name="steel_satin", rough=0.35, color="#C6C8CA",
-                    streaks=False):
-    """streaks=True stretches the roughness noise along X — drawn-shell
-    brushing that breaks the plastic-uniform highlight on big faces."""
+                    streaks=False, aniso=0.0, streak_axis="X"):
+    """streaks=True stretches the roughness noise along streak_axis —
+    drawn-shell brushing that breaks the plastic-uniform highlight on big
+    faces. aniso defaults 0: Principled anisotropy without an authored
+    tangent gives UV-radial tangents on flat plates -> spun-metal radial
+    highlight artifact (bit battery_b_top; same law class as LOOKBIBLE
+    §1.3 material law 1)."""
     mat, bsdf = _principled(name)
     nt = mat.node_tree
     _set(bsdf, "Base Color", hexc(color))
     _set(bsdf, "Metallic", 1.0)
-    _set(bsdf, "Anisotropic", 0.25)
+    _set(bsdf, "Anisotropic", aniso)
     n = nt.nodes.new("ShaderNodeTexNoise")
     n.inputs["Scale"].default_value = 900.0 if streaks else 2600.0
     n.inputs["Detail"].default_value = 4.0
     if streaks:
         tc = nt.nodes.new("ShaderNodeTexCoord")
         mp = nt.nodes.new("ShaderNodeMapping")
-        mp.inputs["Scale"].default_value = (1.0, 90.0, 90.0)
+        stretch = {"X": (1.0, 90.0, 90.0), "Y": (90.0, 1.0, 90.0),
+                   "Z": (90.0, 90.0, 1.0)}[streak_axis]
+        mp.inputs["Scale"].default_value = stretch
         nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
         nt.links.new(mp.outputs["Vector"], n.inputs["Vector"])
     ramp = nt.nodes.new("ShaderNodeValToRGB")
@@ -197,17 +254,102 @@ def steel_satin_mat(name="steel_satin", rough=0.35, color="#C6C8CA",
     return mat
 
 
+def steel_bead_mat(name="steel_bead", color="#B0B6BA", rough_center=0.40,
+                   parting_z=None, parting_width=0.00007):
+    """Bead-blasted drawn-steel shell (LOOKBIBLE §9 tune 1): metalness 1.0,
+    micro roughness variation 0.35-0.45, mild brushed anisotropy along the
+    draw direction, granular micro-normal so the streak formers sparkle.
+    parting_z (LOCAL-space meters): darkened weld/parting band at that
+    height — a material feature so it follows bevels and section cuts."""
+    mat, bsdf = _principled(name)
+    nt = mat.node_tree
+    _set(bsdf, "Base Color", hexc(color))
+    _set(bsdf, "Metallic", 1.0)
+    _set(bsdf, "Anisotropic", 0.3)
+
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    # isotropic bead-blast grain (~0.3 mm features — survives 800px QA res)
+    n1 = nt.nodes.new("ShaderNodeTexNoise")
+    n1.inputs["Scale"].default_value = 3600.0
+    n1.inputs["Detail"].default_value = 5.0
+    nt.links.new(tc.outputs["Object"], n1.inputs["Vector"])
+    r1 = nt.nodes.new("ShaderNodeMapRange")
+    r1.inputs["To Min"].default_value = rough_center - 0.05
+    r1.inputs["To Max"].default_value = rough_center + 0.05
+    nt.links.new(n1.outputs["Fac"], r1.inputs["Value"])
+    # faint drawn-direction streaks overlaid (+-0.02)
+    n2 = nt.nodes.new("ShaderNodeTexNoise")
+    n2.inputs["Scale"].default_value = 700.0
+    n2.inputs["Detail"].default_value = 4.0
+    mp = nt.nodes.new("ShaderNodeMapping")
+    mp.inputs["Scale"].default_value = (1.0, 70.0, 70.0)
+    nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
+    nt.links.new(mp.outputs["Vector"], n2.inputs["Vector"])
+    r2 = nt.nodes.new("ShaderNodeMapRange")
+    r2.inputs["To Min"].default_value = -0.02
+    r2.inputs["To Max"].default_value = 0.02
+    nt.links.new(n2.outputs["Fac"], r2.inputs["Value"])
+    add = nt.nodes.new("ShaderNodeMath")
+    add.operation = "ADD"
+    add.use_clamp = True
+    nt.links.new(r1.outputs["Result"], add.inputs[0])
+    nt.links.new(r2.outputs["Result"], add.inputs[1])
+    rough_out = add
+
+    if parting_z is not None:
+        # band mask: 1 at parting_z, 0 beyond parting_width
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(tc.outputs["Object"], sep.inputs["Vector"])
+        sub = nt.nodes.new("ShaderNodeMath")
+        sub.operation = "SUBTRACT"
+        sub.inputs[1].default_value = parting_z
+        nt.links.new(sep.outputs["Z"], sub.inputs[0])
+        ab = nt.nodes.new("ShaderNodeMath")
+        ab.operation = "ABSOLUTE"
+        nt.links.new(sub.outputs[0], ab.inputs[0])
+        band = nt.nodes.new("ShaderNodeMapRange")
+        band.interpolation_type = "SMOOTHSTEP"
+        band.inputs["From Max"].default_value = parting_width
+        band.inputs["To Min"].default_value = 1.0
+        band.inputs["To Max"].default_value = 0.0
+        nt.links.new(ab.outputs[0], band.inputs["Value"])
+        # darken color in the band
+        mixc = nt.nodes.new("ShaderNodeMix")
+        mixc.data_type = "RGBA"
+        mixc.inputs["A"].default_value = hexc(color)
+        mixc.inputs["B"].default_value = hexc("#4A4D51")
+        nt.links.new(band.outputs["Result"], mixc.inputs["Factor"])
+        nt.links.new(mixc.outputs["Result"], bsdf.inputs["Base Color"])
+        # roughen the band (weld/anneal zone)
+        radd = nt.nodes.new("ShaderNodeMath")
+        radd.operation = "MULTIPLY_ADD"
+        radd.use_clamp = True
+        radd.inputs[1].default_value = 0.10
+        nt.links.new(band.outputs["Result"], radd.inputs[0])
+        nt.links.new(rough_out.outputs[0], radd.inputs[2])
+        rough_out = radd
+
+    nt.links.new(rough_out.outputs[0], bsdf.inputs["Roughness"])
+    # granular micro-normal (bead-blast glint under raking streak light)
+    bump = nt.nodes.new("ShaderNodeBump")
+    bump.inputs["Strength"].default_value = 0.16
+    bump.inputs["Distance"].default_value = 0.00003
+    nt.links.new(n1.outputs["Fac"], bump.inputs["Height"])
+    nt.links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
+    return mat
+
+
 def material_kit():
     return {
         "graphite_pouch": graphite_pouch_mat(),
-        "kapton": kapton_mat(),
+        "kapton": kapton_film_mat(),
         "copper_coil": copper_coil_mat(),
         "steel_satin": steel_satin_mat(),
         "steel_bare": simple_mat("steel_bare", "#D7D9DB", 1.0, 0.25),
-        "steel_cut": simple_mat("steel_cut", "#DDDFE1", 1.0, 0.18),
+        "steel_cut": simple_mat("steel_cut", "#DDDFE1", 1.0, 0.28),
         "nickel_tab": simple_mat("nickel_tab", "#CFD2D4", 1.0, 0.30),
         "brass_enig": simple_mat("brass_enig", "#C9A86A", 1.0, 0.32),
-        "alu_crimp": simple_mat("alu_crimp", "#B9BCBE", 1.0, 0.38),
+        "alu_crimp": simple_mat("alu_crimp", "#B9BCBE", 1.0, 0.5),
         "tungsten": simple_mat("tungsten", "#5A5C60", 1.0, 0.42),
         "blued_spring": simple_mat("blued_spring", "#33415E", 1.0, 0.24),
         "magnet_dark": simple_mat("magnet_dark", "#3B3D42", 1.0, 0.5),
@@ -464,6 +606,69 @@ def studio(kit, floor_z=0.0, floor_size=4.0):
     # fill: broad soft right, cool + weak
     strip("fill_soft", (0.35, 0.35), (0.30, -0.10, 0.18),
           (math.radians(55), 0, math.radians(55)), 2.5, (0.94, 0.97, 1.0))
+    return floor
+
+
+def instrument_world(scene, hdr_path, rot_deg=0.0, strength=1.0):
+    """LOOKBIBLE §9 tune 4: re-shoot under the INSTRUMENT rig, not the white
+    void. hdr_path = public/assets/looks/instrument.hdr (the shipped 8-former
+    rig, §1.1). The rig is rotation-relative: rot_deg aims the whole rig.
+
+    Camera rays see the AUTHORED near-black gradient (bake_env.py's exact
+    stage, §1.1 background law) — the baked HDR contains the emitter cards,
+    and any downward camera otherwise frames the 3x2 m bounce_floor card as
+    a cream wall. Lighting/reflection rays keep the full HDR untouched."""
+    world = bpy.data.worlds.new("instrument_world")
+    scene.world = world
+    world.use_nodes = True
+    nt = world.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputWorld")
+
+    # HDR branch (lighting + reflections)
+    bg_env = nt.nodes.new("ShaderNodeBackground")
+    bg_env.inputs["Strength"].default_value = strength
+    env = nt.nodes.new("ShaderNodeTexEnvironment")
+    env.image = bpy.data.images.load(hdr_path)
+    mp = nt.nodes.new("ShaderNodeMapping")
+    mp.inputs["Rotation"].default_value = (0.0, 0.0, math.radians(rot_deg))
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    nt.links.new(tc.outputs["Generated"], mp.inputs["Vector"])
+    nt.links.new(mp.outputs["Vector"], env.inputs["Vector"])
+    nt.links.new(env.outputs["Color"], bg_env.inputs["Color"])
+
+    # camera-ray branch: bake_env.py's authored near-black -> dark-cool grey
+    bg_cam = nt.nodes.new("ShaderNodeBackground")
+    mixc = nt.nodes.new("ShaderNodeMix")
+    mixc.data_type = "RGBA"
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    ramp = nt.nodes.new("ShaderNodeMapRange")
+    ramp.inputs["From Min"].default_value = -1.0
+    ramp.inputs["From Max"].default_value = 1.0
+    mixc.inputs[6].default_value = (0.004, 0.0045, 0.005, 1.0)
+    mixc.inputs[7].default_value = (0.050, 0.056, 0.065, 1.0)
+    nt.links.new(tc.outputs["Generated"], sep.inputs[0])
+    nt.links.new(sep.outputs["Z"], ramp.inputs["Value"])
+    nt.links.new(ramp.outputs["Result"], mixc.inputs[0])
+    nt.links.new(mixc.outputs[2], bg_cam.inputs["Color"])
+
+    lp = nt.nodes.new("ShaderNodeLightPath")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs["Fac"])
+    nt.links.new(bg_env.outputs["Background"], mix.inputs[1])
+    nt.links.new(bg_cam.outputs["Background"], mix.inputs[2])
+    nt.links.new(mix.outputs["Shader"], out.inputs["Surface"])
+    return world
+
+
+def ink_floor(floor_z=0.0, floor_size=3.0):
+    """Ink stage ground (--ink #0A0B0D, LOOKBIBLE §2) — grounds the part
+    with a real contact shadow under the instrument env."""
+    mat = simple_mat("stage_ink", "#0A0B0D", 0.0, 0.75)
+    bpy.ops.mesh.primitive_plane_add(size=floor_size, location=(0, 0, floor_z))
+    floor = bpy.context.active_object
+    floor.name = "stage_floor"
+    floor.data.materials.append(mat)
     return floor
 
 

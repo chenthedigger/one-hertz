@@ -1,0 +1,187 @@
+/* Nocturne — section-owned styles (imported by src/sections/nocturne.ts).
+   Everything rides the LOOKBIBLE tokens: grounds --ink/--porcelain (the
+   keyframe driver re-writes --porcelain to #0A0B0D across this beat), type
+   on the --type-* / --track-* ramp, data voice Geist Mono + tnum, scrims from
+   the nearest ground token (§7.1 — ink, this is the dark stage). */
+
+.noc {
+  /* Written by NocturneSection.tickDom every frame — the radial darkness. */
+  --noc-hole: 130%;
+  --noc-soft: 175%;
+  /* LOOKBIBLE §2 porcelain as a COLOR (#E8EAED). The live --porcelain var is
+     the STAGE token — the keyframe driver rewrites it to #0A0B0D across this
+     beat, so Nocturne type must NOT derive from it (dark-on-dark). If a look
+     ever re-tokens porcelain, update this literal with it (lane note). */
+  --noc-porcelain: #e8eaed;
+}
+
+/* Darkness radiates OUTWARD from the dial: a radial veil whose transparent
+   hole (centered on the watch head) closes as the section begins. Sits over
+   the fixed WebGL canvas, under the copy. Compositor-cheap enough at one
+   gradient repaint per scrolled frame; pointer-transparent. */
+.noc__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 105% 95% at 48% 42%,
+    transparent var(--noc-hole),
+    color-mix(in srgb, var(--ink) 96%, transparent) var(--noc-soft)
+  );
+}
+
+.noc__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.noc__beat {
+  position: absolute;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ---- Beat 1 · headline (right column — the held pose parks the watch left, §7.5) ---------- */
+
+.noc__beat--head {
+  right: 6vw;
+  top: 20svh;
+  max-width: 40vw;
+  padding: 2.5rem 0 2.5rem 3rem;
+  /* Text-over-3D scrim: gradient from the ink ground 0→~55%, never a panel. */
+  background: radial-gradient(
+    75% 110% at 65% 45%,
+    color-mix(in srgb, var(--ink) 55%, transparent),
+    transparent 72%
+  );
+}
+
+.noc__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  /* dim label = 55% of the ground's counter-color (§4 tone law) */
+  color: color-mix(in srgb, var(--noc-porcelain) 55%, transparent);
+}
+
+.noc__headline {
+  margin-top: 1.1rem;
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: 600 banned at display sizes */
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  /* Nocturne mapping (§2): type = porcelain at 92% */
+  color: color-mix(in srgb, var(--noc-porcelain) 92%, transparent);
+}
+
+.noc__line {
+  display: block;
+  overflow: clip; /* chars slide in from x:-100% under the clip */
+}
+
+.noc__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.noc__lead {
+  margin-top: 1.4rem;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  color: color-mix(in srgb, var(--noc-porcelain) 70%, transparent);
+  /* initial opacity 0 comes from the scrubbed timeline's fromTo state */
+}
+
+/* ---- Beat 2 · grey-line reveals (bottom-right, scrub-color grammar §7.3) -- */
+
+.noc__beat--lines {
+  right: 6vw;
+  bottom: 10svh;
+  max-width: 42vw;
+  display: grid;
+  gap: 0.45rem;
+  padding: 2rem 0 1.25rem 2.5rem;
+  background: radial-gradient(
+    80% 130% at 70% 70%,
+    color-mix(in srgb, var(--ink) 55%, transparent),
+    transparent 74%
+  );
+}
+
+.noc__beat--lines p {
+  font-family: var(--font-body);
+  font-size: var(--type-lead);
+  line-height: 1.25;
+  color: #bcbcbc; /* motion-bible grey on dark; timeline reveals to #ffffff */
+  opacity: 0.92; /* Nocturne type law: 92% alpha */
+}
+
+/* ---- AOD match-cut caption (centered under the luminous dial) ------------ */
+
+.noc__aodtag {
+  left: 0;
+  right: 0;
+  bottom: 9svh;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--noc-porcelain) 55%, transparent);
+  padding-block: 1.5rem;
+  background: radial-gradient(
+    40% 160% at 50% 60%,
+    color-mix(in srgb, var(--ink) 55%, transparent),
+    transparent 75%
+  );
+}
+
+.noc__aodtag em {
+  font-style: normal;
+  color: var(--biosignal-nocturne); /* the 1 Hz organ, brightened for night */
+}
+
+/* ---- Beat 3 · Sleep Score (data voice — mono, tabular) ------------------- */
+
+.noc__beat--score {
+  right: 6vw;
+  top: 26svh;
+  max-width: 40vw;
+  padding: 2.5rem 0 2rem 3rem;
+  background: radial-gradient(
+    75% 115% at 65% 45%,
+    color-mix(in srgb, var(--ink) 55%, transparent),
+    transparent 72%
+  );
+}
+
+.noc__score-value {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--type-display);
+  font-weight: 380;
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  color: color-mix(in srgb, var(--noc-porcelain) 92%, transparent);
+}
+
+.noc__score-unit {
+  font-size: var(--type-title);
+  color: color-mix(in srgb, var(--noc-porcelain) 40%, transparent);
+  margin-left: 0.35em;
+}
+
+.noc__caption {
+  margin-top: 1rem;
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  letter-spacing: 0.02em;
+  color: color-mix(in srgb, var(--noc-porcelain) 55%, transparent);
+}
