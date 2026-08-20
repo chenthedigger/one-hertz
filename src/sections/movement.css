@@ -1,0 +1,167 @@
+/* Movement — word-stack #2 over the rotating S-SiP (the light beat).
+   Scoped styles, imported by src/sections/movement.ts only.
+
+   Ground law: the keyframe driver holds the porcelain ground at this
+   section's center (Movement key has no bgStage) and rides the dark→light
+   ramp out of Mechanism on the way in — scrims below track the LIVE
+   --porcelain token (LOOKBIBLE §7.1). Reveal colors are the light-ground
+   law pair (#BCBCBC → #323232, §7.3) applied inline by the module. */
+
+.mvt {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (Mechanism lane pitfall #2). */
+  overflow: hidden; /* the stack is ~120vh tall and rides through */
+}
+
+/* ---- Legibility scrims (§7.1 — gradients from the live ground token) ----- */
+
+.mvt__scrim {
+  position: absolute;
+  inset-block: 0;
+  pointer-events: none;
+}
+
+.mvt__scrim--stack {
+  left: 0;
+  width: 62%;
+  background: linear-gradient(
+    97deg,
+    color-mix(in srgb, var(--porcelain) 50%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 26%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.mvt__scrim--labels {
+  right: 0;
+  width: 36%;
+  background: linear-gradient(
+    263deg,
+    color-mix(in srgb, var(--porcelain) 62%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* ---- Eyebrow -------------------------------------------------------------- */
+
+.mvt__eyebrow {
+  position: absolute;
+  left: 6vw;
+  top: 7vh;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ---- The word stack (colossal, editorial ragged indents) ------------------ */
+
+.mvt__stack {
+  position: absolute;
+  left: 6vw;
+  right: 0;
+  top: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-colossal);
+  font-weight: 300; /* §4: colossal = 300, 600 banned */
+  line-height: 0.96;
+  letter-spacing: var(--track-colossal);
+  text-transform: uppercase;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.mvt__line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+  white-space: pre; /* the "/ HIGHLY" gap survives */
+  /* pre-reveal color = the light-ground FROM grey; the module drives it */
+  color: #bcbcbc;
+}
+
+/* source-echo ragged stagger (Movement_* frames): THE high right, the slash
+   line inset, then the long words walk back left */
+.mvt__line--0 {
+  margin-left: 24vw;
+}
+
+.mvt__line--1 {
+  margin-left: 15vw;
+}
+
+.mvt__line--2 {
+  margin-left: 1vw;
+}
+
+.mvt__line--3 {
+  margin-left: 9vw;
+}
+
+.mvt__line--4 {
+  margin-left: 3vw;
+}
+
+.mvt__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ---- Right label rail (the source's two label blocks) --------------------- */
+
+.mvt__labels {
+  position: absolute;
+  right: 4.5vw;
+  top: 54%;
+  width: 19.5rem;
+  max-width: 36vw;
+  display: grid;
+  gap: 3.4rem;
+  pointer-events: none;
+}
+
+.mvt__block {
+  will-change: transform, opacity;
+}
+
+.mvt__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: 0.6rem;
+}
+
+/* reveal lines start at the light-ground grey; the scrub:2 lag drives them
+   to #323232 (colors are law — §7.3) */
+.mvt__body {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.5;
+  max-width: 34ch;
+  color: #bcbcbc;
+}
+
+/* ---- Small screens: keep the frame breathing ------------------------------ */
+
+@media (max-width: 720px) {
+  .mvt__stack {
+    font-size: var(--type-display);
+  }
+
+  .mvt__line--0 {
+    margin-left: 34vw;
+  }
+
+  .mvt__labels {
+    right: 6vw;
+    top: 56%;
+    width: 66vw;
+    max-width: 66vw;
+    gap: 1.8rem;
+  }
+}

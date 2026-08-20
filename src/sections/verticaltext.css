@@ -1,0 +1,198 @@
+/* VerticalText — the vertical rotation beat (light stage). Scoped styles,
+   imported by src/sections/verticaltext.ts only (zero style.css contention).
+
+   Ground law: the keyframe driver holds the porcelain ground here (no
+   bgStage on the VerticalText key — LOOKBIBLE §1.5 #3), so type is ink on
+   light and every scrim rides the live --porcelain token (§7.1). Grey-line
+   reveals start at the light-ground grey #323232 (§7.3); the timeline
+   drives them to ink. */
+
+.vt {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (section-Mechanism pitfall 2); the sticky box is already the
+     containing block for the absolute children below. */
+  overflow: hidden; /* stack letters fly ±60vw — never widen the page */
+}
+
+/* ---- Legibility scrims (§7.1 — gradient from the live ground token) ------- */
+
+.vt__scrim {
+  position: absolute;
+  inset-block: 0;
+  width: 52%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.vt__scrim--a {
+  left: 0;
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+.vt__scrim--b {
+  right: 0;
+  background: linear-gradient(
+    260deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* ---- Colossal vertical ghost stacks (the namesake) ------------------------ */
+
+.vt__stack {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-display);
+  /* colossal, capped so four letters always fit the pinned viewport */
+  font-size: min(var(--type-colossal), 19svh);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 0.82;
+  letter-spacing: var(--track-colossal);
+  text-transform: uppercase;
+  /* ghost layer: 30% of the ground's counter-color (§4 tone hierarchy) */
+  color: color-mix(in srgb, var(--ink) 30%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+.vt__stack--a {
+  left: 2vw;
+}
+
+.vt__stack--b {
+  left: 2vw;
+}
+
+.vt__stack-char {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ---- Copy blocks ----------------------------------------------------------- */
+
+.vt__block {
+  position: absolute;
+  top: 26%;
+  max-width: 40vw;
+  pointer-events: none;
+}
+
+.vt__block--a {
+  left: 6vw;
+}
+
+.vt__block--b {
+  right: 6vw;
+  max-width: 50vw;
+  text-align: right;
+}
+
+/* COMPLICATIONS (13 chars, one word) outruns the display size the left
+   block wears — the right head caps at the width the word actually fits
+   (measured on capture; the pairing stays asymmetric across the turn) */
+.vt__block--b .vt__head {
+  font-size: min(var(--type-display), 5.2vw);
+}
+
+.vt__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: 1.1rem;
+  will-change: transform, opacity;
+}
+
+.vt__head {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300;
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+.vt__headline {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+  white-space: nowrap;
+}
+
+/* ghost first line, solid second — the §4 tone pairing */
+.vt__headline--ghost {
+  color: color-mix(in srgb, var(--ink) 31%, transparent);
+}
+
+.vt__headline--solid {
+  color: var(--ink);
+  /* staggered second line: indent ≈ 0.55 × cap-height of the line above */
+  margin-left: 0.4em;
+}
+
+.vt__block--b .vt__headline--solid {
+  margin-left: 0;
+  margin-right: 0.4em;
+}
+
+.vt__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ---- Grey-line reveals (colors are law — start value in the timeline) ----- */
+
+.vt__lines {
+  margin-top: 1.6rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vt__line {
+  font-family: var(--font-body);
+  font-size: var(--type-lead);
+  line-height: 1.3;
+  color: #323232;
+  font-variant-numeric: tabular-nums; /* the data bits stay tabular */
+}
+
+/* ---- Small screens: keep the frame breathing ------------------------------- */
+
+@media (max-width: 720px) {
+  .vt__block {
+    max-width: 74vw;
+  }
+
+  .vt__block--a {
+    top: 12%;
+  }
+
+  .vt__block--b {
+    top: auto;
+    bottom: 10%;
+  }
+
+  .vt__stack {
+    font-size: min(var(--type-colossal), 11svh);
+  }
+
+  .vt__scrim {
+    width: 100%;
+  }
+
+  .vt__line {
+    font-size: var(--type-body);
+  }
+}

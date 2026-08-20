@@ -83,6 +83,12 @@ const ECG_ECHO_A =
 const ECG_ECHO_B =
   "M -60 760 C 260 840, 520 810, 820 730 C 1120 650, 1420 700, 1700 790";
 
+/* W1 tune 3: added strand pass — ORIGINATES top-right so the dash-draw puts
+ * structure across the sensor-dome black on the right half from early in
+ * the window (the left-origin strands only reach it near the end). */
+const ECG_ECHO_C =
+  "M 1680 150 C 1460 250, 1290 420, 1255 590 C 1230 740, 1330 840, 1560 885";
+
 /* ---- grey-line reveal windows (scrub-fraction domain, §7.3 colors) -------- */
 
 interface RevealLine {
@@ -218,6 +224,7 @@ export class MechanismSection extends SectionBase {
       // echoes lead the pen slightly, the layered-ribbon read
       { el: q<SVGPathElement>(".mech__ecg-echo--a"), lead: 1.18 },
       { el: q<SVGPathElement>(".mech__ecg-echo--b"), lead: 1.1 },
+      { el: q<SVGPathElement>(".mech__ecg-echo--c"), lead: 1.25 },
       { el: q<SVGPathElement>(".mech__ecg-main"), lead: 1 },
     ];
     this.secEl = q<HTMLElement>(".mech__sec");
@@ -246,40 +253,55 @@ export class MechanismSection extends SectionBase {
     const line1 = Array.from(pin.querySelectorAll<HTMLElement>(".mech__line--ghost .mech__char"));
     const line2 = Array.from(pin.querySelectorAll<HTMLElement>(".mech__line--solid .mech__char"));
     const eyebrow = pin.querySelector<HTMLElement>(".mech__eyebrow");
+    const copy = pin.querySelector<HTMLElement>(".mech__copy");
+    const rail = pin.querySelector<HTMLElement>(".mech__rail");
 
+    // W1 tune 1 — the DOM channel is GATED: copy enters .12–.18, after the
+    // blend-in camera sweep (.0–.15) has landed, and departs power2.in @.85
+    // (done by ≈.89) before the blend-out hands the frame back.
     // scrub:true transform grammar (§3): char x-slides power3.out, opacity
     // linear over the first half of each slide.
     tl.fromTo(
       line1,
       { xPercent: -110 },
       { xPercent: 0, duration: 0.1, ease: "power3.out", stagger: 0.011 },
-      0.05,
+      0.14,
     );
     tl.fromTo(
       line1,
       { opacity: 0 },
       { opacity: 1, duration: 0.05, ease: "none", stagger: 0.011 },
-      0.05,
+      0.14,
     );
     tl.fromTo(
       line2,
       { xPercent: -110 },
       { xPercent: 0, duration: 0.1, ease: "power3.out", stagger: 0.018 },
-      0.1,
+      0.18,
     );
     tl.fromTo(
       line2,
       { opacity: 0 },
       { opacity: 1, duration: 0.05, ease: "none", stagger: 0.018 },
-      0.1,
+      0.18,
     );
     if (eyebrow) {
       tl.fromTo(
         eyebrow,
         { opacity: 0, y: 10 },
         { opacity: 1, y: 0, duration: 0.06, ease: "power3.out" },
-        0.04,
+        0.12,
       );
+    }
+    // stats rail rides the same gate (its color reveals still open @.26)
+    if (rail) {
+      tl.fromTo(rail, { opacity: 0 }, { opacity: 1, duration: 0.05, ease: "none" }, 0.16);
+    }
+    // departure — copy block + rail leave power2.in (accelerating out, §1
+    // departure grammar) inside .85–.89
+    const leaving = [copy, rail].filter((el): el is HTMLElement => el !== null);
+    if (leaving.length > 0) {
+      tl.to(leaving, { opacity: 0, y: -40, ease: "power2.in", duration: 0.04 }, 0.85);
     }
     // trace fades up fast (source: uOpacity→1 dur .1 @0), draws all window
     tl.fromTo(this.ecgSvg, { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 0.02);
@@ -450,6 +472,8 @@ function buildMarkup(): string {
       <path class="mech__ecg-echo mech__ecg-echo--a" d="${ECG_ECHO_A}"
         pathLength="1000" stroke-dasharray="1000" stroke-dashoffset="1000" />
       <path class="mech__ecg-echo mech__ecg-echo--b" d="${ECG_ECHO_B}"
+        pathLength="1000" stroke-dasharray="1000" stroke-dashoffset="1000" />
+      <path class="mech__ecg-echo mech__ecg-echo--c" d="${ECG_ECHO_C}"
         pathLength="1000" stroke-dasharray="1000" stroke-dashoffset="1000" />
       <path class="mech__ecg-main" d="${ECG_MAIN}"
         pathLength="1000" stroke-dasharray="1000" stroke-dashoffset="1000" />

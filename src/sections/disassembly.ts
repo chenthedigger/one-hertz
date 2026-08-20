@@ -65,10 +65,13 @@ interface HeroSlot {
   twist: number;
 }
 
+/* Distances carry the wave-1 art-director tune: fan presence — parts spread
+ * across ~60–70% of frame width (dists +~25% over the first pass, paired
+ * with the ~9% closer fan dolly in authorCamera). */
 const HERO_SLOTS: HeroSlot[] = [
-  { part: "part_crystal", dist: 2.05, twist: 0.18 },
-  { part: "part_screen", dist: 1.6, twist: -0.12 },
-  { part: "part_backCrystal", dist: -0.8, twist: 0.16 },
+  { part: "part_crystal", dist: 2.15, twist: 0.18 },
+  { part: "part_screen", dist: 1.7, twist: -0.12 },
+  { part: "part_backCrystal", dist: -0.92, twist: 0.16 },
 ];
 
 /** Internals stack: base = resting offset under the display, inside the case. */
@@ -79,9 +82,9 @@ interface InternalSlot {
 }
 
 const INTERNAL_LAYOUT: InternalSlot[] = [
-  { part: "part_sip", base: -0.04, dist: 1.3 },
-  { part: "part_battery", base: -0.1, dist: 0.92 },
-  { part: "part_taptic", base: -0.16, dist: 0.58 },
+  { part: "part_sip", base: -0.04, dist: 1.38 },
+  { part: "part_battery", base: -0.1, dist: 1.0 },
+  { part: "part_taptic", base: -0.16, dist: 0.64 },
 ];
 
 const SCREW_PARTS = [
@@ -323,8 +326,10 @@ export class DisassemblySection extends SectionBase {
 
     // Ghost thesis: the horology frequency departs (power3.in — violent-ish
     // background-letter grammar), ours arrives from off-frame (power3.out).
+    // W1 tune 1: exit finishes by p≈.28 so the ghost fully clears the
+    // upper-left copy zone before the grey-line block lands there (@.32).
     if (ghostFour) {
-      tl.to(ghostFour, { x: "-60vw", ease: "power3.in", duration: 0.45 }, 0.1);
+      tl.to(ghostFour, { x: "-60vw", ease: "power3.in", duration: 0.18 }, 0.1);
     }
     if (ghostOne) {
       tl.fromTo(
@@ -435,13 +440,15 @@ export class DisassemblySection extends SectionBase {
     this.rig.authorTimeline((proxy: OrbitProxy) => {
       const tl = gsap.timeline({ paused: true, defaults: { ease: EASE.default } });
       tl.to(proxy, { parallaxMultiplier: 0, duration: 0.1 }, 0);
+      // W1 tune 2: fan dolly ~9% closer (5.15 → 4.7) — the exploded line
+      // carries the frame; pull-back handoff pose below is unchanged.
       tl.to(
         proxy,
         {
           theta: 0.16,
           phi: 1.36,
-          radius: 5.15,
-          targetX: -0.62,
+          radius: 4.7,
+          targetX: -0.68,
           targetY: -0.1,
           fov: 33,
           duration: 0.75,
@@ -763,7 +770,10 @@ function injectStyles(): void {
 .dis__copy {
   position: absolute;
   inset-inline: 0;
-  bottom: 9svh;
+  /* W1 tune 3: block sits ~40px lower (9svh → 4.5svh @900px) so the
+     MOVEMENT, OPENED / REGULATION micro-labels clear the watch's bottom
+     edge at p .25/.75 instead of half-burying behind the case. */
+  bottom: 4.5svh;
   display: grid;
   gap: 0.6rem;
   justify-items: center;

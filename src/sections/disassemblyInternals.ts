@@ -56,7 +56,12 @@ export const INTERNAL_SLOTS: InternalSlotSpec[] = [
     name: "part_battery",
     url: "/assets/watch/internals/part_battery.glb",
     worldSize: 0.6,
-    preRotation: [Math.PI / 2, 0, 0],
+    // W1 Disassembly tune 4: NEGATIVE X pre-rotation — the graphite POUCH
+    // face (§9 tune-3 matte wrinkled foil + crimp seams, graded in the
+    // re-packed GLB) faces the camera; the satin steel carrier faces away.
+    // With +π/2 the bright carrier fronted the fan and the whole cell read
+    // as bright metal.
+    preRotation: [-Math.PI / 2, 0, 0],
   },
   {
     name: "part_taptic",

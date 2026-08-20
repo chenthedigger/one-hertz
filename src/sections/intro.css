@@ -1,0 +1,235 @@
+/* Intro — hero frame (section-Intro lane). All color/type on the LOOKBIBLE
+   tokens (§2/§4); scrims are gradient washes from the ground token, never
+   hard panels (§7.1). Layout grammar: ink/porcelain diagonal staging —
+   colossal lockup upper-left, watch lower-right on its contact shadow. */
+
+.intro {
+  /* .pin is the sticky box and the containing block for everything here —
+     never re-position it (Mechanism lane pitfall #2). */
+  color: var(--ink);
+}
+
+/* ---- eyebrow (byline law: CHEN everywhere) -------------------------------- */
+
+.intro__eyebrow {
+  position: absolute;
+  top: 6vh;
+  left: 6vw;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  /* dim label = 55% tone (LOOKBIBLE §4 hierarchy-by-tone) */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  will-change: transform, opacity;
+}
+
+/* ---- living-BPM vital (placeholder anchor — P3 wires the live signal) ----- */
+
+.intro__vital {
+  position: absolute;
+  top: 5.4vh;
+  right: 6vw;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  will-change: opacity;
+}
+
+.intro__vital-ring {
+  width: 30px;
+  height: 30px;
+  transform: rotate(-90deg);
+}
+
+.intro__vital-track,
+.intro__vital-fill {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.intro__vital-track {
+  stroke: color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.intro__vital-fill {
+  stroke: var(--biosignal);
+  stroke-linecap: round;
+  stroke-dasharray: 72 100; /* placeholder arc — P3 drives it from bpm() */
+}
+
+.intro__vital-read {
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.intro__vital-value {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.intro__vital-unit {
+  font-size: 0.6rem;
+  letter-spacing: var(--track-caps);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+/* ---- colossal lockup ------------------------------------------------------- */
+
+.intro__lockup {
+  position: absolute;
+  left: 6vw;
+  top: 15vh;
+  padding: 2.5rem 3.5rem 2.75rem 0;
+  will-change: transform, opacity;
+}
+
+/* §7.1 scrim: gradient from the ground token, 0→~55%, never a panel.
+   closest-side + transparent at 100% ⇒ alpha reaches exactly 0 inside the
+   box on every edge — no clipped-gradient seam across the watch (the
+   hard-edged rectangle every reviewer would flag). Tracks the live
+   --porcelain when a look re-tokens it. */
+.intro__lockup::before {
+  content: "";
+  position: absolute;
+  inset: -22% -18%;
+  z-index: -1;
+  background: radial-gradient(
+    closest-side at 46% 48%,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 32%, transparent) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.intro__title {
+  font-family: var(--font-display);
+  font-size: var(--type-colossal);
+  /* colossal = 300; weight 600 is BANNED at display sizes (LOOKBIBLE §4) */
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: var(--track-colossal);
+  text-transform: uppercase;
+}
+
+.intro__line {
+  display: block;
+  white-space: nowrap;
+  overflow: clip; /* chars slide in from x:-105% under this clip */
+}
+
+/* staggered second line: indent ≈0.55× cap-height of the line above (§4) */
+.intro__line--2 {
+  margin-left: 0.38em;
+}
+
+.intro__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.intro__sub {
+  margin-top: 1.4rem;
+  font-family: var(--font-body);
+  font-size: var(--type-lead);
+  font-weight: 350;
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+  will-change: transform, opacity;
+}
+
+/* ---- spec lines (grey-line color reveals, §7.3 light-ground greys) -------- */
+
+.intro__spec {
+  position: absolute;
+  left: 6vw;
+  bottom: 8vh;
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.2rem 1.8rem 1.2rem 0;
+  will-change: transform, opacity;
+}
+
+.intro__spec::before {
+  content: "";
+  position: absolute;
+  inset: -60% -35%;
+  z-index: -1;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--porcelain) 45%, transparent),
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.intro__spec-line {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: #bcbcbc; /* reveal FROM grey; tickDom inks it in (scrub:2 grammar) */
+}
+
+/* ---- scroll hint (dies by p≈.15 — it has done its job) -------------------- */
+
+.intro__hint {
+  position: absolute;
+  bottom: 4.5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  will-change: opacity;
+}
+
+/* metronome tick — a static 1 Hz mark (wall-clock animation is banned,
+   motion-bible law 9; the LIVING pulse is P3's vital wiring) */
+.intro__hint::before {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 12px;
+  margin-right: 0.6rem;
+  vertical-align: -2px;
+  background: var(--biosignal);
+}
+
+/* ---- named anchors (P3 wiring targets — invisible geometry) ---------------- */
+
+/* Loader activity-rings match-cut destination: the hero dial's screen
+   position under the section camera recipe. P3 morphs the loader arc here. */
+.intro__rings-anchor {
+  position: absolute;
+  left: 58%;
+  top: 62%;
+  width: 120px;
+  height: 120px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ---- small viewports ------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .intro__lockup {
+    top: 11vh;
+  }
+
+  .intro__vital {
+    top: auto;
+    bottom: 12vh;
+    right: 6vw;
+  }
+
+  .intro__spec {
+    bottom: 13vh;
+  }
+}

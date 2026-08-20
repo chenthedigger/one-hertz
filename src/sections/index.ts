@@ -10,17 +10,26 @@ import type { CameraRig } from "../webgl/cameraRig";
 import { DisassemblySection } from "./disassembly";
 import { IntroSection } from "./intro";
 import { MechanismSection } from "./mechanism";
+import { MovementSection } from "./movement";
 import { NocturneSection } from "./nocturne";
 import { PlaceholderSection } from "./placeholder";
+import { TimelessSection } from "./timeless";
+import { VerticalTextSection } from "./verticaltext";
 
 export function createSection(name: SectionName, rig: CameraRig): SectionBase {
   switch (name) {
     case "Intro":
-      return new IntroSection();
+      return new IntroSection(rig);
+    case "Timeless":
+      return new TimelessSection(rig);
+    case "VerticalText":
+      return new VerticalTextSection(rig);
     case "Disassembly":
       return new DisassemblySection(rig);
     case "Mechanism":
       return new MechanismSection(rig);
+    case "Movement":
+      return new MovementSection(rig);
     case "Nocturne":
       return new NocturneSection(rig);
     default:

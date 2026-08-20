@@ -489,6 +489,78 @@ def s_curve_ribbon(name, points_xy, half_width, thickness, mat=None,
     return obj
 
 
+def prism_from_profile(name, pts2d, thickness, z0=0.0, mat=None,
+                       edge_bevel=None, bevel_segments=3):
+    """Extrude a closed 2D polygon (list of (x, y), CCW) into a prism:
+    bottom cap at z0, top cap at z0+thickness, ngon caps + side quads.
+    Used for the case-profile laminate wafers, racetrack cassette,
+    knurl star ring, annulus-sector foam tiles."""
+    n = len(pts2d)
+    verts = [(x, y, z0) for x, y in pts2d] + \
+            [(x, y, z0 + thickness) for x, y in pts2d]
+    faces = [[i, (i + 1) % n, n + (i + 1) % n, n + i] for i in range(n)]
+    faces.append(list(range(n - 1, -1, -1)))          # bottom (faces -Z)
+    faces.append(list(range(n, 2 * n)))               # top (faces +Z)
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [], faces)
+    me.update()
+    obj = bpy.data.objects.new(name, me)
+    bpy.context.collection.objects.link(obj)
+    bpy.ops.object.select_all(action="DESELECT")
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    if edge_bevel:
+        m = obj.modifiers.new("bev", "BEVEL")
+        m.width = edge_bevel
+        m.segments = bevel_segments
+        m.limit_method = "ANGLE"
+        m.angle_limit = math.radians(40)
+        bpy.ops.object.modifier_apply(modifier=m.name)
+    try:
+        bpy.ops.object.shade_smooth_by_angle(angle=math.radians(30))
+    except Exception:
+        bpy.ops.object.shade_smooth()
+    if mat:
+        obj.data.materials.append(mat)
+    return obj
+
+
+def offset_profile(pts2d, d):
+    """Inward offset (d > 0) of a dense convex CCW polygon by moving each
+    vertex along its averaged inward edge normal. Exact for smooth dense
+    outlines (the 200+ pt case hull); do not use on sparse sharp polys."""
+    n = len(pts2d)
+    out = []
+    for i in range(n):
+        x0, y0 = pts2d[(i - 1) % n]
+        x1, y1 = pts2d[i]
+        x2, y2 = pts2d[(i + 1) % n]
+        # inward normals of the two adjacent edges (CCW -> inward = left)
+        ax, ay = x1 - x0, y1 - y0
+        bx, by = x2 - x1, y2 - y1
+        la = math.hypot(ax, ay) or 1.0
+        lb = math.hypot(bx, by) or 1.0
+        nxa, nya = -ay / la, ax / la
+        nxb, nyb = -by / lb, bx / lb
+        nx, ny = nxa + nxb, nya + nyb
+        ln = math.hypot(nx, ny) or 1.0
+        out.append((x1 + nx / ln * d, y1 + ny / ln * d))
+    return out
+
+
+def resample_profile(pts2d, n):
+    """Even arc-length resample of a closed polyline to n points."""
+    import numpy as _np
+    p = _np.asarray(pts2d, dtype=float)
+    closed = _np.vstack([p, p[:1]])
+    seg = _np.linalg.norm(_np.diff(closed, axis=0), axis=1)
+    s = _np.concatenate([[0.0], _np.cumsum(seg)])
+    t = _np.linspace(0.0, s[-1], n, endpoint=False)
+    x = _np.interp(t, s, closed[:, 0])
+    y = _np.interp(t, s, closed[:, 1])
+    return list(zip(x.tolist(), y.tolist()))
+
+
 def weld_dots(name_prefix, centers, r=0.00025, h=0.00005, mat=None):
     dots = []
     for i, c in enumerate(centers):
@@ -725,10 +797,41 @@ def render_to(scene, cam, path):
     print(f"[render] {path}")
 
 
+def _flatten_linked_scalar(mat, key):
+    """glTF-export fix (W1 art-director gate, Disassembly tune 4): the glTF
+    exporter DROPS a Principled scalar socket that is LINKED to a procedural
+    graph -> the factor ships absent and falls back to the glTF default
+    (roughness 1.0), which is how the shipped battery lost its §9 tune-3
+    grade (pouch matte 0.6 / carrier satin ~0.39 became rough-1 bright
+    metal). Before export: unlink the socket and write an explicit factor —
+    the mean of the feeding ColorRamp's endpoints when one exists (that ramp
+    IS the authored roughness band), else the socket's default_value."""
+    if not mat.use_nodes:
+        return
+    bsdf = mat.node_tree.nodes.get("Principled BSDF")
+    if bsdf is None or key not in bsdf.inputs:
+        return
+    sock = bsdf.inputs[key]
+    if not sock.is_linked:
+        return
+    value = sock.default_value
+    node = sock.links[0].from_node
+    if node.bl_idname == "ShaderNodeValToRGB":
+        els = node.color_ramp.elements
+        value = sum(e.color[0] for e in els) / len(els)
+    mat.node_tree.links.remove(sock.links[0])
+    sock.default_value = value
+    print(f"[glb] flatten {mat.name}.{key} -> {value:.3f} (linked graph not exportable)")
+
+
 def export_glb(objs, path):
     bpy.ops.object.select_all(action="DESELECT")
     for o in objs:
         o.select_set(True)
+        for slot in o.material_slots:
+            if slot.material is not None:
+                _flatten_linked_scalar(slot.material, "Roughness")
+                _flatten_linked_scalar(slot.material, "Metallic")
     bpy.context.view_layer.objects.active = objs[0]
     bpy.ops.export_scene.gltf(
         filepath=path,

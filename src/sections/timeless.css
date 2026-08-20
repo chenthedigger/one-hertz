@@ -1,0 +1,189 @@
+/* Timeless — section-owned styles (imported by src/sections/timeless.ts).
+   Light stage (porcelain — the keyframe driver holds instrument's Timeless
+   key, rot 15 / envInt 1.0). Everything rides the LOOKBIBLE tokens: type on
+   the --type-* / --track-* ramp, tone hierarchy by alpha (§4: ghost 30–32%,
+   dim 55%), scrims from the nearest ground token (§7.1 — porcelain here). */
+
+.tml {
+  position: relative;
+  height: 100%;
+}
+
+/* ---- eyebrow (static, top-left) ------------------------------------------ */
+
+.tml__eyebrow {
+  position: absolute;
+  top: 8svh;
+  left: 6vw;
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  will-change: transform, opacity;
+}
+
+/* ---- the sweep layer (counter-translated by the scrub timeline) ---------- */
+
+.tml__sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Ghost section-name backdrop — the faintest tone layer (§4 ghost class);
+   parked above the plate so it owns the early frames and exits by center. */
+.tml__ghostword {
+  position: absolute;
+  top: -24svh;
+  left: 8vw;
+  opacity: 0;
+  font-family: var(--font-display);
+  font-size: calc(var(--type-colossal) * 1.22);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: var(--track-colossal);
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--ink) 9%, transparent);
+}
+
+/* ---- the word-stack (colossal, tonal diagonal) --------------------------- */
+
+.tml__stack {
+  position: absolute;
+  top: 10svh;
+  left: 6vw;
+  right: 6vw;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-colossal);
+  font-weight: 300; /* §4: 600 banned at display sizes */
+  line-height: 0.94;
+  letter-spacing: var(--track-colossal);
+  text-transform: uppercase;
+}
+
+.tml__line {
+  display: block;
+  overflow: clip; /* chars slide in from x:-110% under the clip */
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* Tone diagonal (§4 hierarchy by tone, staggered indents ≈ cap-height
+   steps): ghost THE → dim TIRELESS → ink ELECTRICAL → ghost WATCH /. */
+.tml__line--0 {
+  margin-left: 34vw;
+  color: color-mix(in srgb, var(--ink) 32%, transparent);
+}
+
+.tml__line--1 {
+  margin-left: 7vw;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.tml__line--2 {
+  margin-left: 0;
+  color: color-mix(in srgb, var(--ink) 94%, transparent);
+  /* §7.1 scrim: soft porcelain gradient behind the ink line where it
+     crosses the metal — never a hard panel. */
+  background: radial-gradient(
+    55% 95% at 42% 50%,
+    color-mix(in srgb, var(--porcelain) 45%, transparent),
+    transparent 78%
+  );
+}
+
+.tml__line--3 {
+  margin-left: 21vw;
+  color: color-mix(in srgb, var(--ink) 32%, transparent);
+  /* §7.5: the ghost layer grazes the bracelet at the late beat — a light
+     scrim lifts it back over 40% contrast. */
+  background: radial-gradient(
+    50% 90% at 45% 50%,
+    color-mix(in srgb, var(--porcelain) 40%, transparent),
+    transparent 76%
+  );
+}
+
+.tml__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* ---- info labels (the Timeless_0.75 beat — flanking the back 3/4) -------- */
+
+.tml__label {
+  position: absolute;
+  top: 84svh;
+  max-width: 23rem;
+  opacity: 0;
+  padding: 1.5rem 1.75rem 1.5rem 0;
+  /* Text-over-3D scrim from the ground token, 0→~55% (§7.1). */
+  background: radial-gradient(
+    85% 120% at 40% 50%,
+    color-mix(in srgb, var(--porcelain) 55%, transparent),
+    transparent 74%
+  );
+  will-change: transform, opacity;
+}
+
+.tml__label--sensing {
+  left: 6vw;
+}
+
+.tml__label--movement {
+  right: 5vw;
+  max-width: 22rem;
+}
+
+.tml__label-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.tml__label-line {
+  margin-top: 0.5rem;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: 1.35;
+  color: #bcbcbc; /* motion-bible grey on light; reveals to #323232 */
+}
+
+.tml__label-line + .tml__label-line {
+  margin-top: 0.15rem;
+}
+
+/* ---- mobile discipline ---------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .tml__line--0 {
+    margin-left: 18vw;
+  }
+
+  .tml__line--3 {
+    margin-left: 10vw;
+  }
+
+  .tml__label {
+    top: auto;
+    max-width: 78vw;
+  }
+
+  .tml__label--sensing {
+    bottom: 26svh;
+  }
+
+  .tml__label--movement {
+    right: auto;
+    left: 6vw;
+    bottom: 6svh;
+  }
+}

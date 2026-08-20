@@ -99,6 +99,18 @@ export interface DisassemblyStateSnapshot {
   explode: number;
 }
 
+/** Movement section telemetry (P2 — eval captures wait on SiP readiness). */
+export interface MovementStateSnapshot {
+  /** Load settled — real geometry on stage OR failed→section degrades. */
+  sipReady: boolean;
+  /** True when the featured S-SiP mesh actually landed. */
+  sipLoaded: boolean;
+  /** Camera pose-override blend 0..1 (0 = base rig owns the frame). */
+  blend: number;
+  /** Turntable spin, degrees (pure function of clock + progress). */
+  spinDeg: number;
+}
+
 /** Registry of typed extension keys — P3 mechanics extend this interface. */
 export interface StateExtensions {
   cursor: CursorStateSnapshot;
@@ -107,6 +119,7 @@ export interface StateExtensions {
   dial: DialStateSnapshot;
   watch: WatchStateSnapshot;
   disassembly: DisassemblyStateSnapshot;
+  movement: MovementStateSnapshot;
 }
 
 const stateExtensions = new Map<string, () => unknown>();

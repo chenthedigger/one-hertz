@@ -25,15 +25,23 @@
   opacity: 0;
 }
 
+/* W1 tune 3: echo opacities raised (15→24%, 9→15%) + one added strand pass
+   (--c, right-origin) so the sensor-dome black carries structure on the
+   right half of the frame at every scrub position. */
 .mech__ecg-echo {
   fill: none;
-  stroke: color-mix(in srgb, var(--mech-light) 15%, transparent);
+  stroke: color-mix(in srgb, var(--mech-light) 24%, transparent);
   stroke-width: 1.5;
 }
 
 .mech__ecg-echo--b {
-  stroke: color-mix(in srgb, var(--mech-light) 9%, transparent);
+  stroke: color-mix(in srgb, var(--mech-light) 15%, transparent);
   stroke-width: 2.5;
+}
+
+.mech__ecg-echo--c {
+  stroke: color-mix(in srgb, var(--mech-light) 13%, transparent);
+  stroke-width: 1.8;
 }
 
 .mech__ecg-main {
@@ -68,6 +76,25 @@
   left: 6vw;
   top: 27%;
   pointer-events: none;
+  /* keep the ::before scrim inside this element's stacking context */
+  isolation: isolate;
+}
+
+/* W1 tune 2: §7.1 ink-ground scrim behind the headline — a gradient from
+   the LIVE ground token (the driver holds --porcelain at the bgStage ink
+   here), never a hard panel. Pairs with the 5vw ghost shift below so
+   ELECTRICAL's tail stays legible over the bright crown metal. */
+.mech__copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -16% -36% -20% -30%;
+  pointer-events: none;
+  background: radial-gradient(
+    64% 115% at 34% 45%,
+    color-mix(in srgb, var(--porcelain) 60%, transparent),
+    transparent 74%
+  );
 }
 
 .mech__eyebrow {
@@ -94,9 +121,12 @@
   overflow: hidden; /* mask for the char x-slides */
 }
 
-/* ghost layer: 31% of the ground's counter-color (§4 tone hierarchy) */
+/* ghost layer: 31% of the ground's counter-color (§4 tone hierarchy).
+   W1 tune 2: shifted ~5% of frame left so the tail clears the bright
+   crown/strap metal (§7.5 — ghost never over the watch at low contrast). */
 .mech__line--ghost {
   color: color-mix(in srgb, var(--mech-light) 31%, transparent);
+  margin-left: -5vw;
 }
 
 .mech__line--solid {
