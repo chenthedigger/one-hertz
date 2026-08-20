@@ -29,3 +29,12 @@ build/
 # ai harness local state (remove this block if the project wants .planning committed)
 .claude/settings.local.json
 .planning/
+
+# heavy source-reference media — regenerable via evals/reference/source/capture-scripts
+evals/reference/source/desktop/
+evals/reference/source/mobile/
+evals/reference/source/videos/
+evals/reference/source/interactions/
+
+# third-party raw asset archives — provenance rule: ship processed GLB only
+research/assets-candidates/
