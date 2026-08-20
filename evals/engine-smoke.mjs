@@ -72,7 +72,24 @@ async function newPage(url) {
 // ---- 1. Default load -------------------------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/");
-  await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: LOADER_TIMEOUT_MS });
+  try {
+    await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: LOADER_TIMEOUT_MS });
+  } catch (e) {
+    if (IS_CI) {
+      // Software WebGL could not complete boot (typically PMREM/float-texture
+      // limits). Surface the real cause in the CI log, then notice-skip.
+      const diag = await page.evaluate(() => ({
+        state: window.__ONE_HERTZ__?.state?.() ?? null,
+        loaderText: document.getElementById("loader")?.textContent ?? null,
+      })).catch(() => null);
+      console.log("SKIP: boot did not complete under software WebGL within", LOADER_TIMEOUT_MS, "ms");
+      console.log("console errors:", JSON.stringify(errors, null, 2));
+      console.log("diag:", JSON.stringify(diag)?.slice(0, 2000));
+      await browser.close();
+      process.exit(78);
+    }
+    throw e;
+  }
   const m = await page.evaluate(() => window.__ONE_HERTZ__.state());
   check("no console errors (default)", errors.length === 0, errors.join(" | "));
   check("15 sections in manifest", m.sections.length === 15, `got ${m.sections.length}`);

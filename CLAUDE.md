@@ -34,4 +34,8 @@
 
 ## Current state
 
-- P0 running (workflow wf_f5591a9c-1e4): toolchain ∥ deploy claim ∥ source reference capture ∥ rubric freeze ∥ Spike A ∥ Spike B ∥ internals research. Next: P0 GO/NO-GO, then P1 engine core.
+- P0 GO (all 7 lanes) · P1 shipped + deployed (dial live on stage screen, 99/99 checks) · repo on GitHub (chenthedigger/one-hertz, private, CI active).
+- **iOS Safari real-device check PASSED 2026-08-20**: founder scrolled the live P1 build on iPhone — pinned sections do not jitter (clears PLAN §4.4 GO/NO-GO carried item; founder's iPhone = named real device candidate for rubric perf field).
+- CI eval-lite on GPU-less runners: notice-skip when boot can't complete under SwiftShader (typecheck+build still gate; smoke enforced locally + against prod).
+- P1.5 look-dev running: plumbing (real Ultra 3 on stage) → 3 looks ∥ dial art ∥ type ∥ motion bible → council → LOOKBIBLE.md.
+- Pending founder: $30 Sketchfab dika3d purchase (Alpine+Trail band geometry donor).
