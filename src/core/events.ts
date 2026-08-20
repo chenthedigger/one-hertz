@@ -1,7 +1,9 @@
 /**
  * Typed event fabric — enum adopted verbatim from the source-site recon
- * (PLAN §1). Spike B ships the enum plus a minimal typed emitter; payload
- * types will tighten as each mechanic lands in P3.
+ * (PLAN §1). Payloads are FIRM as of the P1 cursor+events lane: each shape
+ * below is the contract for its P3 mechanic (docs/p1/cursor-events.md).
+ * Additive changes only; renaming a key means updating every consumer AND
+ * evals/assert.ts in the same change.
  */
 
 export enum EngineEvent {
@@ -16,20 +18,51 @@ export enum EngineEvent {
   UpdateRotations = "UPDATE_ROTATIONS",
 }
 
-/** Payload map — stubs for now; each mechanic firms these up when built. */
+/**
+ * Cursor icon-channel tokens (recon mechanic 1). Kebab-case strings ON
+ * PURPOSE — evals/assert.ts round-trips these exact values through
+ * SET_CURSOR_ICON and state().cursor.icon.
+ */
+export type CursorIconName =
+  | "finish-swatch"
+  | "cross"
+  | "arrow-left"
+  | "arrow-right"
+  | "select";
+
+/** Payload map — the typed contract for every mechanic (PLAN §1). */
 export interface EnginePayloads {
-  [EngineEvent.ConfigChange]: { config: string };
-  [EngineEvent.SetCursorIcon]: { icon: string | null; label?: string };
-  [EngineEvent.SetClickedMesh]: { meshName: string };
+  /** Colorway swap: finish id + band id (consumed by materials, gallery
+   *  `<picture>` sets, screen canvas, accent tokens — PLAN §1 mechanic 4). */
+  [EngineEvent.ConfigChange]: { finish: string; band: string };
+  /** Cursor icon channel; `null` clears it. `color` tints the
+   *  finish-swatch icon (defaults to the cursor's swatch fallback). */
+  [EngineEvent.SetCursorIcon]: { icon: CursorIconName | null; color?: string };
+  /** Exploded view: a part proxy was clicked (part = GLB node name). */
+  [EngineEvent.SetClickedMesh]: { part: string };
+  /** Exploded view: close the selected part. */
   [EngineEvent.LeaveClickedMesh]: undefined;
+  /** Exploded view: step selection (1 = next part, -1 = previous). */
   [EngineEvent.NextPreviousClickedMesh]: { direction: 1 | -1 };
-  [EngineEvent.XplodAll]: { exploded: boolean };
-  [EngineEvent.LongpressToggle]: { active: boolean };
-  [EngineEvent.HoverPosition]: { x: number; y: number; id: string };
-  [EngineEvent.UpdateRotations]: { delta: number };
+  /** Exploded view: explode/collapse everything. */
+  [EngineEvent.XplodAll]: { on: boolean };
+  /** Longpress hold-zoom: fired every ramp frame with intensity 0..1
+   *  (power3.inOut over LONGPRESS_RAMP_S). `active` flips false on release
+   *  while intensity ramps back down. */
+  [EngineEvent.LongpressToggle]: { active: boolean; intensity: number };
+  /** Details section: 3D-projected screen position of a hover label
+   *  (viewport px) + which part it annotates. */
+  [EngineEvent.HoverPosition]: { x: number; y: number; part: string };
+  /** Rotation-speed multiplier for idle/mechanism spins (1 = base rate). */
+  [EngineEvent.UpdateRotations]: { speed: number };
 }
 
 type Handler<E extends EngineEvent> = (payload: EnginePayloads[E]) => void;
+
+/** Events whose payload is `undefined` may be emitted without an argument. */
+type EmitArgs<E extends EngineEvent> = undefined extends EnginePayloads[E]
+  ? [payload?: EnginePayloads[E]]
+  : [payload: EnginePayloads[E]];
 
 export class EventBus {
   private handlers = new Map<EngineEvent, Set<Handler<EngineEvent>>>();
@@ -41,10 +74,15 @@ export class EventBus {
       this.handlers.set(event, set);
     }
     set.add(handler as Handler<EngineEvent>);
-    return () => set.delete(handler as Handler<EngineEvent>);
+    return () => this.off(event, handler);
   }
 
-  emit<E extends EngineEvent>(event: E, payload: EnginePayloads[E]): void {
+  off<E extends EngineEvent>(event: E, handler: Handler<E>): void {
+    this.handlers.get(event)?.delete(handler as Handler<EngineEvent>);
+  }
+
+  emit<E extends EngineEvent>(event: E, ...args: EmitArgs<E>): void {
+    const payload = args[0] as EnginePayloads[E];
     this.handlers.get(event)?.forEach((h) => h(payload));
   }
 }

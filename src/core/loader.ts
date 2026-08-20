@@ -17,7 +17,7 @@ export interface LoaderTask {
   done(): void;
 }
 
-const MIN_DURATION_S = 1.2; // choreographed minimum (source uses ~2.5s; short for spike)
+const MIN_DURATION_S = 2.5; // choreographed minimum (~2.5s, source parity — PLAN §2)
 const ARC_RADIUS = 54;
 const ARC_LENGTH = 2 * Math.PI * ARC_RADIUS;
 
@@ -37,7 +37,12 @@ export class Loader {
   /** Resolves when all tasks are done and the minimum choreography played. */
   readonly ready: Promise<void>;
 
-  constructor() {
+  /**
+   * @param skip Eval determinism (`?eval=1`, PLAN §6): remove the loader
+   * shell immediately and resolve `ready` as soon as all registered tasks
+   * complete — no choreography, no fade, no minimum time.
+   */
+  constructor(private readonly skip = false) {
     this.el = must(document.getElementById("loader"), "#loader");
     this.arc = must(
       document.querySelector<SVGCircleElement>(".loader-arc__fill"),
@@ -46,6 +51,7 @@ export class Loader {
     this.arc.style.strokeDasharray = `${ARC_LENGTH}`;
     this.arc.style.strokeDashoffset = `${ARC_LENGTH}`;
     this.ready = new Promise((res) => (this.resolveReady = res));
+    if (this.skip) this.el.remove();
     gsap.ticker.add(this.update);
   }
 
@@ -71,6 +77,15 @@ export class Loader {
   }
 
   private update = (_time: number, deltaMs: number): void => {
+    if (this.skip) {
+      // Loader-skip mode still waits for REAL readiness (assets must be
+      // loaded before eval capture) — it just skips all choreography.
+      if (this.real() >= 1) {
+        gsap.ticker.remove(this.update);
+        this.resolveReady();
+      }
+      return;
+    }
     const elapsed = (performance.now() - this.startedAt) / 1000;
     // The arc may never outrun the choreographed minimum, and never lies
     // about real progress: target = min(real, timeCurve).
