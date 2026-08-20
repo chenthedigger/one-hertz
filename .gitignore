@@ -38,3 +38,10 @@ evals/reference/source/interactions/
 
 # third-party raw asset archives — provenance rule: ship processed GLB only
 research/assets-candidates/
+
+# regenerated every eval round (pnpm eval:capture)
+evals/reference/ours/
+
+# uncompressed draft GLBs — keep only gltfpack .ktx2.glb outputs
+research/asset-qa/*-draft.glb
+!research/asset-qa/*.ktx2.glb
