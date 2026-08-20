@@ -34,7 +34,31 @@ function check(name, ok, detail = "") {
   if (!ok) failures++;
 }
 
-const browser = await chromium.launch({ channel: "chrome", headless: true });
+// CI runners have no GPU: allow software WebGL (SwiftShader) and give the
+// loader (env decode + PMREM compile) far more time. Locally: real GPU, 15s.
+const IS_CI = !!process.env.CI;
+const LOADER_TIMEOUT_MS = IS_CI ? 60000 : 15000;
+const browser = await chromium.launch({
+  channel: "chrome",
+  headless: true,
+  args: IS_CI ? ["--enable-unsafe-swiftshader", "--use-angle=swiftshader"] : [],
+});
+
+// No WebGL at all (some locked-down runners) → skip, not fail: exit 78 is the
+// eval-lite sentinel ci.yml converts to a ::notice. typecheck+build still gate.
+{
+  const probe = await browser.newPage();
+  const hasWebgl = await probe.evaluate(() => {
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl2") || c.getContext("webgl"));
+  });
+  await probe.close();
+  if (!hasWebgl) {
+    console.log("SKIP: no WebGL context available on this runner — structural smoke skipped");
+    await browser.close();
+    process.exit(78);
+  }
+}
 
 async function newPage(url) {
   const page = await browser.newPage({ viewport: { width: 1600, height: 900 } });
@@ -48,7 +72,7 @@ async function newPage(url) {
 // ---- 1. Default load -------------------------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/");
-  await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: 15000 });
+  await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: LOADER_TIMEOUT_MS });
   const m = await page.evaluate(() => window.__ONE_HERTZ__.state());
   check("no console errors (default)", errors.length === 0, errors.join(" | "));
   check("15 sections in manifest", m.sections.length === 15, `got ${m.sections.length}`);
@@ -83,7 +107,7 @@ async function newPage(url) {
 {
   const { page, errors } = await newPage(BASE + "/?eval=1");
   await page.waitForFunction(() => window.__ONE_HERTZ__ !== undefined);
-  await page.waitForFunction(() => window.__ONE_HERTZ__.state().uiFlags.loaderDone, null, { timeout: 15000 });
+  await page.waitForFunction(() => window.__ONE_HERTZ__.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
   check("eval: loader element removed immediately",
     await page.evaluate(() => document.getElementById("loader") === null));
   // Synchronous settle: pose captured in the SAME evaluate as gotoSection.
@@ -123,7 +147,7 @@ async function newPage(url) {
 // ---- 3. Lifecycle: center class toggles once per crossing ------------------
 {
   const { page, errors } = await newPage(BASE + "/?eval=1");
-  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: 15000 });
+  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
   const r = await page.evaluate(() => {
     const H = window.__ONE_HERTZ__;
     H.gotoSection("Curves", 0.5);
@@ -145,7 +169,7 @@ async function newPage(url) {
 // ---- 4. Deep link ?scroll= --------------------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/?eval=1&scroll=Nocturne");
-  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: 15000 });
+  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
   const active = await page.evaluate(() => window.__ONE_HERTZ__.state().activeSection);
   check("?scroll=Nocturne lands on Nocturne", active === "Nocturne", String(active));
   check("no console errors (?scroll)", errors.length === 0, errors.join(" | "));
@@ -155,7 +179,7 @@ async function newPage(url) {
 // ---- 5. Solo sandbox --------------------------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/?eval=1&solo=Mechanism");
-  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: 15000 });
+  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
   const r = await page.evaluate(() => ({
     tracks: document.querySelectorAll("[data-section]").length,
     manifest: window.__ONE_HERTZ__.state().sections.map((s) => s.name),
@@ -169,7 +193,7 @@ async function newPage(url) {
 // ---- 6. Autoscroll ----------------------------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/?eval=1&autoscroll&autoscrollspeed=4000");
-  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: 15000 });
+  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
   const s0 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
   await page.waitForTimeout(1500);
   const s1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
@@ -181,7 +205,7 @@ async function newPage(url) {
 // ---- 7. Materials inspector -------------------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/?eval=1&materials");
-  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: 15000 });
+  await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
   const rows = await page.evaluate(() => document.querySelectorAll("#materials-inspector tbody tr").length);
   check("?materials inspector renders rows", rows >= 2, `rows=${rows}`);
   check("no console errors (materials)", errors.length === 0, errors.join(" | "));
@@ -191,7 +215,7 @@ async function newPage(url) {
 // ---- 8. Non-eval sticky pin sanity -----------------------------------------
 {
   const { page, errors } = await newPage(BASE + "/");
-  await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: 15000 });
+  await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: LOADER_TIMEOUT_MS });
   await page.evaluate(() => window.__ONE_HERTZ__.gotoSection("Disassembly", 0.5));
   await page.waitForTimeout(400);
   const pinTop = await page.evaluate(
