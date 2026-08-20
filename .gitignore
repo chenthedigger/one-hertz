@@ -1,0 +1,31 @@
+# deps
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# builds
+dist/
+build/
+*.egg-info/
+.next/
+.cache/
+.tsbuildinfo
+
+# env & secrets — never commit real env files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# os / editor
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# ai harness local state (remove this block if the project wants .planning committed)
+.claude/settings.local.json
+.planning/
