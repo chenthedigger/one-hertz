@@ -118,9 +118,12 @@ async function newPage(url) {
   check("last section rawEnd clamped to maxScroll", Math.abs(footer.rawEnd - maxScroll) < 1,
     `rawEnd=${footer.rawEnd} maxScroll=${maxScroll}`);
   check("activeSection at boot = Intro", m.activeSection === "Intro", String(m.activeSection));
-  check("state schema v1 + shape", m.schema === 1 && typeof m.pinState === "string" &&
+  check("state schema v2 + shape", m.schema === 2 && typeof m.pinState === "string" &&
     Array.isArray(m.cameraPose.position) && typeof m.colorway === "string" &&
-    typeof m.dialMode === "string" && typeof m.uiFlags === "object", JSON.stringify(Object.keys(m)));
+    typeof m.dialMode === "string" && typeof m.uiFlags === "object" &&
+    typeof m.scroll === "object" && typeof m.scroll.position === "number" &&
+    typeof m.scroll.velocity === "number" && typeof m.scroll.enabled === "boolean",
+    JSON.stringify(Object.keys(m)) + " scroll=" + JSON.stringify(m.scroll));
   await page.close();
 }
 
@@ -215,23 +218,23 @@ async function newPage(url) {
 {
   const { page, errors } = await newPage(BASE + "/?eval=1&autoscroll&autoscrollspeed=4000");
   await page.waitForFunction(() => window.__ONE_HERTZ__?.state().uiFlags.loaderDone, null, { timeout: LOADER_TIMEOUT_MS });
-  const s0 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+  const s0 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
   if (IS_CI) {
     // SwiftShader rAF cadence collapses — assert movement, not pace.
     let s1 = s0;
     try {
       await page.waitForFunction(
-        (start) => window.__ONE_HERTZ__.state().scroll - start > 50,
+        (start) => window.__ONE_HERTZ__.state().scroll.position - start > 50,
         s0,
         { timeout: 10000 },
       );
-      s1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+      s1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
     } catch { /* s1 stays s0 → FAIL below with evidence */ }
     check("autoscroll advances (CI: movement only, pace unassertable on software rAF)",
       s1 - s0 > 50, `moved ${Math.round(s1 - s0)}px in ≤10s`);
   } else {
     await page.waitForTimeout(1500);
-    const s1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+    const s1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
     check("autoscroll advances at requested pace", s1 - s0 > 3000, `moved ${Math.round(s1 - s0)}px in 1.5s`);
   }
   check("no console errors (autoscroll)", errors.length === 0, errors.join(" | "));

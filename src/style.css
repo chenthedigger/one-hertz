@@ -257,6 +257,19 @@ main {
   position: relative;
   min-height: 100svh;
 }
+/* P5 perf-hunt: tracks far from the viewport skip style/layout/paint
+   entirely. Dormancy is registry-driven (registry.update: sleep beyond
+   2 viewports, wake at 1.5 — hysteresis), NOT a blanket
+   content-visibility:auto, because the design's giant ghost type
+   deliberately bleeds across track boundaries (e.g. TIMELESS into the
+   Intro frame) and containment on a near track clips it. Track heights
+   are explicit svh (section.ts sets them inline), so containment never
+   changes scroll geometry. Measured effect: mid-scroll major-GC pauses
+   fell 250 ms → ~40 ms (full-page per-frame style/layout churn was what
+   made V8's embedder marking slow — the P4 gate's growing hitch cadence). */
+.track--dormant {
+  content-visibility: hidden;
+}
 
 .pin {
   position: sticky;

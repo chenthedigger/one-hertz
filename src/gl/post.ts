@@ -38,6 +38,7 @@ import {
   Vector2,
   WebGLRenderTarget,
   type IUniform,
+  type Object3D,
   type PerspectiveCamera,
   type Scene,
   type Texture,
@@ -116,9 +117,23 @@ export class PostPipeline {
   private readonly bloomMixPass: ShaderPass;
   private readonly grainPass: ShaderPass;
 
-  private readonly darkMaterial = new MeshBasicMaterial({ color: 0x000000 });
-  private readonly materialCache = new Map<Mesh, Material | Material[]>();
-  private readonly visibilityCache = new Map<Mesh, boolean>();
+  // P5 perf-hunt ROOT CAUSE of the desktop hitch cadence: ONE shared dark
+  // material swapped across every non-bloom mesh made three re-run
+  // getProgram/getParameters/getProgramCacheKey PER MESH PER FRAME (the
+  // shared material's currentProgram flip-flopped between geometry-derived
+  // parameter sets) — steady string/object churn that grew with the scene
+  // (internals attach: 69→146 geometries) and forced growing major-GC
+  // pauses (V8.GC_MC_INCREMENTAL_EMBEDDER_TRACING 34→250 ms across a 60 s
+  // pass). A PER-MESH dark material keeps every material↔program binding
+  // stable, so the bloom darkening render allocates nothing at steady
+  // state. WeakMap: a removed mesh releases its stand-in with it.
+  private readonly darkMaterials = new WeakMap<Mesh, MeshBasicMaterial>();
+  // renderBloom bookkeeping is flat parallel arrays reused across frames
+  // (never Maps rebuilt per frame — the earlier P5 churn fix).
+  private readonly swapMeshes: Mesh[] = [];
+  private readonly swapMaterials: (Material | Material[])[] = [];
+  private readonly hideMeshes: Mesh[] = [];
+  private readonly hideVisible: boolean[] = [];
   private readonly bloomPass: UnrealBloomPass;
 
   private tier = 0;
@@ -181,6 +196,19 @@ export class PostPipeline {
     this.tier = tier;
     this.bloomMixPass.enabled = this.bloomEnabled();
     this.bokehPass.enabled = this.dofEnabled();
+  }
+
+  /**
+   * A scene-pass render target for warm compilation (P5 perf-hunt). Program
+   * cache keys differ between rendering to the CANVAS (tone mapping +
+   * output colorspace baked in) and rendering into ANY WebGLRenderTarget
+   * (NoToneMapping + working colorspace — what every composer pass uses).
+   * Warming/compiling with this target bound produces the exact program
+   * variants the live pipeline runs; compiling against the canvas produces
+   * variants that are never used.
+   */
+  get sceneRenderTarget(): WebGLRenderTarget {
+    return this.beautyComposer.renderTarget1;
   }
 
   private bloomEnabled(): boolean {
@@ -275,29 +303,48 @@ export class PostPipeline {
   private renderBloom(): void {
     const originalBackground = this.scene.background;
     this.scene.background = BLACK;
-    this.scene.traverse((obj) => {
-      if (!(obj instanceof Mesh) || obj.layers.isEnabled(SCREEN_BLOOM_LAYER)) return;
-      const material = obj.material as Material | Material[];
-      const anyTransparent = Array.isArray(material)
-        ? material.some((m) => m.transparent)
-        : material.transparent;
-      if (anyTransparent) {
-        this.visibilityCache.set(obj, obj.visible);
-        obj.visible = false;
-      } else {
-        this.materialCache.set(obj, material);
-        obj.material = this.darkMaterial;
-      }
-    });
+    this.scene.traverse(this.darkenForBloom);
 
     this.bloomComposer.render();
 
-    for (const [mesh, material] of this.materialCache) mesh.material = material;
-    for (const [mesh, visible] of this.visibilityCache) mesh.visible = visible;
-    this.materialCache.clear();
-    this.visibilityCache.clear();
+    const { swapMeshes, swapMaterials, hideMeshes, hideVisible } = this;
+    for (let i = 0; i < swapMeshes.length; i++) {
+      swapMeshes[i]!.material = swapMaterials[i]!;
+    }
+    for (let i = 0; i < hideMeshes.length; i++) {
+      hideMeshes[i]!.visible = hideVisible[i]!;
+    }
+    // length=0 keeps the backing capacity — steady-state renderBloom
+    // allocates nothing (the whole point of the flat-array rewrite).
+    swapMeshes.length = 0;
+    swapMaterials.length = 0;
+    hideMeshes.length = 0;
+    hideVisible.length = 0;
     this.scene.background = originalBackground;
   }
+
+  /** Preallocated traverse visitor (no per-frame closure allocation). */
+  private readonly darkenForBloom = (obj: Object3D): void => {
+    if (!(obj instanceof Mesh) || obj.layers.isEnabled(SCREEN_BLOOM_LAYER)) return;
+    const material = obj.material as Material | Material[];
+    const anyTransparent = Array.isArray(material)
+      ? material.some((m) => m.transparent)
+      : material.transparent;
+    if (anyTransparent) {
+      this.hideMeshes.push(obj);
+      this.hideVisible.push(obj.visible);
+      obj.visible = false;
+    } else {
+      this.swapMeshes.push(obj);
+      this.swapMaterials.push(material);
+      let dark = this.darkMaterials.get(obj);
+      if (dark === undefined) {
+        dark = new MeshBasicMaterial({ color: 0x000000 });
+        this.darkMaterials.set(obj, dark);
+      }
+      obj.material = dark;
+    }
+  };
 
   private uniform(pass: ShaderPass, name: string): IUniform {
     const u = (pass.uniforms as Record<string, IUniform>)[name];
@@ -308,6 +355,8 @@ export class PostPipeline {
   dispose(): void {
     this.beautyComposer.dispose();
     this.bloomComposer.dispose();
-    this.darkMaterial.dispose();
+    // Per-mesh dark stand-ins share a handful of GL programs owned by the
+    // renderer's program cache; the material objects themselves are
+    // WeakMap-held and die with their meshes — nothing to dispose here.
   }
 }

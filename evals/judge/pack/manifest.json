@@ -1,0 +1,1498 @@
+{
+  "round": "p5-council",
+  "rubricVersion": "1.1.0",
+  "seed": 1,
+  "builtAt": "2026-08-26T16:50:07.819Z",
+  "presentation": "Each PNG shows two candidates, 'A' and 'B'. Left/right is randomized per pair per seat (seeded). Nothing in the image or filename identifies origin.",
+  "motionStrips": {
+    "pointsPerStrip": 12,
+    "rule": "scroll clips sampled at equal steps across each clip's constant-rate scroll phase; interaction clips at equal steps from content onset (loader end, same luma-stddev rule both sides) to 0.5s before the end; frames numbered 01-12 in time order"
+  },
+  "seats": [
+    {
+      "seat": 1,
+      "files": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Colors-1.png"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Curves-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Footer-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Images-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Intro-1.png"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-MovementWatchRight-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Parts-1.png"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-desktop-VerticalText-1.png"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Colors-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Disassembly-0.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Disassembly-1.png"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Hands-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Images-1.png"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-MovementWatchRight-0.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-MovementWatchRight-1.png"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-1/pair-still-mobile-VerticalText-0.75.png"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-1/pair-video-desktop-scroll.png"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "kind": "video",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-1/pair-video-mobile-scroll.png"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-1/pair-video-desktop-explode.png"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-1/pair-video-desktop-colorway_swap.png"
+        }
+      ]
+    },
+    {
+      "seat": 2,
+      "files": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Colors-1.png"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Curves-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Footer-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Images-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Intro-1.png"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-MovementWatchRight-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Parts-1.png"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-desktop-VerticalText-1.png"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Colors-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Disassembly-0.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Disassembly-1.png"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Hands-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Images-1.png"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-MovementWatchRight-0.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-MovementWatchRight-1.png"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-2/pair-still-mobile-VerticalText-0.75.png"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-2/pair-video-desktop-scroll.png"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "kind": "video",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-2/pair-video-mobile-scroll.png"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-2/pair-video-desktop-explode.png"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-2/pair-video-desktop-colorway_swap.png"
+        }
+      ]
+    },
+    {
+      "seat": 3,
+      "files": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Colors-1.png"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Curves-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Footer-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Images-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Intro-1.png"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-MovementWatchRight-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Parts-1.png"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-desktop-VerticalText-1.png"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Colors-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Disassembly-0.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Disassembly-1.png"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Hands-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Images-1.png"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-MovementWatchRight-0.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-MovementWatchRight-1.png"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-3/pair-still-mobile-VerticalText-0.75.png"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-3/pair-video-desktop-scroll.png"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "kind": "video",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-3/pair-video-mobile-scroll.png"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-3/pair-video-desktop-explode.png"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-3/pair-video-desktop-colorway_swap.png"
+        }
+      ]
+    },
+    {
+      "seat": 4,
+      "files": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Colors-1.png"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Curves-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Footer-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Images-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Intro-1.png"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-MovementWatchRight-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Parts-1.png"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-desktop-VerticalText-1.png"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Colors-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Disassembly-0.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Disassembly-1.png"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Hands-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Images-1.png"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-MovementWatchRight-0.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-MovementWatchRight-1.png"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-4/pair-still-mobile-VerticalText-0.75.png"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-4/pair-video-desktop-scroll.png"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "kind": "video",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-4/pair-video-mobile-scroll.png"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-4/pair-video-desktop-explode.png"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-4/pair-video-desktop-colorway_swap.png"
+        }
+      ]
+    },
+    {
+      "seat": 5,
+      "files": [
+        {
+          "pairId": "still-desktop-Colors-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Colors-1.png"
+        },
+        {
+          "pairId": "still-desktop-Curves-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Curves-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Footer-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Footer-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Images-0.5",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Images-0.5.png"
+        },
+        {
+          "pairId": "still-desktop-Intro-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Intro-1.png"
+        },
+        {
+          "pairId": "still-desktop-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-MovementWatchRight-0.25",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-MovementWatchRight-0.25.png"
+        },
+        {
+          "pairId": "still-desktop-Parts-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Parts-1.png"
+        },
+        {
+          "pairId": "still-desktop-Straps-0.75",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-desktop-VerticalText-1",
+          "kind": "still",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-desktop-VerticalText-1.png"
+        },
+        {
+          "pairId": "still-mobile-Colors-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Colors-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Disassembly-0.png"
+        },
+        {
+          "pairId": "still-mobile-Disassembly-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Disassembly-1.png"
+        },
+        {
+          "pairId": "still-mobile-Hands-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Hands-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-Images-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Images-1.png"
+        },
+        {
+          "pairId": "still-mobile-Mechanism-0.25",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Mechanism-0.25.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-0",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-MovementWatchRight-0.png"
+        },
+        {
+          "pairId": "still-mobile-MovementWatchRight-1",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-MovementWatchRight-1.png"
+        },
+        {
+          "pairId": "still-mobile-Straps-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-Straps-0.75.png"
+        },
+        {
+          "pairId": "still-mobile-VerticalText-0.75",
+          "kind": "still",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition"
+          ],
+          "file": "seat-5/pair-still-mobile-VerticalText-0.75.png"
+        },
+        {
+          "pairId": "video-desktop-scroll",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-5/pair-video-desktop-scroll.png"
+        },
+        {
+          "pairId": "video-mobile-scroll",
+          "kind": "video",
+          "viewport": "mobile",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-5/pair-video-mobile-scroll.png"
+        },
+        {
+          "pairId": "video-desktop-explode",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-5/pair-video-desktop-explode.png"
+        },
+        {
+          "pairId": "video-desktop-colorway_swap",
+          "kind": "video",
+          "viewport": "desktop",
+          "axes": [
+            "light",
+            "material",
+            "typography",
+            "composition",
+            "motion"
+          ],
+          "file": "seat-5/pair-video-desktop-colorway_swap.png"
+        }
+      ]
+    }
+  ]
+}

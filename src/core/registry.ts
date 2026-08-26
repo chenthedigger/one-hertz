@@ -39,6 +39,19 @@ import {
   type EngineStateContract,
 } from "./state";
 
+/** Frames an out-of-view section keeps ticking after its clamped progress
+ *  stops moving (~2 s at 60 Hz) — long enough for every internal lerp /
+ *  decay to settle at the boundary value before its scrubs go quiet. */
+const IDLE_TICK_LINGER_FRAMES = 120;
+
+/** Track dormancy (P5 perf-hunt): a track further than SLEEP viewports
+ *  from the view span goes content-visibility:hidden (Blink skips its
+ *  style/layout/paint — the measured 250 ms → ~40 ms major-GC fix); it
+ *  wakes crossing WAKE. The margin clears every designed cross-track type
+ *  bleed (~≤1 viewport); the gap between the two is hysteresis. */
+const DORMANT_SLEEP_VH = 2.0;
+const DORMANT_WAKE_VH = 1.5;
+
 export type LifecycleType = "enter" | "leave" | "enterCenter" | "leaveCenter";
 
 export interface LifecycleEvent {
@@ -89,6 +102,12 @@ interface Measured {
   progressWebgl: number;
   inView: boolean;
   inCenter: boolean;
+  /** Consecutive frames both channel progresses were unchanged (P5
+   *  perf-hunt — the out-of-range tick-skip window). */
+  idleFrames: number;
+  /** True while the track wears .track--dormant (content-visibility:
+   *  hidden) — see DORMANT_SLEEP_VH / DORMANT_WAKE_VH. */
+  dormant: boolean;
 }
 
 export class SectionRegistry {
@@ -185,6 +204,8 @@ export class SectionRegistry {
         progressWebgl: old?.progressWebgl ?? 0,
         inView: old?.inView ?? false,
         inCenter: old?.inCenter ?? false,
+        idleFrames: 0,
+        dormant: old?.dormant ?? false,
       };
     });
   }
@@ -201,10 +222,42 @@ export class SectionRegistry {
 
     for (const m of this.measured) {
       // Channels.
-      m.progressDom = clamp01((rawScroll - m.rawStart) / (m.rawEnd - m.rawStart));
-      m.progressWebgl = clamp01((rawScroll - m.webglStart) / (m.webglEnd - m.webglStart));
-      m.section.tickWebgl(m.progressWebgl);
-      m.section.tickDom(m.progressDom);
+      const progressDom = clamp01((rawScroll - m.rawStart) / (m.rawEnd - m.rawStart));
+      const progressWebgl = clamp01((rawScroll - m.webglStart) / (m.webglEnd - m.webglStart));
+      const unchanged = progressDom === m.progressDom && progressWebgl === m.progressWebgl;
+      m.idleFrames = unchanged ? m.idleFrames + 1 : 0;
+      m.progressDom = progressDom;
+      m.progressWebgl = progressWebgl;
+      // P5 perf-hunt: an out-of-view section whose clamped progress has not
+      // moved for a linger window is INERT by design law (ticks are pure
+      // functions of progress; wall-clock behaviors ride gsap.ticker, not
+      // the scrub) — skip its scrubs instead of re-writing identical values
+      // through 13 idle GSAP timelines every frame. Measured effect: the
+      // full-page per-frame write flood was the difference between a 15 ms
+      // and a 300 ms major-GC pause mid-scroll (write-barrier/marking
+      // contention), the P4 gate's growing hitch cadence. The linger window
+      // (~2 s at 60 Hz) lets every internal lerp/decay settle at the
+      // boundary value before the section goes quiet; in-view sections
+      // always tick (interactions compose over static progress).
+      const skip = m.idleFrames > IDLE_TICK_LINGER_FRAMES && !m.inView;
+      if (!skip) {
+        m.section.tickWebgl(m.progressWebgl);
+        m.section.tickDom(m.progressDom);
+      }
+
+      // Dormancy — distance from the view span in viewports (see consts).
+      const distBelow = (m.top - viewBottom) / vh; // track fully below view
+      const distAbove = (rawScroll - (m.top + m.height)) / vh; // fully above
+      const far = Math.max(distBelow, distAbove);
+      if (m.dormant) {
+        if (far < DORMANT_WAKE_VH) {
+          m.dormant = false;
+          m.section.element.classList.remove("track--dormant");
+        }
+      } else if (far > DORMANT_SLEEP_VH) {
+        m.dormant = true;
+        m.section.element.classList.add("track--dormant");
+      }
 
       // Lifecycle — boolean transitions fire exactly once per crossing.
       const inView = viewBottom > m.top && rawScroll < m.top + m.height;

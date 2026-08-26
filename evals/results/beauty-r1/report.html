@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ONE HERTZ · beauty-r1 verdict</title>
+<style>
+  :root{
+    --bg:#0b0b0c; --panel:#131315; --panel2:#0f0f11; --line:#242428;
+    --ink:#e8e6e1; --dim:#8f8d88; --faint:#5a5955;
+    --red:#e0362c; --green:#3ddc84; --amber:#e8b33c;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    --disp:"Helvetica Neue",Inter,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--disp);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:48px 28px 96px}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--red);text-transform:uppercase}
+  h1{font-size:clamp(34px,6vw,64px);font-weight:200;letter-spacing:-.02em;margin:10px 0 4px}
+  h1 b{font-weight:700}
+  .sub{font-family:var(--mono);font-size:12px;color:var(--dim);margin-bottom:6px}
+  .verdict{display:inline-block;margin:18px 0 8px;padding:10px 22px;border:1px solid var(--green);color:var(--green);font-family:var(--mono);font-size:14px;letter-spacing:.3em}
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin:56px 0 16px;padding-top:18px;border-top:1px solid var(--line)}
+  h2 .idx{color:var(--red);margin-right:10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .cell{background:var(--panel);padding:18px 16px}
+  .cell .lab{font-family:var(--mono);font-size:10px;letter-spacing:.15em;color:var(--faint);text-transform:uppercase}
+  .cell .num{font-size:34px;font-weight:200;margin:6px 0 2px}
+  .cell .num small{font-size:14px;color:var(--dim)}
+  .cell .st{font-family:var(--mono);font-size:11px}
+  .pass{color:var(--green)} .fail{color:var(--red)} .warn{color:var(--amber)}
+  .tscroll{overflow-x:auto;border:1px solid var(--line)}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td.mono, .mono{font-family:var(--mono);font-size:12px}
+  td.ours{color:var(--green);font-family:var(--mono);font-size:11px}
+  td.src{color:var(--dim);font-family:var(--mono);font-size:11px}
+  .bar{height:6px;background:var(--panel2);border:1px solid var(--line);position:relative;margin-top:8px}
+  .bar i{position:absolute;inset:0;background:var(--green);transform-origin:left}
+  .bar .mark{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--amber)}
+  p.body{color:var(--dim);max-width:76ch;margin:0 0 14px;font-size:14.5px}
+  p.body b{color:var(--ink);font-weight:600}
+  blockquote{border-left:2px solid var(--red);padding:6px 0 6px 16px;margin:10px 0 18px;color:var(--dim);font-size:13.5px;font-style:italic}
+  .tune{border:1px solid var(--line);background:var(--panel);padding:16px 18px;margin-bottom:14px}
+  .tune h3{font-size:14px;font-weight:600;margin-bottom:4px}
+  .tune h3 .rank{font-family:var(--mono);color:var(--red);margin-right:8px;font-weight:400}
+  .tune .meta{font-family:var(--mono);font-size:11px;color:var(--faint);margin-bottom:8px}
+  .tune .fix{font-size:13.5px;color:var(--ink)}
+  .tune .fix::before{content:"TUNE → ";font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.1em}
+  ol.cav{margin:0 0 0 20px;color:var(--dim);font-size:13.5px}
+  ol.cav li{margin-bottom:10px;max-width:80ch}
+  ol.cav b{color:var(--ink)}
+  .foot{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:640px){.wrap{padding:32px 16px 64px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">P5 council · beauty protocol · rubric v1.1.0</div>
+  <h1>ONE HERTZ <b>/ beauty-r1</b></h1>
+  <div class="sub">5 blind vision judges · 20 still pairs + 4 video strips · matched moments, ours vs frozen source (thewatch.60fps.fr capture kit) · sides randomized per pair per seat · sealed key evals/judge/pack/answers.json · 2026-08-27</div>
+  <div class="verdict">BEAUTY GATE — PASS (5/5)</div>
+  <p class="body" style="margin-top:14px">120 axis-choices, 120 with concrete evidence (<b>0 void ballots</b>, no re-runs), 0 ties. Ours took <b>86 of 120 (71.7%)</b>. Every seat independently cleared the 60% bar. Round 1 of a 4-round ceiling: no further round required.</p>
+
+  <h2><span class="idx">01</span>Gate summary</h2>
+  <div class="grid">
+    <div class="cell"><div class="lab">(a) overall ≥60%</div><div class="num">71.7<small>%</small></div><div class="st pass">PASS · 86/120 win-or-tie</div><div class="bar"><i style="transform:scaleX(.717)"></i><span class="mark" style="left:60%"></span></div></div>
+    <div class="cell"><div class="lab">(b) axis floor ≥40%</div><div class="num">66.7<small>% worst</small></div><div class="st pass">PASS · material is lowest</div><div class="bar"><i style="transform:scaleX(.667)"></i><span class="mark" style="left:40%"></span></div></div>
+    <div class="cell"><div class="lab">(c) exceed ≥3 axes above</div><div class="num">5<small>/5 axes</small></div><div class="st pass">PASS · strict wins &gt; source on all</div></div>
+    <div class="cell"><div class="lab">(d) deception probe</div><div class="num">5<small>/5 seats</small></div><div class="st pass">PASS · all picked OURS as the pro site</div></div>
+    <div class="cell"><div class="lab">(e) judge agreement</div><div class="num">77.5<small>%</small></div><div class="st pass">≥70% · not flagged</div><div class="bar"><i style="transform:scaleX(.775)"></i><span class="mark" style="left:70%"></span></div></div>
+  </div>
+
+  <h2><span class="idx">02</span>Per-axis win rates <span style="color:var(--faint)">· axes self-assigned by seats (not printed on packs; see caveat 2)</span></h2>
+  <div class="tscroll"><table>
+    <tr><th>axis</th><th>n</th><th>ours</th><th>source</th><th>tie</th><th>win-or-tie</th><th>floor</th><th>above source (strict)</th></tr>
+    <tr><td>light</td><td class="mono">16</td><td class="mono">12</td><td class="mono">4</td><td class="mono">0</td><td class="mono">75.0%</td><td class="ours">PASS</td><td class="ours">YES</td></tr>
+    <tr><td>material</td><td class="mono">27</td><td class="mono">18</td><td class="mono">9</td><td class="mono">0</td><td class="mono">66.7%</td><td class="ours">PASS</td><td class="ours">YES</td></tr>
+    <tr><td>typography</td><td class="mono">23</td><td class="mono">16</td><td class="mono">7</td><td class="mono">0</td><td class="mono">69.6%</td><td class="ours">PASS</td><td class="ours">YES</td></tr>
+    <tr><td>composition</td><td class="mono">34</td><td class="mono">23</td><td class="mono">11</td><td class="mono">0</td><td class="mono">67.6%</td><td class="ours">PASS</td><td class="ours">YES</td></tr>
+    <tr><td>motion</td><td class="mono">20</td><td class="mono">17</td><td class="mono">3</td><td class="mono">0</td><td class="mono">85.0%</td><td class="ours">PASS</td><td class="ours">YES</td></tr>
+    <tr><td><b>total</b></td><td class="mono"><b>120</b></td><td class="mono"><b>86</b></td><td class="mono"><b>34</b></td><td class="mono"><b>0</b></td><td class="mono"><b>71.7%</b></td><td></td><td class="ours">5 AXES</td></tr>
+  </table></div>
+
+  <h2><span class="idx">03</span>Per-judge results</h2>
+  <div class="tscroll"><table>
+    <tr><th>seat</th><th>ours</th><th>source</th><th>win rate</th><th>void</th><th>deception probe (unblinded)</th></tr>
+    <tr><td class="mono">1</td><td class="mono">18</td><td class="mono">6</td><td class="mono">75.0%</td><td class="mono">0</td><td>picked <span class="ours">OURS</span> — "square smartwatch ONE HERTZ world … reads as the shipping professional site"</td></tr>
+    <tr><td class="mono">2</td><td class="mono">15</td><td class="mono">9</td><td class="mono">62.5%</td><td class="mono">0</td><td>picked <span class="ours">OURS</span> — "the side carrying the square smartwatch … shipped professional site"</td></tr>
+    <tr><td class="mono">3</td><td class="mono">17</td><td class="mono">7</td><td class="mono">70.8%</td><td class="mono">0</td><td>picked <span class="ours">OURS</span> by system description (eyebrow labels, mono data chips, resolved copy); letter-level ambiguous — caveat 3</td></tr>
+    <tr><td class="mono">4</td><td class="mono">18</td><td class="mono">6</td><td class="mono">75.0%</td><td class="mono">0</td><td>picked <span class="ours">OURS</span> — "electrical-watch experience … persistent 64 BPM vital chip"; called source "the imitation"</td></tr>
+    <tr><td class="mono">5</td><td class="mono">18</td><td class="mono">6</td><td class="mono">75.0%</td><td class="mono">0</td><td>picked <span class="ours">OURS</span> — "titanium square-watch side with the persistent red ECG vital chip"; its stated letter map matches the sealed key on all 6 pairs it names</td></tr>
+  </table></div>
+
+  <h2><span class="idx">04</span>Unblinded outcome matrix · 24 pairs × 5 seats</h2>
+  <div class="tscroll"><table>
+    <tr><th>pair</th><th>s1</th><th>s2</th><th>s3</th><th>s4</th><th>s5</th><th>ours</th><th>agree</th></tr>
+    <tr><td class="mono">still-desktop-Colors-1</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-desktop-Curves-0.5</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">4/5</td><td class="mono">60%</td></tr>
+    <tr><td class="mono">still-desktop-Footer-0.5</td><td class="ours">OURS</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="mono">1/5</td><td class="mono">60%</td></tr>
+    <tr><td class="mono">still-desktop-Images-0.5</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-desktop-Intro-1</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="src">src</td><td class="ours">OURS</td><td class="src">src</td><td class="mono">3/5</td><td class="mono">40%</td></tr>
+    <tr><td class="mono">still-desktop-Mechanism-0.25</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-desktop-MovementWatchRight-0.25</td><td class="src">src</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">3/5</td><td class="mono">40%</td></tr>
+    <tr><td class="mono">still-desktop-Parts-1</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-desktop-Straps-0.75</td><td class="ours">OURS</td><td class="src">src</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">3/5</td><td class="mono">40%</td></tr>
+    <tr><td class="mono">still-desktop-VerticalText-1</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="mono fail">0/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-Colors-0.75</td><td class="ours">OURS</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">4/5</td><td class="mono">60%</td></tr>
+    <tr><td class="mono">still-mobile-Disassembly-0</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-Disassembly-1</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-Hands-0.75</td><td class="ours">OURS</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">4/5</td><td class="mono">60%</td></tr>
+    <tr><td class="mono">still-mobile-Images-1</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="src">src</td><td class="ours">OURS</td><td class="mono">4/5</td><td class="mono">60%</td></tr>
+    <tr><td class="mono">still-mobile-Mechanism-0.25</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-MovementWatchRight-0</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-MovementWatchRight-1</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="mono fail">0/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-Straps-0.75</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="src">src</td><td class="mono fail">0/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">still-mobile-VerticalText-0.75</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="src">src</td><td class="ours">OURS</td><td class="mono">3/5</td><td class="mono">40%</td></tr>
+    <tr><td class="mono">video-desktop-colorway_swap</td><td class="ours">OURS</td><td class="src">src</td><td class="src">src</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">3/5</td><td class="mono">40%</td></tr>
+    <tr><td class="mono">video-desktop-explode</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+    <tr><td class="mono">video-desktop-scroll</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="src">src</td><td class="mono">4/5</td><td class="mono">60%</td></tr>
+    <tr><td class="mono">video-mobile-scroll</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="ours">OURS</td><td class="mono">5/5</td><td class="mono">100%</td></tr>
+  </table></div>
+  <p class="body" style="margin-top:12px">Unanimous OURS: 10 pairs. Unanimous SOURCE: 3 (desktop VerticalText-1, mobile MovementWatchRight-1, mobile Straps-0.75). Those three plus Footer-0.5 (1/5) account for 17 of the 34 losses: <b>half our losses are four empty/under-composed matched moments</b>, not diffuse craft gaps.</p>
+
+  <h2><span class="idx">05</span>Deception probe &amp; exceed clause</h2>
+  <p class="body"><b>Probe</b> ("Which is the shipping professional site?"): zero seats picked ours as the amateur build; all five picked ONE HERTZ. Cited: persistent live vital chip, mono spec ledgers with spec-true microcopy ("512 Hz", "LTPO3", "3000 nits · down to 1 Hz"), numbered catalog eyebrows, set credits colophon, zero broken captured states. Seat 4 called the source side "the imitation."</p>
+  <p class="body"><b>Exceed clause</b>: the three claimed levers all appear verbatim in winning rationales:</p>
+  <blockquote>post stack · "rim light on the crown knurl and the engraved DIVE-40M caseback ring cuts through the dark" (s5)<br>per-part copy · "annotation beats (Sapphire crystal, LTPO3 OLED cards) … and a closing thesis line" (s2)<br>screen liveness · "persistent 64 BPM vital chip" (s4) · "the 58 / 220 BPM stat numeral" (s2·s3·s4·s5)</blockquote>
+
+  <h2><span class="idx">06</span>Advisory tune list · all 34 losses ranked by frequency <span style="color:var(--faint)">· no gate failed; these buy round-2 margin</span></h2>
+
+  <div class="tune"><h3><span class="rank">T1</span>still-desktop-VerticalText-1 · 5/5 losses · composition/typography</h3>
+    <div class="meta">seats 1·2·3·4·5: "strands one small watch … two-thirds of the frame vacant" · "almost no typography beyond the tiny BPM chip"</div>
+    <div class="fix">Hold the rotated ONE—HERTZ masthead + twin copy columns through progress 1.0 (retime out-choreography past the last capture step).</div></div>
+
+  <div class="tune"><h3><span class="rank">T2</span>still-mobile-MovementWatchRight-1 · 5/5 losses · material/composition/light</h3>
+    <div class="meta">seats 1·2·3·4·5: "static centered strap-back view that hides the dial entirely" · "even, flat studio gray"</div>
+    <div class="fix">End mobile MWR on a diagonal composition with the dial in frame; authored key-light raking case + band, specular variation on Ti buckle hardware.</div></div>
+
+  <div class="tune"><h3><span class="rank">T3</span>still-mobile-Straps-0.75 · 5/5 losses · composition/material/light</h3>
+    <div class="meta">seats 1·2·3·4·5: "near-empty frame with only a sliver of band at the top-right corner" · "washed to a shapeless gray silhouette"</div>
+    <div class="fix">Reframe the mobile Straps camera/timeline so the band macro fills the frame at 0.75 with headline + caption present.</div></div>
+
+  <div class="tune"><h3><span class="rank">T4</span>still-desktop-Footer-0.5 · 4/5 losses · material/typography/composition</h3>
+    <div class="meta">seats 2·3·4·5: ledger top row (ECG ELECTRODES) viewport-clipped · lineup "flat-lit and material-indistinct" · "detached below its spec table … no focal point"</div>
+    <div class="fix">Fix ledger clipping at 900px; scale the 4-watch lineup up and interleave with the outro type; light finishes to read distinct.</div></div>
+
+  <div class="tune"><h3><span class="rank">T5</span>still-mobile-VerticalText-0.75 · 2 losses + 2 grazes · typography</h3>
+    <div class="meta">named by 4/5 seats: vital chip overprints "Always-On Retina" / "3000 nits" spec lines</div>
+    <div class="fix">Add the mobile VerticalText spec block (and mobile Hands copy, 1× loss s2) to the chip's ONE-owner getYield policy — same mechanism as the P4 Images/Footer yields.</div></div>
+
+  <div class="tune"><h3><span class="rank">T6–T9</span>2× and 1× items</h3>
+    <div class="meta">desktop Straps-0.75 "flat and waxy" band + corner framing (2×) · colorway_swap video motion-flat first half (2×) · desktop Intro-1 ghost lines washed / TIRELESS buried (2×) · desktop MWR-0.25 crystal glare (2×) · desktop Curves-0.5 blown highlight (1×) · mobile Colors-0.75 shadowless stage (1×) · mobile Images-1 caption fade (1×) · desktop scroll video frame-07 empty beat (1×)</div>
+    <div class="fix">Beat-level exposure/yield/framing fixes; full quotes and per-item levers in report.md §Loss ledger.</div></div>
+
+  <h2><span class="idx">07</span>Caveats</h2>
+  <ol class="cav">
+    <li><b>Matched-moment symmetry:</b> several source losses are the source's own mid-transition states at the frozen progress step (Colors-1 near-empty frame, Images-0.5 mid-transition, faded Parts column). Protocol is symmetric (ours was punished identically at VerticalText-1 / Straps-0.75), but 71.7% means "at these 24 frozen moments", not every scroll position.</li>
+    <li><b>Axis self-assignment:</b> axis labels were not printed on packs; seats assigned axes themselves, so per-axis n is uneven (16–34). Aggregate 86/120 is axis-independent; both axis gates clear with margin. Print axes on future pair sheets.</li>
+    <li><b>Seat 3 probe:</b> answered "A" (ours was A in exactly 12/24 of its pairs) but its feature description of the professional side is unambiguously ours' system; counted as ours. Excluding seat 3, the probe is still 4/4.</li>
+    <li>Judges' in-notes product tallies (s4 "19-5", s5 "17/24") differ ±1 from the sealed-key unblinding (18-6 both); the sealed key is authoritative.</li>
+    <li>Anchored scale stayed diagnostic only (our best moments placed 7–8; weakest captured states 4–5). No /10 averaging entered any gate.</li>
+  </ol>
+
+  <div class="foot">
+    <span>ONE HERTZ · CHEN · beauty-r1 · rubric v1.1.0</span>
+    <span>ballots: evals/judge/ballots.json · key: evals/judge/pack/answers.json (sealed)</span>
+    <span>build clean · engine-smoke ALL PASS</span>
+  </div>
+</div>
+</body>
+</html>

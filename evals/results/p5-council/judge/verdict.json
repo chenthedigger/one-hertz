@@ -1,0 +1,5 @@
+{
+  "round": "p5-council",
+  "status": "pending",
+  "note": "pairs + prompts ready; seat the council (TODO P5) and drop ballots into judge/ballots/judge<N>.json"
+}

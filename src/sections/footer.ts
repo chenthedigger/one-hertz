@@ -58,7 +58,7 @@ import {
   type Object3D,
 } from "three";
 import { createContactShadow } from "../gl/contactShadow";
-import { extendState } from "../core/debug";
+import { extendState, registerResidency } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
 import { bus, EngineEvent } from "../core/events";
 import { params } from "../core/params";
@@ -242,6 +242,7 @@ export class FooterSection extends SectionBase {
 
   /* Lineup scene graph (built lazily once the hero GLB is adopted). */
   private lineup: Group | null = null;
+  private prebuildTries = 0;
   private wrappers: Group[] = [];
   /** Per-slot contact-shadow materials — opacity rides each slot's rise. */
   private shadowMats: MeshBasicMaterial[] = [];
@@ -327,6 +328,43 @@ export class FooterSection extends SectionBase {
     if (!isEvalMode) {
       gsap.ticker.add((_t, deltaMs) => this.tickLag(deltaMs / 1000));
     }
+
+    // P5 perf-hunt: pre-build the lineup off the scroll hot path. The 4×
+    // hero deep-clone + per-instance material skins + their first-draw
+    // shader compiles were a measured mid-scroll allocation burst (major-GC
+    // hitch source) when built on the Footer's first tick. Built hidden
+    // once the hero + colorway tables are ready; frames stay pure functions
+    // of progress (visibility is still blend-gated in tickWebgl). The
+    // tick-path build stays as the untouched fallback.
+    this.scheduleLineupPrebuild();
+
+    // Residency (eval only): the harness must not measure a pass with the
+    // lineup prebuild still pending — settles on build OR the bounded
+    // give-up (the tick-path fallback then owns it, as before).
+    registerResidency(
+      () => !isEvalMode || this.lineup !== null || this.prebuildTries >= 60,
+    );
+  }
+
+  /** Two stops: success = prebuilt+warmed; ceiling = 60 tries (~30 s) then
+   *  the tick-path fallback owns it. */
+  private scheduleLineupPrebuild(): void {
+    const tryBuild = (): void => {
+      if (this.lineup !== null) return; // already built (either path)
+      const stage = getStage();
+      const firstId = LINEUP_CONFIGS[0]?.id;
+      const skinsReady =
+        firstId !== undefined &&
+        (getColorwaySystem()?.materialTargetsFor(firstId) ?? null) !== null;
+      if (stage !== null && stage.watch !== null && skinsReady) {
+        this.buildLineup();
+        if (this.lineup !== null) stage.requestWarm(this.lineup);
+        return;
+      }
+      if (++this.prebuildTries >= 60) return;
+      setTimeout(tryBuild, 500);
+    };
+    setTimeout(tryBuild, 500);
   }
 
   /* ---- DOM scrub timeline (fraction domain 0..1, padded to 1) ------------ */

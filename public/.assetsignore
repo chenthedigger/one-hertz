@@ -1,1 +1,13 @@
 .DS_Store
+# P5 perf-hunt deploy prune — never fetched on the happy path (see
+# docs/p5/perf-hunt.md §deploy-prune). Files stay in public/ so dev +
+# vite preview (?look= routes) keep working; wrangler just never uploads
+# them. Missing-on-prod behavior verified graceful: loadHdrEnv catches,
+# console warns, procedural/boot env stands in.
+assets/env/studio_small_03_2k.hdr
+assets/looks/porcelain.hdr
+assets/looks/dusk.hdr
+# bundled transcoder duplicates — runtime loads /assets/basis/ (kept)
+assets/basis_transcoder-*
+# sourcemaps are dev artifacts; 4.4 MB of deploy weight nobody fetches
+assets/*.js.map

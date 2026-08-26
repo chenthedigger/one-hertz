@@ -18,8 +18,12 @@ import type { ScrollEngine } from "./scroll";
 import type { PartialState, StateStore, UiFlags } from "./state";
 import type { CameraPose, Stage } from "../webgl/stage";
 
-/** Bump on any breaking change to the state() shape (SPIKE-B Q9). */
-export const STATE_SCHEMA_VERSION = 1;
+/** Bump on any breaking change to the state() shape (SPIKE-B Q9).
+ *  v2 (2026-08-26, P5 council co-sign — rubric v1.1.0): `scroll` scalar →
+ *  `{position, velocity, enabled}` so the rubric's `longpress-lenis-stop`
+ *  reads scroll arbitration first-class (`state().scroll.enabled`), closing
+ *  the standing schema-v1 SKIP (docs/p1/integrate.md §6 → docs/p3/integrate.md). */
+export const STATE_SCHEMA_VERSION = 2;
 
 /* ---- Additive state() extensions (schema v1-compatible) -------------------
  * Interaction systems live outside the engine core, so state() exposes them
@@ -45,8 +49,11 @@ export interface CursorStateSnapshot {
 export interface LongpressStateSnapshot {
   active: boolean;
   intensity: number;
-  /** False while the hold has Lenis stopped (the `scroll.enabled` flag the
-   *  eval wants lives here — state().scroll must stay a scalar in schema 1). */
+  /** False while the hold has Lenis stopped. Schema v2 promoted the
+   *  canonical flag to `state().scroll.enabled` (engine-level truth:
+   *  `!lenis.isStopped`, covers the explode touch-drag stop too); this
+   *  mirror stays because it is longpress-CAUSED specifically, and the
+   *  cursor smoke asserts it. */
   scrollEnabled: boolean;
 }
 
@@ -265,6 +272,28 @@ export interface StateExtensions {
 
 const stateExtensions = new Map<string, () => unknown>();
 
+/* ---- Asset residency (P5 perf-hunt) ---------------------------------------
+ * evals/lib.ts waitReady() polls `state().flags.assetsReady` as its asset-
+ * residency gate (rubric determinism: "fonts AND assets resident AND
+ * settled frames") — a contract member that was never fed. Systems with
+ * deferred-to-construction loads (eval mode) register a provider; the flag
+ * is the AND of all of them. Every provider SETTLES (true on success,
+ * failure, or bounded give-up) — residency can delay readiness, never
+ * wedge it.
+ */
+const residencyProviders: (() => boolean)[] = [];
+
+/** Register a residency signal (additive — call any time before/after
+ *  installDebugApi). The provider must eventually return true forever. */
+export function registerResidency(provider: () => boolean): void {
+  residencyProviders.push(provider);
+}
+
+function assetsResident(): boolean {
+  for (const p of residencyProviders) if (!p()) return false;
+  return true;
+}
+
 /**
  * Register an additive state() field. The provider is called lazily on
  * every snapshot, so registration order vs. installDebugApi is irrelevant.
@@ -287,6 +316,18 @@ export function readStateExtension<K extends keyof StateExtensions>(
 ): StateExtensions[K] | null {
   const provider = stateExtensions.get(key);
   return provider ? (provider() as StateExtensions[K]) : null;
+}
+
+/** Scroll snapshot (schema v2 — was a bare `lenis.scroll` scalar in v1). */
+export interface ScrollStateSnapshot {
+  /** Smoothed scroll offset, px (Lenis-owned — the one smoothing owner). */
+  position: number;
+  /** Lenis velocity, px/frame (0 at rest; the resize-defer idle signal). */
+  velocity: number;
+  /** False while ANY system holds Lenis stopped (longpress hold-zoom,
+   *  explode touch-drag) — engine-level truth: `!lenis.isStopped`.
+   *  Rubric `longpress-lenis-stop` reads this. */
+  enabled: boolean;
 }
 
 export interface EngineStateSnapshot {
@@ -317,8 +358,11 @@ export interface EngineStateSnapshot {
     eval: boolean;
     materialsDebug: boolean;
     touchResizeFilter: boolean;
+    /** All registered residency providers settled (ADDITIVE — P5
+     *  perf-hunt; the waitReady() asset-residency gate, see above). */
+    assetsReady: boolean;
   };
-  scroll: number;
+  scroll: ScrollStateSnapshot;
   clock: number;
   qualityTier: number;
   evalMode: boolean;
@@ -386,6 +430,12 @@ export interface OneHertzDebugApi {
      * fix 3; symmetric with setEnvRotation for sweeps + eval wiring).
      */
     setEnvIntensity(intensity: number): void;
+    /**
+     * Renderer resource counters (ADDITIVE — P5 perf-hunt; EVAL MODE ONLY).
+     * The perf harness samples this across its scripted pass to prove GL
+     * resources are warm-resident (no mid-scroll program/texture churn).
+     */
+    info?: () => { programs: number; geometries: number; textures: number; calls: number };
   };
   /**
    * Look-config hot-apply (ADDITIVE, hero-plumbing lane; src/gl/look.ts) —
@@ -404,6 +454,14 @@ export interface OneHertzDebugApi {
    * hears it identically. `durationS` overrides the 1 s tween.
    */
   setConfig?: (id: string, durationS?: number) => void;
+  /**
+   * The live Lenis instance (ADDITIVE — P5 perf-hunt; rubric perf.method
+   * contract scroll driver). EVAL MODE ONLY: evals/perf.ts drives its
+   * scripted pass via `lenis.scrollTo(end, {duration, easing})` — the real
+   * smoothing owner — instead of the synthetic-wheel fallback. Absent
+   * outside `?eval=1` (no internals leak on the live page).
+   */
+  lenis?: import("lenis").default;
 }
 
 declare global {
@@ -445,8 +503,13 @@ export function installDebugApi(
           eval: isEvalMode,
           materialsDebug: params.materials,
           touchResizeFilter: engine.touchResizeFilterArmed,
+          assetsReady: assetsResident(),
         },
-        scroll: engine.lenis.scroll,
+        scroll: {
+          position: engine.lenis.scroll,
+          velocity: engine.lenis.velocity,
+          enabled: !engine.lenis.isStopped,
+        },
         clock: getClock(),
         qualityTier: stage.tier,
         evalMode: isEvalMode,
@@ -479,6 +542,16 @@ export function installDebugApi(
       setEnvIntensity: (intensity) => stage.setEnvIntensity(intensity),
     },
   };
+  // Contract scroll driver (perf.ts preference #1) — eval-gated on purpose.
+  if (isEvalMode) {
+    api.lenis = engine.lenis;
+    api.gl.info = () => ({
+      programs: stage.renderer.info.programs?.length ?? 0,
+      geometries: stage.renderer.info.memory.geometries,
+      textures: stage.renderer.info.memory.textures,
+      calls: stage.renderer.info.render.calls,
+    });
+  }
   window.__ONE_HERTZ__ = api;
   return api;
 }

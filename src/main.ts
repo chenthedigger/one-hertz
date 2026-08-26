@@ -107,7 +107,12 @@ function boot(): void {
   dial.applyDialToken(dialToken);
   extendState("dial", () => dial.stats());
 
+  // Boot compile — against the composer's scene target so the compiled
+  // program variants are the ones the live pipeline actually runs (P5
+  // perf-hunt: canvas-target compiles warm nothing — see stage.warmNow).
+  stage.renderer.setRenderTarget(stage.post.sceneRenderTarget);
   stage.renderer.compile(stage.scene, stage.camera);
+  stage.renderer.setRenderTarget(null);
   stageTask.done();
 
   // -- Hero watch GLB (the REAL Ultra 3 replaces the torus knot) ------------
@@ -179,6 +184,9 @@ function boot(): void {
       currentLookName = "default";
       await applyLookToStage(DEFAULT_LOOK);
     }
+    // P5 perf-hunt: warm the settled scene at idle (programs + texture
+    // uploads) so nothing pays a first-draw compile burst mid-scroll.
+    stage.requestWarm();
   });
 
   // -- Scroll engine + sections ---------------------------------------------

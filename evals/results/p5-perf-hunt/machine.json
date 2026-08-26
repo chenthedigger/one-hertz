@@ -1,0 +1,8 @@
+{
+  "round": "p5-perf-hunt",
+  "machine": "MacBook Pro · Apple M5 Pro · 24 GB",
+  "os": "macOS 26.4.1",
+  "browser": "Google Chrome 151.0.7922.175 (playwright-core channel:\"chrome\", headless)",
+  "server": "vite preview :4670 (lane port)",
+  "note": "rubric named-desktop field — same class of machine as the P4 perf round (evals/results/p4-perf/machine.json)"
+}

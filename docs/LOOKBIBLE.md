@@ -1,6 +1,7 @@
 # LOOKBIBLE.md — the P2/P3 build law
 
 Status: **LOCKED** · 2026-08-21 · P1.5 council closed (3 independent judges, full-evidence ballots)
+Amended: **2026-08-26 · P5 council co-sign** (docs/p5/cosigns.md) — four housekeeping supersedes, all already shipped + gate-verified by P3/P4 lanes, formally recorded here: ① §1.3/§2 ocean anchor `#1f6153` → real-Ocean palette, anchor `#283f58` Anchor Blue (founder real-colors decision 2026-08-26; gallery lane flag 1) · ② §6 frame 4 `side-14mm` → `side-12mm` (apple.com Ultra 3 depth truth; copy lane flag) · ③ §1.5 table synced to shipped instrument.json (Hands rot 245, per-key bloom dips, Images anchorOffset — look-fixes §4/§5 co-sign) · ④ §2 Alpine/Trail line closed (founder: no purchase, recolor axis only).
 Verdict: **INSTRUMENT wins** — first place on 2 of 3 ballots and highest aggregate (22.5 vs dusk 20.8, porcelain 20.5) — with grafts merged from both losing lanes (§1.3) and the live-parity fixes all three ballots demanded (§1.4).
 Shipped: `?look=instrument` is now the **boot default** (`src/main.ts`); `public/assets/looks/instrument.json` carries the merged grafts. Proof frame: `docs/p15/final-look.png`.
 
@@ -32,7 +33,7 @@ Background: near-black → dark-cool-grey gradient (0.004→0.05 linear). Env au
 ### 1.2 · Rig + post stack (shipped in instrument.json)
 
 - `lightRig`: envRotationDeg 0 · envIntensity 1.0 · exposure 1.05
-- `postTune`: bloomThreshold **1.0** (never lower — HDR metal speculars would bloom) · bloomStrength **0.6** base (Nocturne beat runs **0.85**, §1.5) · bloomRadius 0.3 · grainAmount **0.048** (hard light + grain double-count as texture; luminance weighting stays gl-lane law) · vignetteNocturne **0.36**
+- `postTune`: bloomThreshold **1.0** (never lower — HDR metal speculars would bloom) · bloomStrength **0.6** base (per-key overrides in §1.5: Nocturne **0.85** hot dial, dips Colors **0.22** / Parts **0.25** / Footer **0.30** for ink-dial legibility — gate-4 dial-wash tune, co-signed) · bloomRadius 0.3 · grainAmount **0.048** (hard light + grain double-count as texture; luminance weighting stays gl-lane law) · vignetteNocturne **0.36**
 - DOF: macro pinned sections only, tier 0 only; focus racks ride the same beat fractions as their dolly (motion bible §7.9)
 - Contact shadow: current defaults are a stub; final treatment blocked on the `contactShadow {opacity, radius, falloff}` config key (§1.4 fix 2)
 
@@ -64,7 +65,7 @@ Background: near-black → dark-cool-grey gradient (0.004→0.05 linear). Env au
 
 **Crystal / back / sensors:** `mat_crystal_sapphire` #f4f6f9, opacity 0.16, rough 0.02, clearcoat 1.0/0.03, **ior 1.77, envInt 0.7** · `mat_back_spun` #34363a, rough 0.32, aniso 0.85 @1.5708 · `mat_back_ceramic` #121316, rough 0.24, clearcoat 0.7/0.12 · `mat_back_lens` #08090b, rough 0.06, clearcoat 1.0/0.02, envInt 1.3 · `mat_back_ring` #d5d3cf, rough 0.18, aniso 0.6 @1.5708 · `mat_back_matte` #17181a, rough 0.8 · `mat_sensor_dark` #0c0d0f 0.5 · `mat_sensor_trim` #9fa0a3 metal 0.3 · `mat_cavity_black` #060708 0.9.
 
-**Ocean band (graft from porcelain — instrument's own read was over-saturated teal):** `mat_band_ocean` **#1f6153**, rough 0.56, envInt 0.4 · `mat_band_tab` #1f6153, rough 0.62, envInt 0.4 · `mat_band_hardware_dark` #3a3c40, metal, rough 0.35.
+**Ocean band — SUPERSEDED 2026-08-26 (P5 co-sign; founder real-colors decision):** the P1.5 green-teal `#1f6153` (porcelain graft) is dead — Apple sells no green-teal Ocean band. The band axis is now the three REAL apple.com Ultra 3 Ocean colors, judged on rendered frames under this env (law 4): **Anchor Blue `#283f58`** (the new ocean ANCHOR — boot band), **Black `#202226`**, **Neon Green `#a2df2e`**. Material truth lives in `instrument.json` `x_colorway` band tables (roughness/envInt per color); `mat_band_hardware_dark` #3a3c40, metal, rough 0.35 unchanged. Historical `#1f6153` survives only in the archived debug looks (`default/porcelain/dusk.json`) — never copy it forward.
 
 **Accents:** `mat_accent_orange_ring` #e04f18 (metal 0.4, rough 0.42) · `mat_actionButton_orange` #d94a16 (rough 0.5) · `mat_button_trim` #b6b3ad (metal, rough 0.35).
 
@@ -83,7 +84,9 @@ The look's identity (dark graphic stage, satin Ti) must exist LIVE, not only in 
 
 ### 1.5 · Per-section lighting keyframes (all 15 — clock-scalar driven, DATA in instrument.json)
 
-Shape: one clean 360° revolution Intro 0° → Footer 360° so the outro SWAP-restart lands back on the hero pose seamlessly (the loop-closing shape the council grafted over dusk's −300° jump). Wiring contract: P2's per-frame driver lerps between section-center keys off the WebGL master progress via `stage.setEnvRotation` + `stage.setEnvIntensity` + `renderer.toneMappingExposure` (+ `stage.setStageColor` for `bgStage`, + `post.tune` for per-beat `bloomStrength`). Section agents never invent lighting.
+Shape: one clean 360° revolution Intro 0° → Footer 360° so the outro SWAP-restart lands back on the hero pose seamlessly (the loop-closing shape the council grafted over dusk's −300° jump). Wiring contract: P2's per-frame driver lerps between section-center keys off the WebGL master progress via `stage.setEnvRotation` + `stage.setEnvIntensity` + `renderer.toneMappingExposure` (+ `stage.setStageColor` for `bgStage`, + `post.tune` for per-beat `bloomStrength`, + optional per-key `anchorOffset` shifting that key's center anchor by a fraction of its section's raw range — gate-4 Images handoff). Section agents never invent lighting.
+
+*Table synced to shipped `instrument.json` 2026-08-26 (P5 co-sign of the P3 tune-w3w4 + P4 look-fixes data edits — `docs/p4/look-fixes.md` §4/§5). instrument.json remains the DATA of record; on any future divergence, re-sync this table, never fork it.*
 
 | # | Section | rot° | envInt | exposure | Extra / note |
 |---|---|---|---|---|---|
@@ -95,13 +98,13 @@ Shape: one clean 360° revolution Intro 0° → Footer 360° so the outro SWAP-r
 | 6 | Movement | 140 | 0.95 | 1.05 | |
 | 7 | Curves | 170 | 1.0 | 1.05 | streak strip grazes the chamfer — light rehearses the copy |
 | 8 | MovementWatchRight | 200 | 1.0 | 1.05 | |
-| 9 | Hands | 225 | 0.9 | 1.05 | |
+| 9 | Hands | **245** | 0.9 | 1.05 | *was 225 — sweep-picked (gate-3 Hands tune 1, co-signed look-fixes §4): at 225 the crystal mirrors `streak_chamfer` into a blown sheet through .5–.92; 245 holds the ink read, arc stays monotonic (200 < 245 < 250)* |
 | 10 | Straps | 250 | 1.05 | 1.05 | band macro — fluoroelastomer stays matte |
-| 11 | Images | 250 | 1.05 | 1.05 | DOM section — hold |
+| 11 | Images | 250 | 1.05 | 1.05 | DOM section — hold; `anchorOffset −0.05` starts the porcelain→Nocturne bgStage ramp one beat sooner (gate-4 exit handoff; Straps→Images segment is value-flat, so only the outgoing ramp moves) |
 | 12 | **Nocturne** | 290 | **0.35** | 0.95 | **dusk graft**: continuum dip, NOT blackout; `bloomStrength 0.85` (hot dial halo), vignette flag on, `bgStage #0A0B0D`. The deep **0.045 blackout** (porcelain graft) survives only as the AOD **match-cut beat inside the section** — dip at the handoff moment, back to 0.35 by the section's own exit. Entry/exit grade on the continuum (dusk's thesis), the moment itself on porcelain's ink. |
-| 13 | Colors | 330 | 1.0 | 1.05 | recovery ramp out of Nocturne |
-| 14 | Parts | 350 | 1.0 | 1.05 | |
-| 15 | Footer | 360 | 1.0 | 1.05 | full revolution — restart lands on the Intro pose |
+| 13 | Colors | 330 | 1.0 | 1.05 | recovery ramp out of Nocturne; `bloomStrength 0.22` — ink dial resolvable at plate standoff (gate-4 dial-wash tune, co-signed) |
+| 14 | Parts | 350 | 1.0 | 1.05 | `bloomStrength 0.25` — card-slot dial reads ink at standoff 10 (gate-4 dial-wash tune, co-signed) |
+| 15 | Footer | 360 | 1.0 | 1.05 | full revolution — restart lands on the Intro pose; `bloomStrength 0.30` for row-scale lineup dials (gate-4 dial-wash tune, co-signed) |
 
 Light-motion laws: env-rotation tweens use `power2.inOut` (motion bible — light never snaps); stage-dim restores before section exit (by t≈0.9); Nocturne is the ONLY section that may hold a dimmed exit into Colors' recovery ramp.
 
@@ -124,14 +127,14 @@ Light-motion laws: env-rotation tweens use `power2.inOut` (motion bible — ligh
 | `--biosignal` | #FF2D55 | HOLD ring, ECG, red discipline |
 | `--biosignal-nocturne` | #FF375F | brightened Nocturne variant |
 | accent orange | #e04f18 / #d94a16 | crown ring / action button — instrument-orange against cool light |
-| ocean band | #1f6153 | the graded Ocean colorway anchor |
+| ocean band | **#283f58** | Anchor Blue — the Ocean colorway anchor + boot band (superseded #1f6153, P5 co-sign 2026-08-26; siblings Black #202226 / Neon Green #a2df2e, §1.3) |
 | dial secondary ink | #91AFBA-class slate-teal | sampled from the real Wayfinder texture (dial spec §5) |
 
 **Stage grammar (the look's editorial signature, council-adopted as the site's section-background law):** the ink/porcelain **diagonal split-stage** — sections alternate light/dark grounds exactly as the source alternates its section plates. Live wiring = `bgStage` keyframes (§1.4 fix 1). Render wiring = the diagonal wedge backdrop (fix the stair-step aliasing on the wedge edge before gallery re-renders — filter/AA the wedge, noted from render-01/07/08).
 
 **Nocturne mapping (inversion designed, not filtered):** stage → #0A0B0D · type → porcelain 92% alpha · biosignal → #FF375F · dial = the light source (bloom 0.85, emissive carries the frame) · grain thickens automatically (luminance-weighted) · vignette 0.36 on. Every other token dims by tone, never hue-shifts.
 
-**Colorway accents (P3 CONFIG_CHANGE):** natural-Ti × Ocean ships; black-DLC payload ready (§1.3); Alpine/Trail blocked on the $30 dika3d geometry purchase. Each new colorway declares: band mat values (judged under the shipped env), CSS `--first/second-color` pair, gallery `<picture>` set, dial accent unchanged (red discipline is not a colorway).
+**Colorway accents (P3 CONFIG_CHANGE — axis final per founder 2026-08-26):** FOUR shipped configs = 2 Ti finishes × 3 real Ocean colors (Anchor Blue carries the repeat on opposite finishes): `natural-anchor-blue` (boot) · `black-dlc-black` · `natural-neon-green` · `black-dlc-anchor-blue`. **Alpine/Trail: CLOSED, never building** — no purchase, no in-house geometry (supersedes the "$30 dika3d blocked" line). Each colorway declares: band mat values in `instrument.json` `x_colorway` (judged under the shipped env), CSS `--first/second-color` pair, gallery `<picture>` set, dial accent unchanged (red discipline is not a colorway).
 
 ---
 
@@ -194,7 +197,7 @@ All: Cycles 128spp+, 1280px+ masters, AgX MHC to match the QA set until the shar
 | 1 | `hero-diagonal` | 50mm, 3/4 hero | full watch on the ink/porcelain diagonal — the site's signature plate (instrument render-01 recipe, wedge edge AA'd) |
 | 2 | `crown-knurl` | macro 40mm f/3.2 | crown + knurl, per-tooth glints, dial bokeh behind (render-02 — the council's jewelry-grade proof) |
 | 3 | `dial-faceon` | 35° dial-normal, symmetric | full face; bezel rim carries one continuous specular line, ink dial fully legible (porcelain's render-03 camera, instrument's light) |
-| 4 | `side-14mm` | 105mm | edge-on profile — the 14.4mm story; both chamfer streaks live |
+| 4 | `side-12mm` | 105mm | edge-on profile — the 12 mm story; both chamfer streaks live. *(Renamed from `side-14mm`, P5 co-sign 2026-08-26: apple.com Ultra 3 depth is 12 mm; 14.4 was the Ultra 2. Page copy shipped `SIDE-12MM` at P4; gallery assets are `${finish}_${n}.webp` by index, so no filenames break.)* |
 | 5 | `back-crystal` | 35mm @ ~28mm, inside band loop, floor hidden | engraved DIVE-40M/WR-100M ring legible, sensor dome radial structure |
 | 6 | `dlc-warm-rim` | 50mm 3/4 | black-DLC variant, single warm raking rim strip on the top edge + luminous dial (dusk's hero-dlc lighting — what makes DLC read ceramic, not plastic) |
 | 7 | `nocturne-aod` | 50mm, slight low angle | env 0.045, dial emission carries the room, vignette on — the porcelain-blackout beat (dusk's continuum grades the section, this frame is the moment) |

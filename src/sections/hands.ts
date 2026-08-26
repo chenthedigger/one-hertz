@@ -23,7 +23,7 @@
  *     pose CHASES the case's flank axis through `caseSpace` +
  *     `productAttitude(clock)` (Nocturne's chase pattern), so the edge-on
  *     profile holds at any page clock (live == eval == solo). Optics per
- *     LOOKBIBLE §6 #4 `side-14mm`: 105 mm telephoto ≈ fov 19. Beats on the
+ *     LOOKBIBLE §6 #4 `side-12mm`: 105 mm telephoto ≈ fov 19. Beats on the
  *     fraction grid: blend-in .0–.12 (parallax off — macro law 7) · rise
  *     .1–.5 (the one big move: the case crests from the bottom of frame
  *     into the dead side elevation) · slide-under .5–.75 (the source's .7
@@ -103,7 +103,7 @@ function windowProgress(p: number, [a, b]: [number, number]): number {
   return clamp01((p - a) / (b - a));
 }
 
-/* ---- camera recipe (LOOKBIBLE §6 #4 side-14mm, translated) ---------------- */
+/* ---- camera recipe (LOOKBIBLE §6 #4 side-12mm, translated) ---------------- */
 
 /**
  * Which case flank faces the camera: the Ultra's Action Button (the orange)

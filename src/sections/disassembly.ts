@@ -45,7 +45,7 @@
 import { gsap } from "gsap";
 import { Group, Matrix4, Quaternion, Vector3, type Object3D } from "three";
 import { EASE } from "../core/constants";
-import { extendState } from "../core/debug";
+import { extendState, registerResidency } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
 import { bus, EngineEvent } from "../core/events";
 import { params } from "../core/params";
@@ -266,6 +266,10 @@ export class DisassemblySection extends SectionBase {
         void loadInternals(stage.renderer).then((loaded) => {
           this.internals = loaded;
           this.internalsReady = true;
+          // P5 perf-hunt: warm each internal's programs + KTX2 uploads at
+          // idle, BEFORE attach/first-draw — the compile burst at the fan's
+          // first frame was a measured major-GC hitch source.
+          for (const item of loaded) stage.requestWarm(item.wrapper);
         });
       };
       const PREFETCH_SECTIONS = new Set([
@@ -278,6 +282,10 @@ export class DisassemblySection extends SectionBase {
         if (PREFETCH_SECTIONS.has(section)) kick();
       });
       if (isEvalMode || params.solo === "Disassembly") kick();
+      // Residency: once a load has STARTED, state().flags.assetsReady holds
+      // until it settles (eval kicks at construction, so the harness never
+      // measures a pass with internals still arriving). Un-kicked = resident.
+      registerResidency(() => !kicked || this.internalsReady);
     } else {
       this.internalsReady = true; // exotic embedding: slots become stubs
     }

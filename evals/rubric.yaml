@@ -5,12 +5,36 @@
 
 meta:
   project: one-hertz
-  version: 1.0.0
+  version: 1.1.0
   frozen: 2026-08-20
   source: "https://thewatch.60fps.fr (evidence: scratchpad/watchrecon/, frozen captures: evals/reference/source/)"
   note: >
     All likeness comparisons run against the frozen reference captures under
     evals/reference/source/ (P0 capture kit), never against the live site.
+  changelog:
+    - version: 1.1.0
+      date: 2026-08-26
+      signed_off: "P5 council co-sign lane (docs/p5/cosigns.md — flags raised by docs/p3/integrate.md flag 1 and docs/p4/integrate.md handoffs)"
+      changes:
+        - >
+          debug_api state schema v2: state().scroll scalar -> {position, velocity,
+          enabled} (src/core/debug.ts STATE_SCHEMA_VERSION 2). Rationale: schema v1
+          froze scroll as a bare lenis.scroll scalar, so longpress-lenis-stop's
+          `state().scroll.enabled` read was structurally impossible and stood as a
+          permanent SKIP since P3; `enabled` is engine-level truth (!lenis.isStopped,
+          covering every stopper: longpress hold-zoom AND explode touch-drag), not a
+          per-mechanic mirror. No gate or severity changed.
+        - >
+          sections-14-order: codified the loader-role interpretation the P3 harness
+          already ran (assertion text below now states it). Rationale: the frozen
+          role list includes `loader` but the rubric's own frozen enumeration
+          (evals/reference/source/sections.json, 14 dataSections Intro..Footer plus
+          Colors) has no loader dataSection — the loader is a pre-scroll phase on the
+          source and here. A role list that cannot biject its own frozen evidence is
+          a rubric self-contradiction; the harness resolution (loader satisfied from
+          the shipped boot HTML, behavior still gated by loader-honesty; additive
+          non-canonical roles like "colorway" pass through the ordered-subsequence
+          walk) is hereby the contract, not an interpretation flag.
 
 # ---------------------------------------------------------------------------
 # Debug API surface every automated assertion is allowed to touch (built P1).
@@ -20,7 +44,7 @@ debug_api:
   members:
     - "sections            # ordered manifest: [{id, sourceRole, trackVh, webglStart, webglEnd, scrubChannels}]"
     - "gotoSection(id, localProgress)   # deterministic addressing, localProgress in [0,1]"
-    - "state()             # full snapshot: scroll, cursor, longpress, explode, config, camera, dial, outro, flags"
+    - "state()             # full snapshot: scroll {position, velocity, enabled} (schema v2), cursor, longpress, explode, config, camera, dial, outro, flags"
     - "freezeClock(seed)   # deterministic clock + RNG"
     - "forceQualityTier(n) # per-tier perf measurement"
   events:  # typed enum replicated from source recon; assertions may subscribe/emit
@@ -56,7 +80,13 @@ structural_checklist:
         not break the source-relative order.
       assertion: >
         auto: __ONE_HERTZ__.sections[].sourceRole contains the 14 canonical roles as an
-        ordered subsequence, each exactly once, none missing.
+        ordered subsequence, each exactly once, none missing. The `loader` role is the
+        pre-scroll phase (the frozen source enumeration has no loader dataSection):
+        when absent from the scroll manifest it is satisfied by the shipped boot HTML
+        (`id="loader"`), with its behavior gated by loader-honesty. Additive sections
+        may carry truthful non-canonical role strings (e.g. "colorway"); they pass
+        through the ordered-subsequence walk untouched. [v1.1.0 codification of the
+        P3 harness resolution — docs/p3/integrate.md flag 1]
       severity_if_fail: CRITICAL
 
     # -- mechanic 1 · cursor state machine ---------------------------------

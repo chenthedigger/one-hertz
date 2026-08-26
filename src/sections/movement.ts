@@ -54,7 +54,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { getClock } from "../core/clock";
-import { extendState } from "../core/debug";
+import { extendState, registerResidency } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
 import { bus, EngineEvent } from "../core/events";
 import { params } from "../core/params";
@@ -257,6 +257,9 @@ export class MovementSection extends SectionBase {
         if (PREFETCH_SECTIONS.has(section)) kick();
       });
       if (isEvalMode || params.solo === "Movement") kick();
+      // Residency: a started SiP load holds state().flags.assetsReady until
+      // it settles (sipReady is set in loadSip's finally — success or fail).
+      registerResidency(() => !kicked || this.sipReady);
     } else {
       this.sipReady = true; // exotic embedding: DOM-only beat
     }
@@ -313,6 +316,9 @@ export class MovementSection extends SectionBase {
       });
       this.sipSpin.add(flat);
       this.sipLoaded = true;
+      // P5 perf-hunt: warm the SiP's programs + texture uploads at idle —
+      // its first visible frame must not pay a compile burst mid-scroll.
+      stage.requestWarm(this.sipAnchor);
     } catch (error: unknown) {
       console.warn(
         `movement: featured S-SiP failed (${String(error)}) — camera override stays inert, DOM beat degrades gracefully`,

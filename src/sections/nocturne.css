@@ -194,3 +194,28 @@
   letter-spacing: 0.02em;
   color: color-mix(in srgb, var(--noc-porcelain) 55%, transparent);
 }
+
+/* ---- Portrait (house 720px break) ----------------------------------------
+   The desktop right column (40–42vw) collapses to ~156px at 390px and the
+   40 px Fraunces floor (§4 LAW — the one serif moment never shrinks below
+   40 px) then wraps one word per line (7 lines, colliding with the vital
+   chip — P5 mobile-debt fix, docs/p5/cosigns.md). Widen the beats so the
+   lead wraps at its authored sentence boundaries (≤3 lines, §8 Nocturne
+   budget) and the char-split headline lines stay unbroken words. Blocks
+   stay right-anchored; the ink scrims scale with them (§7.1). */
+@media (max-width: 720px) {
+  .noc__beat--head {
+    max-width: 78vw;
+    padding: 2rem 0 2rem 1.5rem;
+  }
+
+  .noc__beat--lines {
+    max-width: 74vw;
+    padding-left: 1.5rem;
+  }
+
+  .noc__beat--score {
+    max-width: 72vw;
+    padding-left: 1.5rem;
+  }
+}

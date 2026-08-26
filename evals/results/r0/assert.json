@@ -1,8 +1,8 @@
 {
   "round": "r0",
-  "rubricVersion": "1.0.0",
-  "target": "http://localhost:4660",
-  "ranAt": "2026-08-26T16:10:32.713Z",
+  "rubricVersion": "1.1.0",
+  "target": "http://localhost:4670",
+  "ranAt": "2026-08-26T19:06:29.204Z",
   "items": [
     {
       "itemId": "sections-14-order",
@@ -39,23 +39,23 @@
     {
       "itemId": "longpress-ramp-reverse",
       "pass": true,
-      "evidence": "intensity@0.5/1/2.1s=[0.00,0.03,0.99], post-release=0.00",
+      "evidence": "intensity@0.5/1/2.1s=[0.00,0.04,0.99], post-release=0.00",
       "area": "longpress",
       "severity": "HIGH",
       "skipped": false
     },
     {
       "itemId": "longpress-lenis-stop",
-      "pass": false,
-      "evidence": "SKIP — state().scroll is a scalar — scroll.enabled flag not exposed yet",
+      "pass": true,
+      "evidence": "enabled during=false/after=true, wheel moved 0px during hold, LONGPRESS_TOGGLE events=97",
       "area": "longpress",
       "severity": "HIGH",
-      "skipped": true
+      "skipped": false
     },
     {
       "itemId": "longpress-zoom-parallax",
       "pass": true,
-      "evidence": "hold dolly deltas {\"Timeless\":-1.3443100000000001,\"VerticalText\":-0.8850799999999999}, parallaxGain=1 (per-section multiplier proportionality needs constants exposure — partial check)",
+      "evidence": "hold dolly deltas {\"Timeless\":-1.3441,\"VerticalText\":-0.8850399999999996}, parallaxGain=1 (per-section multiplier proportionality needs constants exposure — partial check)",
       "area": "longpress",
       "severity": "HIGH",
       "skipped": false
@@ -71,7 +71,7 @@
     {
       "itemId": "explode-lookat-lerp",
       "pass": true,
-      "evidence": "lookAt approach over 10 frames: total=2.472, monotonic=true, maxFrameJump=27% of distance",
+      "evidence": "lookAt approach over 10 frames: total=2.473, monotonic=true, maxFrameJump=28% of distance",
       "area": "explode",
       "severity": "HIGH",
       "skipped": false
@@ -79,7 +79,7 @@
     {
       "itemId": "explode-idle-rotation",
       "pass": true,
-      "evidence": "selectedRotationY delta over 1s = 0.1510 rad (target 0.15±10%)",
+      "evidence": "selectedRotationY delta over 1s = 0.1515 rad (target 0.15±10%)",
       "area": "explode",
       "severity": "HIGH",
       "skipped": false
@@ -207,7 +207,7 @@
     {
       "itemId": "loader-honesty",
       "pass": true,
-      "evidence": "warm-cache loader ran 3.85s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure",
+      "evidence": "warm-cache loader ran 3.38s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure",
       "area": "loader",
       "severity": "HIGH",
       "skipped": false
@@ -231,7 +231,7 @@
     {
       "itemId": "deeplink-params",
       "pass": true,
-      "evidence": "4/4 params work — ?scroll: activeSection=Timeless (want Timeless); ?autoscroll: y 2002->3164 advancing=true; ?materials: flags.materialsDebug=true; ?eval=1: flags.eval=true",
+      "evidence": "4/4 params work — ?scroll: activeSection=Timeless (want Timeless); ?autoscroll: y 1905->3062 advancing=true; ?materials: flags.materialsDebug=true; ?eval=1: flags.eval=true",
       "area": "debug",
       "severity": "HIGH",
       "skipped": false
@@ -240,13 +240,13 @@
   "judgeVerifiedItems": [],
   "summary": {
     "total": 29,
-    "passed": 28,
+    "passed": 29,
     "failed": 0,
-    "skipped": 1,
+    "skipped": 0,
     "gate": {
       "criticals": [],
       "criticalCount": 0,
-      "passRate": 0.966,
+      "passRate": 1,
       "passRateMin": 0.9,
       "pass": true
     }

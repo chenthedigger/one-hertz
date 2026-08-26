@@ -127,10 +127,10 @@ async function newPage(url) {
   check("scrollEnabled false while armed", at600.scrollEnabled === false, JSON.stringify(at600));
 
   // wheel during hold: page must not move
-  const y0 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+  const y0 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
   await page.mouse.wheel(0, 800);
   await page.waitForTimeout(400);
-  const y1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+  const y1 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
   check("wheel inert during hold", Math.abs(y1 - y0) < 2, `moved ${Math.abs(y1 - y0)}px`);
 
   // intensity ramps toward 1 over ~2s; dolly-in follows
@@ -153,10 +153,10 @@ async function newPage(url) {
   check("dolly returns to base after release", Math.abs(decayed.camera.dolly - baseDolly) < 0.05, `base=${baseDolly} now=${decayed.camera.dolly}`);
 
   // wheel works again after release
-  const y2 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+  const y2 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
   await page.mouse.wheel(0, 800);
   await page.waitForTimeout(600);
-  const y3 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll);
+  const y3 = await page.evaluate(() => window.__ONE_HERTZ__.state().scroll.position);
   check("wheel scrolls after release", y3 - y2 > 50, `moved ${Math.round(y3 - y2)}px`);
 
   // LONGPRESS_TOGGLE + UPDATE_ROTATIONS emitted through the bus
@@ -224,7 +224,7 @@ async function newPage(url) {
   check("eval: camera pose still drift-free with parallax fields", JSON.stringify(s1.cameraPose) === JSON.stringify(s2.cameraPose),
     `t0=${JSON.stringify(s1.cameraPose.position)} t600=${JSON.stringify(s2.cameraPose.position)}`);
   check("eval: longpress/cursor/camera additive fields present", !!s2.longpress && !!s2.cursor && !!s2.camera, Object.keys(s2).join(","));
-  check("eval: schema still v1", s2.schema === 1, String(s2.schema));
+  check("eval: schema v2", s2.schema === 2, String(s2.schema));
   check("no console errors (eval)", errors.length === 0, errors.join(" | "));
   await page.close();
 }

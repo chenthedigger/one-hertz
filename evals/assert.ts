@@ -231,8 +231,27 @@ const CHECKS: Record<string, Check> = {
     await ctx.page.waitForTimeout(200);
     const label2 = pick(await state(ctx), "cursor.label");
     results.push(`outro hover label=${JSON.stringify(label2)}`);
-    // picker context
+    // picker context — hover a picker in the CURRENT (outro) viewport: far
+    // tracks are dormant (content-visibility:hidden, P5 perf-hunt) exactly
+    // like a real user can only hover what is on screen. The Footer carries
+    // its own picker root (colorway-dual-placement); fall back to the first
+    // match for exotic/solo layouts.
     const picker = await ctx.page.$("[data-colorway-picker]");
+    // Hover the picker from ITS OWN section: far tracks are dormant
+    // (content-visibility:hidden, P5 perf-hunt), exactly like a real user
+    // can only hover what is on screen. (The Footer's picker root is a
+    // pointer-events:none nav by design — its buttons are the targets —
+    // so the first picker (Colors rail) with its own section active is the
+    // faithful hover context.)
+    if (picker) {
+      const ownSection = await picker.evaluate(
+        (el) => el.closest("[data-section]")?.getAttribute("data-section") ?? null,
+      );
+      if (ownSection) {
+        await gotoSection(ctx.page, ownSection, 0.5);
+        await ctx.page.waitForTimeout(200);
+      }
+    }
     let label3: unknown;
     if (picker) {
       await picker.hover();
@@ -321,7 +340,9 @@ const CHECKS: Record<string, Check> = {
     const st = await state(ctx);
     const scrollState = pick(st, "scroll");
     if (typeof scrollState !== "object" || scrollState === null) {
-      throw new SkipError("state().scroll is a scalar — scroll.enabled flag not exposed yet");
+      // Pre-v2 build under test (schema v1 froze scroll as a scalar; the
+      // v2 object landed with rubric v1.1.0) — skip, never crash.
+      throw new SkipError("state().scroll is a scalar (schema v1 build) — scroll.enabled needs schema >= 2");
     }
     need(st, "scroll.enabled");
     const c = await stageCenter(ctx.page);

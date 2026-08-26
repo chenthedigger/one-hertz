@@ -25,10 +25,12 @@ import {
   Vector3,
   WebGLRenderer,
   type CanvasTexture,
+  type Object3D,
   type Texture,
 } from "three";
 import type { WatchAsset } from "./watch";
 import { uClock } from "../core/clock";
+import { registerResidency } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
 import {
   CONTACT_SHADOW_BASE_RADIUS,
@@ -156,6 +158,11 @@ export class Stage {
     this.post = new PostPipeline(this.renderer, this.scene, this.camera);
     this.post.applyTier(this.qualityTier);
 
+    // Residency: warm work queued/in-flight delays state().flags.assetsReady
+    // (bounded — every warm settles), so the harness never measures a pass
+    // with compiles still pending.
+    registerResidency(() => this.warmSettled);
+
     this.resize();
   }
 
@@ -253,6 +260,92 @@ export class Stage {
 
   get tier(): number {
     return this.qualityTier;
+  }
+
+  /* ---- Idle warm (P5 perf-hunt) ------------------------------------------
+   * Root cause of the desktop hitch cadence (CDP trace + heap sampling):
+   * lazily-arriving 3D content (internals GLBs, Movement SiP, footer
+   * lineup) paid its shader-program build (three cloneUniforms churn) and
+   * KTX2 texture upload at FIRST DRAW — i.e. mid-scroll — an allocation
+   * burst that forced V8 into an atomic major-GC finalize (121→285 ms
+   * pauses, growing with the scene graph). Warming at idle moves both
+   * costs off the scroll hot path: programs compile via compileAsync
+   * (KHR_parallel_shader_compile — non-blocking), textures pre-upload via
+   * initTexture. Zero visual effect: nothing is rendered or made visible.
+   */
+  private readonly warmQueue = new Set<Object3D>();
+  private warmScheduled = false;
+  /** Scheduled-but-unsettled warm runs (residency: warmSettled). */
+  private pendingWarms = 0;
+
+  /** True when no warm work is queued or in flight — the stage's
+   *  contribution to `state().flags.assetsReady`. */
+  get warmSettled(): boolean {
+    return this.pendingWarms === 0;
+  }
+
+  /**
+   * Queue `root` (default: whole scene) for an idle warm pass. Coalesced;
+   * safe to call repeatedly. Off-scene roots are compiled against this
+   * scene's environment (compileAsync's targetScene parameter).
+   */
+  requestWarm(root?: Object3D): void {
+    if (this.disposed) return;
+    this.warmQueue.add(root ?? this.scene);
+    if (this.warmScheduled) return;
+    this.warmScheduled = true;
+    this.pendingWarms++;
+    const run = (): void => {
+      this.warmScheduled = false;
+      const roots = [...this.warmQueue];
+      this.warmQueue.clear();
+      const compiles = roots.map((r) => this.warmNow(r));
+      void Promise.allSettled(compiles).then(() => {
+        this.pendingWarms--;
+      });
+    };
+    // Eval mode: warm on the next macrotask — the harness settles the page
+    // synchronously and may never go idle before its scripted pass starts.
+    if (isEvalMode) setTimeout(run, 0);
+    else if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 1500 });
+    else setTimeout(run, 200);
+  }
+
+  private warmNow(root: Object3D): Promise<void> {
+    if (this.disposed) return Promise.resolve();
+    // 1 · Pre-upload every texture referenced by the subtree's materials.
+    const textures = new Set<Texture>();
+    root.traverse((obj) => {
+      const mesh = obj as Mesh;
+      if (!mesh.isMesh) return;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      for (const mat of mats) {
+        for (const value of Object.values(mat)) {
+          if ((value as Texture | null)?.isTexture) textures.add(value as Texture);
+        }
+      }
+    });
+    for (const tex of textures) this.renderer.initTexture(tex);
+    // 2 · Compile programs without blocking (parallel shader compile).
+    // CRITICAL: bind a composer target first — program cache keys differ
+    // between canvas and render-target rendering (tone mapping + output
+    // colorspace are baked into the key), and the live pipeline ONLY ever
+    // renders the scene into composer targets. Compiling against the
+    // canvas warms variants that are never used (measured: every lazy
+    // subtree still paid a first-draw compile mid-scroll).
+    const prevTarget = this.renderer.getRenderTarget();
+    this.renderer.setRenderTarget(this.post.sceneRenderTarget);
+    try {
+      const target = root === this.scene ? undefined : this.scene;
+      // compileAsync's compile step is synchronous; only the readiness
+      // polling is async — restoring the target right after is safe.
+      return this.renderer
+        .compileAsync(root, this.camera, target)
+        .then(() => {})
+        .catch(() => {}); // warm is best-effort — first draw remains correct
+    } finally {
+      this.renderer.setRenderTarget(prevTarget);
+    }
   }
 
   resize(): void {

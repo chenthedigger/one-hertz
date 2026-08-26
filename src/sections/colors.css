@@ -10,9 +10,10 @@
   /* LOOKBIBLE §2 porcelain as a COLOR — the live var is the stage token. */
   --col-porcelain: #e8eaed;
   /* Colorway pair (LOOKBIBLE §2 declaration) — rewritten by the
-     CONFIG_CHANGE consumer; defaults = Natural / Ocean. */
+     CONFIG_CHANGE consumer; defaults = boot config Natural / Anchor Blue
+     (ocean anchor #283f58, P5 co-sign 2026-08-26). */
   --first-color: #cfccc6;
-  --second-color: #1f6153;
+  --second-color: #283f58;
   /* Ring indicator angle — walks to the active slot on CONFIG_CHANGE. */
   --col-arc-rot: 0deg;
 }

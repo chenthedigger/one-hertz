@@ -196,7 +196,7 @@
 
 /* Core disc wears the active band chip (UI hex only, never material truth). */
 .prt__picker-ring-core {
-  fill: var(--prt-core, #1f6153); /* Ocean anchor (LOOKBIBLE §2) at boot */
+  fill: var(--prt-core, #283f58); /* Ocean anchor = Anchor Blue (LOOKBIBLE §2) at boot */
   transition: fill 0.5s linear;
 }
 

@@ -45,3 +45,6 @@ evals/reference/ours/
 # uncompressed draft GLBs — keep only gltfpack .ktx2.glb outputs
 research/asset-qa/*-draft.glb
 !research/asset-qa/*.ktx2.glb
+
+# blind-council seat composites — regenerable from pairs.ts + sealed seed (answers/manifest/ballots stay committed)
+evals/judge/pack/seat-*/

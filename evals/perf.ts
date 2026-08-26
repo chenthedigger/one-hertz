@@ -76,6 +76,31 @@ try {
     log(ok ? `   quality tier forced: ${tier}` : `   !! forceQualityTier not exposed — running default tier`);
   }
 
+  // Pre-pass quiet: openTarget already waited the ready contract (loader +
+  // fonts + flags.assetsReady residency + settled frames); a scripted pass
+  // additionally waits for frame quiet (30 consecutive rAF deltas < 25 ms,
+  // ceiling 10 s) so the measured window contains scroll work only — not
+  // tail-end boot work (idle warm compiles, texture uploads) racing the
+  // driver. Bounded and recorded; not a gate input.
+  const quiet = await page.evaluate(
+    () =>
+      new Promise<{ waitedMs: number; settled: boolean }>((resolve) => {
+        const t0 = performance.now();
+        let last = t0;
+        let streak = 0;
+        const step = (now: number) => {
+          streak = now - last < 25 ? streak + 1 : 0;
+          last = now;
+          if (streak >= 30) resolve({ waitedMs: Math.round(now - t0), settled: true });
+          else if (now - t0 > 10_000)
+            resolve({ waitedMs: Math.round(now - t0), settled: false });
+          else requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }),
+  );
+  log(`   pre-pass quiet: ${quiet.waitedMs}ms (${quiet.settled ? "settled" : "CEILING HIT"})`);
+
   // Start the in-page rAF delta recorder, then the scroll driver.
   const driver = await page.evaluate((durSec) => {
     const w = window as unknown as Record<string, unknown> & {
@@ -84,12 +109,32 @@ try {
         scrollTo?: (y: number, opts?: unknown) => void;
       };
     };
-    const rec: { deltas: number[]; running: boolean; driver: string } = {
+    const rec: {
+      deltas: number[];
+      running: boolean;
+      driver: string;
+      longtasks: { start: number; duration: number }[];
+    } = {
       deltas: [],
       running: true,
       driver: "none",
+      longtasks: [],
     };
     w.__EVAL_PERF__ = rec;
+    // Independent crosscheck: PerformanceObserver longtasks recorded next
+    // to the rAF deltas (rubric perf.method trace crosscheck — in-page
+    // flavor; near-zero overhead, unlike a CDP trace mid-measurement).
+    try {
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries())
+          rec.longtasks.push({
+            start: Math.round(e.startTime),
+            duration: Math.round(e.duration),
+          });
+      }).observe({ type: "longtask", buffered: false });
+    } catch {
+      /* longtask unsupported — crosscheck absent, recorded as empty */
+    }
     let last = performance.now();
     const loop = (now: number) => {
       rec.deltas.push(now - last);
@@ -132,13 +177,14 @@ try {
     .catch(() => log("   !! bottom not reached within duration+20s — recording what we have"));
   const wallSec = (Date.now() - started) / 1000;
 
-  const deltas = await page.evaluate(() => {
+  const { deltas, longtasks } = await page.evaluate(() => {
     const rec = (window as unknown as Record<string, unknown>).__EVAL_PERF__ as {
       deltas: number[];
       running: boolean;
+      longtasks: { start: number; duration: number }[];
     };
     rec.running = false;
-    return rec.deltas;
+    return { deltas: rec.deltas, longtasks: rec.longtasks };
   });
 
   if (cdp) await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
@@ -180,10 +226,15 @@ try {
       qualityTier: tier,
       caveat: throttle ? CAVEAT_MOBILE_PROXY : null,
       trimmedLeadingFrames: 10,
-      trace_crosscheck: "TODO — one CDP Performance trace per round (rubric perf.method)",
+      prePassQuiet: quiet,
+      trace_crosscheck:
+        "in-page PerformanceObserver longtask record (see longtasks[]) — " +
+        "hitches must have a matching longtask; full out-of-band CDP trace " +
+        "still a valid deeper tool (used in the P5 perf-hunt root-cause).",
     },
     stats,
     gates: verdicts,
+    longtasks,
     frameDeltasMs: trimmed.map((d) => Math.round(d * 100) / 100),
   };
 

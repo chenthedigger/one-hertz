@@ -89,8 +89,8 @@ const SHOTS: readonly { name: string; alt: string }[] = [
   },
   {
     // 12 mm case depth — apple.com Ultra 3 tech specs ("Depth: 12mm"),
-    // re-verified 2026-08-26 (14.4 mm was the Ultra 2; LOOKBIBLE §6's
-    // "side-14mm" frame NAME predates the Ultra 3 spec — flagged for P5).
+    // re-verified 2026-08-26 (14.4 mm was the Ultra 2). LOOKBIBLE §6 #4
+    // renamed side-14mm → side-12mm (P5 council co-sign 2026-08-26).
     name: "SIDE-12MM",
     alt: "Edge-on profile, 12 millimeters, chamfer streaks live",
   },
