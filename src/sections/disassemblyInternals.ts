@@ -69,6 +69,42 @@ export const INTERNAL_SLOTS: InternalSlotSpec[] = [
     worldSize: 0.5,
     preRotation: [Math.PI / 2, 0, 0],
   },
+  {
+    // Display laminate (A2 queue 4, docs/p2/internals-continue.md):
+    // sapphire lid authored face-up → +π/2 fronts the lid toward the fan
+    // camera; children `display_oled` / `display_shield` ride inside.
+    name: "part_display",
+    url: "/assets/watch/internals/part_display.glb",
+    worldSize: 0.66,
+    preRotation: [Math.PI / 2, 0, 0],
+  },
+  {
+    // Speaker cassette (queue 5) — racetrack plate-up, grille toward camera.
+    name: "part_speaker",
+    url: "/assets/watch/internals/part_speaker.glb",
+    worldSize: 0.42,
+    preRotation: [Math.PI / 2, 0, 0],
+  },
+  {
+    // Sensor-array back dome (queue 7, flagship). NEGATIVE X: the INSIDE
+    // (foam tile ring, coil arc, `sensor_foam_peel` hinge beat) fronts the
+    // fan — the peel is the scrub beat; the ceramic dome faces away exactly
+    // as it does in the real stack (it is the case back).
+    name: "part_sensor_array",
+    url: "/assets/watch/internals/part_sensor_array.glb",
+    worldSize: 0.55,
+    preRotation: [-Math.PI / 2, 0, 0],
+  },
+  {
+    // Digital Crown assembly (queue 6): authored coaxial along its own +X
+    // (internals-continue contract) — no pre-rotation; the wrapper's case
+    // frame aligns crown-X with case-X (the crown flank), and the explode
+    // layout fans it +X off the case side.
+    name: "part_crown_asm",
+    url: "/assets/watch/internals/part_crown_asm.glb",
+    worldSize: 0.34,
+    preRotation: [0, 0, 0],
+  },
 ];
 
 export interface LoadedInternal {

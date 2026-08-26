@@ -345,11 +345,14 @@ export class HandsSection extends SectionBase {
     tl.to(r, { frameY: 0.4, standoff: 4.9, lat: 0, duration: 0.4 }, 0.1);
     // .5–.75: slide-under (the source's .7 beat) — the camera climbs above
     // the flank, the top edge crests, the chamfer streak crawls the case.
-    // phiOff capped at −.24: past that the crystal mirrors the env stripe
-    // into a glare sheet and washes the dial (§7.2 legibility over drama).
-    tl.to(r, { phiOff: -0.24, frameY: 0.18, standoff: 4.55, duration: 0.25 }, 0.5);
+    // phiOff capped at −.12 (gate-3 tune 1, re-swept at LIVE clock
+    // ≈.57–.61 on full-page captures): at −.24 the crystal face mirrors
+    // the streak formers into a blown white sheet from .5 through the
+    // exit; −.12 keeps the crest read while the crystal holds a
+    // controlled specular line (§7.2 legibility over drama).
+    tl.to(r, { phiOff: -0.12, frameY: 0.18, standoff: 4.55, duration: 0.25 }, 0.5);
     // .75–.9: ease back off (closer runs ~0.6× the opener, law 3 shape).
-    tl.to(r, { standoff: 4.85, phiOff: -0.16, duration: 0.15 }, 0.75);
+    tl.to(r, { standoff: 4.85, phiOff: -0.07, duration: 0.15 }, 0.75);
     // .9–1: hand the frame back to the base rig for Straps.
     tl.to(r, { blend: 0, parallaxScale: 1, duration: 0.1 }, 0.9);
     return tl;

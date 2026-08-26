@@ -57,6 +57,9 @@ export interface CameraAuxSnapshot {
   parallaxGain: number;
   /** Active section's longpress zoom multiplier. */
   zoomMultiplier: number;
+  /** Live look-at target, world space (ADDITIVE — explode lookAt-lerp
+   *  evidence: rubric explode-lookat-lerp samples this over frames). */
+  lookAt: { x: number; y: number; z: number };
 }
 
 /** Live watchface snapshot (dial subsystem wired to the stage screen). */
@@ -91,7 +94,7 @@ export interface WatchStateSnapshot {
 
 /** Disassembly section telemetry (P2 — eval captures wait on readiness). */
 export interface DisassemblyStateSnapshot {
-  /** Internals wrappers attached under the watch root (0..3). */
+  /** Internals wrappers attached under the watch root (0..7). */
   internals: number;
   /** All roster slots resolved — loaded GLB or contract-named stub. */
   internalsReady: boolean;
@@ -141,6 +144,105 @@ export interface MovementWatchRightStateSnapshot {
   active: string | null;
 }
 
+/** Living BPM vital telemetry (P3 vital lane — src/ui/vital/vital.ts). */
+export interface VitalStateSnapshot {
+  /** Displayed value — pinned 64 under `?eval=1`. */
+  bpm: number;
+  /** Live simulated HR before the eval pin (58↔142). */
+  rawBpm: number;
+  /** Beat phase 0..1 — pinned 0 under `?eval=1`. */
+  phase: number;
+  /** Beats fired since mount (0 forever under eval). */
+  beats: number;
+  /** Active signal hex (biosignal / Nocturne variant on dark grounds). */
+  signal: string;
+  dark: boolean;
+  revealed: boolean;
+  soundOn: boolean;
+  reducedMotion: boolean;
+}
+
+/** One clickable part of the exploded view (rubric explode substrate). */
+export interface ExplodePartSnapshot {
+  id: string;
+  hasProxyHitbox: boolean;
+  /** Projected proxy-center, CSS px — the scripted-click target. */
+  screenPos: { x: number; y: number };
+  /** Local-space distance from the rest pose (0 = assembled). */
+  offsetFromRest: number;
+}
+
+/**
+ * Exploded-view mechanic snapshot (P3 explode lane — rubric mechanic 3).
+ * NOTE on the state() shape: the rubric (frozen at P0, the mechanics
+ * contract) addresses `state().explode.parts/selected/mode/...` — this
+ * extension therefore REPLACES the P1 placeholder string at the `explode`
+ * key; the StateStore axis token rides inside as `token`. evals/assert.ts
+ * was built against the rubric shape; nothing consumed the string form.
+ */
+export interface ExplodeStateSnapshot {
+  /** StateStore axis mirror: assembled | exploded | part-focus. */
+  token: string;
+  mode: "assembled" | "exploded" | "all" | "selected";
+  parts: ExplodePartSnapshot[];
+  selected: string | null;
+  selectedRotationY: number;
+  selectedScreenPos: { x: number; y: number } | null;
+  /** Drag-pan cluster yaw, radians. */
+  clusterRotation: number;
+  /** Interactive XPLOD_ALL ramp 0..1. */
+  xplodAll: number;
+  dragEnabled: boolean;
+  /** Taptic tick-back graft (±0.4 mm @ ~8 Hz on hover; eval-frozen). */
+  tapticTick: { active: boolean; offset: number };
+  /** Nocturne 1 Hz LED pulse (led_green live, led_red forced dark). */
+  nocturneLed: { gated: boolean; green: number; red: number };
+}
+
+/** Colorway config snapshot (P3 swap lane — rubric mechanic 4). */
+export interface ConfigStateSnapshot {
+  /** Active config id (== StateStore colorway axis). */
+  active: string;
+  finish: string;
+  band: string;
+  /** Active accent token (the resolved `--accent` value). */
+  accent: string;
+  /** True while the 1 s material tween is in flight. */
+  tweening: boolean;
+  /** The available configs (>= 4 — rubric colorway-5param-1s-tween). */
+  finishes: {
+    id: string;
+    finish: string;
+    band: string;
+    label: string;
+    accent: string;
+  }[];
+}
+
+/** One tracked material's live tween state (rubric samples index 0 at
+ *  t=0/0.5/1 s across a swap — all five params must interpolate). */
+export interface TrackedMaterialSnapshot {
+  name: string;
+  /** Config id whose targets this material is at/moving toward. */
+  preset: string;
+  color: string;
+  roughness: number;
+  metalness: number;
+  envMapIntensity: number;
+  /** Colorway-only scalar — written as metalness × this (see ui/colorway.ts). */
+  metalnessMapIntensity: number;
+}
+
+/** Outro lineup snapshot (P3 swap lane — rubric mechanic 5). */
+export interface OutroStateSnapshot {
+  /** Watch instances in the lineup (4 once built). */
+  instances: number;
+  /** Wall-clock rise stagger step, seconds (source: 0.7 + i·0.1). */
+  stagger: number;
+  /** Config id previewed by SELECT MODEL, or null. */
+  selected: string | null;
+}
+
 /** Registry of typed extension keys — P3 mechanics extend this interface. */
 export interface StateExtensions {
   cursor: CursorStateSnapshot;
@@ -153,6 +255,11 @@ export interface StateExtensions {
   movementWatchRight: MovementWatchRightStateSnapshot;
   curves: CurvesStateSnapshot;
   hands: HandsStateSnapshot;
+  vital: VitalStateSnapshot;
+  explode: ExplodeStateSnapshot;
+  config: ConfigStateSnapshot;
+  materials: TrackedMaterialSnapshot[];
+  outro: OutroStateSnapshot;
 }
 
 const stateExtensions = new Map<string, () => unknown>();
@@ -190,7 +297,12 @@ export interface EngineStateSnapshot {
   cameraPose: CameraPose;
   colorway: string;
   dialMode: string;
-  explode: string;
+  /**
+   * Contract-axis token until the explode mechanic installs; then the
+   * registered `explode` extension replaces it with the rubric's rich
+   * snapshot (see ExplodeStateSnapshot note — rubric-shaped on purpose).
+   */
+  explode: string | ExplodeStateSnapshot;
   postStack: string;
   uiFlags: UiFlags;
   scroll: number;
@@ -205,6 +317,10 @@ export interface EngineStateSnapshot {
   dial?: DialStateSnapshot;
   watch?: WatchStateSnapshot;
   disassembly?: DisassemblyStateSnapshot;
+  vital?: VitalStateSnapshot;
+  config?: ConfigStateSnapshot;
+  materials?: TrackedMaterialSnapshot[];
+  outro?: OutroStateSnapshot;
 }
 
 export interface OneHertzDebugApi {
@@ -268,6 +384,13 @@ export interface OneHertzDebugApi {
     apply(name: string): Promise<void>;
     current(): string;
   };
+  /**
+   * Colorway swap entry point (ADDITIVE — P3 swap lane; the capture kit's
+   * preferred path). Emits CONFIG_CHANGE on the bus — the ONE mutation
+   * path; every consumer (materials tween, gallery, accents, pickers)
+   * hears it identically. `durationS` overrides the 1 s tween.
+   */
+  setConfig?: (id: string, durationS?: number) => void;
 }
 
 declare global {

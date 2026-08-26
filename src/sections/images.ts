@@ -49,6 +49,7 @@ import { EngineEvent, bus } from "../core/events";
 import { isEvalMode } from "../core/determinism";
 import { params } from "../core/params";
 import { SectionBase, timelineAdapter } from "../core/section";
+import { resolveConfig } from "../ui/colorway";
 import type { CameraRig } from "../webgl/cameraRig";
 import "./images.css";
 
@@ -101,9 +102,12 @@ const SHOTS: readonly { name: string; alt: string }[] = [
  * SETTLED by .5 — evidence captures land on the {.25,.5,.75} grid and a
  * straddling entrance photographs half-faded, Straps lane pitfall 1) ------ */
 
-/** Image rise cadence — the source's stagger .1 shape in our window. */
-const FIG_T0 = 0.1;
-const FIG_STEP = 0.05;
+/** Image rise cadence — the source's stagger .1 shape in our window.
+ *  T0 .16 (was .1) + a fast opacity snap (gate-4 tune 2): cells hold at
+ *  opacity 0 until their own rise starts, so the plate edge enters clean —
+ *  no half-faded ink cell reading as a bare grey rectangle at p≈.12. */
+const FIG_T0 = 0.16;
+const FIG_STEP = 0.045; /* last still lands .34 + .14 = .48 — settled by .5 */
 /** scrub:2 grey-line windows — offsets alternate (the 15/25 pattern). */
 const REVEAL_WINDOWS: readonly [number, number][] = [
   [0.3, 0.41],
@@ -219,7 +223,12 @@ export class ImagesSection extends SectionBase {
     this.addDomAdapter(timelineAdapter(this.buildDomTimeline()));
 
     // Colorway src-swap wiring — instant on CONFIG_CHANGE (§8 row 11).
-    bus.on(EngineEvent.ConfigChange, ({ finish }) => this.applyFinish(finish));
+    // resolveConfig normalizes every payload shape (canonical `{config}`,
+    // legacy `{finish, band}`) to the config whose id IS the asset token.
+    bus.on(EngineEvent.ConfigChange, (payload) => {
+      const cfg = resolveConfig(payload);
+      if (cfg) this.applyFinish(cfg.id);
+    });
 
     // scrub:2 catch-up lag rides the shared ticker LIVE only — eval applies
     // targets directly in tickDom (deterministic captures, Mechanism model).
@@ -262,7 +271,7 @@ export class ImagesSection extends SectionBase {
             <p class="gal__colorway"><span data-colorway>${finishLabel(this.finish)}</span></p>
           </div>
         </div>
-        <div class="gal__sheet">${figures}
+        <div class="gal__sheet" data-gallery>${figures}
         </div>
       </div>`;
   }
@@ -311,7 +320,9 @@ export class ImagesSection extends SectionBase {
     figures.forEach((fig, i) => {
       const t0 = FIG_T0 + i * FIG_STEP;
       tl.fromTo(fig, { y: 140 }, { y: 0, duration: 0.14, ease: "power3.out" }, t0);
-      tl.fromTo(fig, { opacity: 0 }, { opacity: 1, duration: 0.07 }, t0);
+      // opacity snaps in over the rise's first quarter — the ghost-grey
+      // partial-opacity phase is too short to photograph (gate-4 tune 2)
+      tl.fromTo(fig, { opacity: 0 }, { opacity: 1, duration: 0.04 }, t0);
     });
 
     // Caption bar joins once the sheet is up.

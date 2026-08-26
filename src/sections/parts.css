@@ -176,19 +176,65 @@
   stroke-width: 1.5;
 }
 
-/* Quarter arc marks the active colorway on the ring (P3 animates it). */
+/* Quarter arc marks the active colorway on the ring — it WALKS to the
+   active config's quadrant (1 s easeOutCubic, the source picker's
+   circle-svg grammar; --prt-arc-rot is set by parts.ts). */
 .prt__picker-ring-arc {
   fill: none;
   stroke: var(--ink);
   stroke-width: 1.5;
   stroke-dasharray: 30 90;
   stroke-dashoffset: 8;
-  transform: rotate(-90deg);
+  transform: rotate(calc(-90deg + var(--prt-arc-rot, 0deg)));
   transform-origin: center;
+  transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+/* Core disc wears the active band chip (UI hex only, never material truth). */
 .prt__picker-ring-core {
-  fill: #1f6153; /* the Ocean band anchor (LOOKBIBLE §2) */
+  fill: var(--prt-core, #1f6153); /* Ocean anchor (LOOKBIBLE §2) at boot */
+  transition: fill 0.5s linear;
+}
+
+/* ---- the four config swatches (live picker — P3 SWAP lane) ---------------- */
+
+.prt__picker-swatches {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.prt__swatch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0.3rem 0.32rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.25s linear, background-color 0.25s linear;
+}
+
+.prt__swatch:hover,
+.prt__swatch:focus-visible {
+  border-color: color-mix(in srgb, var(--ink) 45%, transparent);
+  background: color-mix(in srgb, var(--porcelain) 70%, transparent);
+  outline: none;
+}
+
+.prt__swatch--active {
+  border-color: var(--ink);
+}
+
+.prt__swatch-finish,
+.prt__swatch-band {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--chip);
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
 /* ---- the table (Geist Mono + tnum by law, §4) ---------------------------- */

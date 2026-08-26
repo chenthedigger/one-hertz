@@ -169,7 +169,9 @@ async function captureInteractions(
       skip("explode-open", "no disassembly/explode section in manifest");
     } else {
       await gotoSection(page, dis, 0.5);
-      const pos = pick((parts as unknown[])[0], "screenPos") as
+      // screenPos is a live projection — re-read after the goto settles.
+      const liveParts = pick(await getState(page), "explode.parts") as unknown[] | undefined;
+      const pos = pick((liveParts ?? (parts as unknown[]))[0], "screenPos") as
         | { x: number; y: number }
         | undefined;
       if (!pos) {

@@ -15,6 +15,9 @@
 
 /* ---- Legibility scrim (§7.1 — top-center copy over the 3D band) ---------- */
 
+/* Gate-3 tune 3: the scrim holds ≥50% porcelain through the headline +
+   body block's depth so the ghost line stays legible where the band
+   crosses behind it — still a gradient, never a hard panel (§7.1). */
 .strp__scrim {
   position: absolute;
   inset-inline: 0;
@@ -23,8 +26,8 @@
   pointer-events: none;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
-    color-mix(in srgb, var(--porcelain) 38%, transparent) 45%,
+    color-mix(in srgb, var(--porcelain) 60%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 50%, transparent) 52%,
     transparent 100%
   );
 }
@@ -65,9 +68,11 @@
   overflow: hidden; /* mask for the char x-slides */
 }
 
-/* ghost layer: 31% of the ground's counter-color (§4 tone hierarchy) */
+/* Ghost layer at 40% — §7.5 outranks the §4 ghost band here: "WOVEN,"
+   crosses the band macro at .25 and tone layers under 40% are banned over
+   the product (gate-3 tune 3). Still reads ghost against the solid line. */
 .strp__t-ghost {
-  color: color-mix(in srgb, var(--ink) 31%, transparent);
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
 }
 
 .strp__t-solid {
@@ -143,13 +148,19 @@
   margin-top: 0.5rem;
 }
 
-/* ---- Beat 3 · family callout rail (copy only — Ocean is on stage) --------- */
+/* ---- Beat 3 · family callout rail (copy only — Ocean is on stage) ----------
+   Gate-3 tunes 2+4: the rail moved from top-center into the bottom-left
+   dead zone — it fills the .75 vacancy the source's edge-to-edge band
+   grammar would never leave empty, AND it no longer crosses the band, so
+   the fuzzy text-shadow scrim halo is gone entirely (clean ink on bare
+   porcelain, no glow artifact). */
 
 .strp__family {
   position: absolute;
-  inset-inline: 0;
-  top: 14%;
-  text-align: center;
+  left: 6vw;
+  bottom: 9vh;
+  max-width: 44vw;
+  text-align: left;
   pointer-events: none;
   opacity: 0;
   will-change: transform, opacity;
@@ -158,12 +169,12 @@
 .strp__fam-list {
   list-style: none;
   padding: 0;
-  margin: 1.4rem 0 0;
+  margin: 1.2rem 0 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: baseline;
   flex-wrap: wrap;
-  column-gap: 2.6vw;
+  column-gap: 2.2vw;
   row-gap: 0.6rem;
 }
 
@@ -173,15 +184,9 @@
   font-size: var(--type-title);
   letter-spacing: var(--track-title);
   text-transform: uppercase;
-  /* Dim-label tier (§4: 55%), NOT ghost — the pending-family callouts are
-     the brief's copy and the rail crosses the band macro; §7.5 bans <40%
-     tone layers over the product. Text-shadow = the §7.4 ground-colored
-     scrim grammar, holds the caps legible where they cross the crest. */
+  /* Dim-label tier (§4: 55%) on bare porcelain — no scrim needed in the
+     bottom-left zone; the halo treatment died with the top placement. */
   color: color-mix(in srgb, var(--ink) 55%, transparent);
-  text-shadow:
-    0 0 18px var(--porcelain),
-    0 0 8px color-mix(in srgb, var(--porcelain) 90%, transparent),
-    0 1px 3px color-mix(in srgb, var(--porcelain) 80%, transparent);
   will-change: transform, opacity;
 }
 
@@ -220,8 +225,9 @@
   }
 
   .strp__family {
-    top: 12%;
-    padding-inline: 6vw;
+    left: 6vw;
+    bottom: 7vh;
+    max-width: 88vw;
   }
 
   .strp__fam-list {

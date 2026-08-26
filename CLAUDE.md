@@ -27,12 +27,18 @@
 
 ## Decisions
 
+- 2026-08-26 · **No Alpine/Trail bands** (founder): no purchase, no in-house build. Colorway axis = 2 Ti finishes × Ocean-band COLOR recolors (pure material swaps on existing geometry; Apple sells multiple Ocean colors — verify real combos from constants at P4). Outro keeps 4 instances via finish×band-color. Straps-section family callouts copy reviewed at P4.
+
 - 2026-08-20 · Concept **one-hertz** chosen by 4-concept judged panel (34/40); grafts merged from all losers · tradeoff: semantic breaks lower naive pixel similarity, rubric weights structure instead.
 - 2026-08-20 · Name: repo/site **one-hertz / ONE HERTZ**, **CHEN** as byline (founder delegated; keeps thesis as brand, person as author).
 - 2026-08-20 · Device: decided by Spike A rendered evidence, criterion includes "≥4 gorgeous swap states" (lean Ultra 3 titanium × band swap).
 - 2026-08-20 · Founder directives: beauty #1, no self-imposed limits, faithful Apple Watch full fidelity (takedown tail-risk accepted), no legal boilerplate — credits as portfolio story only.
 
-## Current state
+## Current state (2026-08-26)
+
+- **P2 COMPLETE: 15/15 sections live on prod** (v5c1c1554, one-hertz.ubonranto.workers.dev) · internals 7/7 · gate verdicts: zero REBUILD across 4 waves · gate-3/4 tune lists (28 items) frozen in docs/p2/gate-{3,4}.json, applied in P3 · next: P3 interactions (explode, SWAP+outro restart, living BPM, loader match-cut).
+
+## Prior state
 
 - P0 GO (all 7 lanes) · P1 shipped + deployed (dial live on stage screen, 99/99 checks) · repo on GitHub (chenthedigger/one-hertz, private, CI active).
 - **iOS Safari real-device check PASSED 2026-08-20**: founder scrolled the live P1 build on iPhone — pinned sections do not jitter (clears PLAN §4.4 GO/NO-GO carried item; founder's iPhone = named real device candidate for rubric perf field).

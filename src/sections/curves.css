@@ -68,16 +68,20 @@
 
 /* The card copy sits over 3D in the top half: a soft vertical gradient
    scrim from the porcelain ground, never a hard panel. */
+/* Gate-3 tune 2: the scrim holds ≥55% porcelain through the sub-copy
+   block's full depth (the band crosses under the copy at .5–.75), then
+   falls off — still a gradient, never a hard panel (§7.1). */
 .crv__scrim {
   position: absolute;
   inset-inline: 0;
   top: 0;
-  height: 62%;
+  height: 66%;
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
-    color-mix(in srgb, var(--porcelain) 34%, transparent) 55%,
+    color-mix(in srgb, var(--porcelain) 62%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 56%, transparent) 58%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 80%,
     transparent 100%
   );
 }
@@ -87,7 +91,7 @@
 .crv__card {
   position: absolute;
   inset-inline: 0;
-  top: 9vh;
+  top: 7vh; /* lifted 2vh — sub-copy clears the band at .5–.75 (gate-3) */
   display: grid;
   justify-items: center;
   gap: 1.1rem;

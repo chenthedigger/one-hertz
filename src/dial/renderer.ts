@@ -93,6 +93,10 @@ export class DialRenderer {
 
   private mode: DialMode = "active";
   private complication: ComplicationId = "heartRate";
+  /** Colorway accent override (P3 swap — second hand + axle pin; null =
+   *  the palette's authored biosignal). AOD drops the seconds hand, so the
+   *  override only ever paints in active mode — the §5 AOD grammar holds. */
+  private accentOverride: string | null = null;
   private vitals: DialVitals = { ...DEFAULT_VITALS };
   private readonly gearbox = new GearedSeconds();
 
@@ -135,6 +139,18 @@ export class DialRenderer {
 
   setComplication(id: ComplicationId): void {
     this.complication = id;
+  }
+
+  /**
+   * Colorway accent (P3 swap — CONFIG_CHANGE consumer). Repaints the
+   * second hand + axle pin in the config's tempered biosignal; the face
+   * layer (cardinal N marker) keeps the authored palette. The boot config's
+   * accent equals the palette value, so nothing regrades at rest.
+   */
+  setAccent(accent: string): void {
+    if (accent === this.accentOverride) return;
+    this.accentOverride = accent;
+    this.lastKey = ""; // force a repaint + upload on the next update()
   }
 
   /**
@@ -221,7 +237,7 @@ export class DialRenderer {
       complication: this.complication,
       seconds: this.lastSeconds,
       bpm: this.vitals.bpm,
-      accent: PALETTE[this.mode].accent,
+      accent: this.accentOverride ?? PALETTE[this.mode].accent,
     };
   }
 
@@ -283,6 +299,7 @@ export class DialRenderer {
 
   private paintHands(w: number, h: number, wall: number, seconds: number): void {
     const pal = PALETTE[this.mode];
+    const accent = this.accentOverride ?? pal.accent;
     const ctx = this.ctx;
     const cx = w / 2;
     const cy = h / 2;
@@ -335,9 +352,9 @@ export class DialRenderer {
     // AOD drops the seconds hand entirely (LOOKBIBLE §5 tune 1 — real
     // watchOS AOD grammar); the dirty key still ticks 1/s for the minute step.
     if (!aod) {
-      this.baton(cx, cy, secondDeg, -hands.second.tail, hands.second.len, hands.second.w, pal.accent);
+      this.baton(cx, cy, secondDeg, -hands.second.tail, hands.second.len, hands.second.w, accent);
       const ball = polar(cx, cy, R * hands.second.tail, secondDeg + 180);
-      ctx.fillStyle = pal.accent;
+      ctx.fillStyle = accent;
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, R * hands.second.ballR, 0, Math.PI * 2);
       ctx.fill();
@@ -355,7 +372,7 @@ export class DialRenderer {
     ctx.arc(cx, cy, R * hands.hubR * 0.62, 0, Math.PI * 2);
     ctx.fill();
     if (!aod) {
-      ctx.fillStyle = pal.accent;
+      ctx.fillStyle = accent;
       ctx.beginPath();
       ctx.arc(cx, cy, R * hands.hubR * 0.34, 0, Math.PI * 2);
       ctx.fill();

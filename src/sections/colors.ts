@@ -54,6 +54,7 @@ import { Euler, Vector3 } from "three";
 import { getClock } from "../core/clock";
 import { EngineEvent, bus } from "../core/events";
 import { SectionBase, timelineAdapter } from "../core/section";
+import { CONFIGS, resolveConfig, type ColorwayConfig } from "../ui/colorway";
 import type { CameraPoseOverride, CameraRig } from "../webgl/cameraRig";
 import { productAttitude } from "../webgl/stage";
 import "./colors.css";
@@ -64,68 +65,22 @@ const DAWN_TAG = "DAYBREAK · 06:00"; // 16 ≤ 18 caps — Nocturne's bookend
 const EYEBROW = "13 · EDITIONS"; // 13 ≤ 18 caps
 const TITLE_LINE_1 = "ONE HEART,"; // 10 ≤ 18 at colossal
 const TITLE_LINE_2 = "FOUR LIGHTS."; // 12 ≤ 18
-const LEAD = "Two editions live. Two more in the grade."; // 41 ≤ 48
+const LEAD = "Two finishes. Four band colors. One heart."; // 42 ≤ 48
 const GREY_LINES = [
   "Natural titanium returns the light.", // 35 ≤ 44
   "DLC keeps it. Ocean cools it.", // 29
   "The band decides the mood.", // 26
 ] as const;
-const RAIL_CAPTION = "Four editions. One instrument. Choose at the outro."; // 52 ≤ 60
+const RAIL_CAPTION = "Four editions. One instrument. Tap a slot to swap."; // 50 ≤ 60
 
-/* ---- editions (finish × band; ids are the open colorway tokens P3's
- * CONFIG_CHANGE emitter will speak — natural-titanium is INITIAL_STATE's
- * value, black-dlc matches instrument.json x_dlcVariant; hexes are the
- * LOOKBIBLE §1.3 material anchors, UI chips only, never material truth) --- */
+/* ---- editions — the FOUR shipped configs (ui/colorway CONFIGS is the one
+ * table: 2 Ti finishes × Ocean COLOR recolors, founder 2026-08-26; the old
+ * reserved Alpine/Trail slots retired with the recolor-only decision). The
+ * rail is dual-placement picker #3 (Parts card + outro lineup are #1/#2):
+ * every slot emits CONFIG_CHANGE on the shared bus — same mutation path as
+ * every other entry point. Hexes stay UI chips only, never material truth. */
 
-interface Edition {
-  readonly finish: string;
-  readonly band: string;
-  readonly finishLabel: string;
-  readonly bandLabel: string;
-  readonly finishHex: string;
-  readonly bandHex: string;
-  /** false = slot reserved (Alpine/Trail await the dika3d band geometry). */
-  readonly ready: boolean;
-}
-
-const EDITIONS: readonly Edition[] = [
-  {
-    finish: "natural-titanium",
-    band: "ocean",
-    finishLabel: "NATURAL",
-    bandLabel: "OCEAN",
-    finishHex: "#cfccc6",
-    bandHex: "#1f6153",
-    ready: true,
-  },
-  {
-    finish: "black-dlc",
-    band: "ocean",
-    finishLabel: "BLACK DLC",
-    bandLabel: "OCEAN",
-    finishHex: "#17181b",
-    bandHex: "#1f6153",
-    ready: true,
-  },
-  {
-    finish: "natural-titanium",
-    band: "alpine",
-    finishLabel: "RESERVED",
-    bandLabel: "ALPINE",
-    finishHex: "#cfccc6",
-    bandHex: "#dfe3e0",
-    ready: false,
-  },
-  {
-    finish: "black-dlc",
-    band: "trail",
-    finishLabel: "RESERVED",
-    bandLabel: "TRAIL",
-    finishHex: "#17181b",
-    bandHex: "#4a4d3f",
-    ready: false,
-  },
-];
+const EDITIONS: readonly ColorwayConfig[] = CONFIGS;
 
 /* ---- beat windows (fraction grid {.05,.1,.15,.2,.25,.4,.5,.75} anchored) -- */
 
@@ -228,12 +183,21 @@ export class ColorsSection extends SectionBase {
     this.addDomAdapter(timelineAdapter(this.buildDomTimeline()));
     this.addWebglAdapter(timelineAdapter(this.buildCameraTimeline()));
 
-    // CONFIG_CHANGE consumer (P3 socket): captions, swatch ring, colorway
-    // CSS pair all follow the payload. Nothing emits yet — the P3 swap
-    // mechanic plugs into a live listener.
-    bus.on(EngineEvent.ConfigChange, ({ finish, band }) => this.applyEdition(finish, band));
-    const initial = EDITIONS[0];
-    if (initial) this.applyEdition(initial.finish, initial.band);
+    // CONFIG_CHANGE consumer: captions, swatch ring, colorway CSS pair all
+    // follow the bus. resolveConfig normalizes every payload shape.
+    bus.on(EngineEvent.ConfigChange, (payload) => {
+      const cfg = resolveConfig(payload);
+      if (cfg) this.applyEdition(cfg);
+    });
+    // …and EMITTER (dual-placement picker #3): every slot speaks the same
+    // canonical `{config}` payload the Parts card and the outro emit.
+    this.mustQuery<HTMLElement>(".col__rail").addEventListener("click", (e) => {
+      const el =
+        e.target instanceof Element ? e.target.closest<HTMLElement>("[data-finish]") : null;
+      const id = el?.dataset["finish"];
+      if (id) bus.emit(EngineEvent.ConfigChange, { config: id });
+    });
+    this.applyEdition(CONFIGS[0] as ColorwayConfig);
   }
 
   /* ---- DOM (self-rendered — index.html holds only the empty track) ------- */
@@ -261,7 +225,8 @@ export class ColorsSection extends SectionBase {
             <circle class="col__ring-dot" cx="50" cy="2" r="1.4" />
           </g>
         </svg>
-        <div class="col__rail" data-cursor-text="swap">
+        <div class="col__rail" data-cursor-text="swap" data-colorway-picker
+             data-colorway-slot="colors" role="group" aria-label="Colorway picker">
           <ul class="col__slots">
             ${EDITIONS.map(slotMarkup).join("")}
           </ul>
@@ -328,8 +293,11 @@ export class ColorsSection extends SectionBase {
     tl.to(linesBlock, { opacity: 0, duration: 0.04 }, 0.6);
     tl.to(linesBlock, { y: -18, duration: 0.045, ease: "power2.in" }, 0.6);
 
-    // Beat 3 · the edition ring + rail (the presentation plate).
+    // Beat 3 · the edition ring + rail (the presentation plate). The rail
+    // WRAPPER fades in with its content (gate-4 tune 3: its scrim backing
+    // used to sit visible from p=0 as a stray translucent rectangle).
     tl.fromTo(ring, { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0.58);
+    tl.fromTo(rail, { opacity: 0 }, { opacity: 1, duration: 0.05 }, 0.6);
     tl.fromTo(
       slots,
       { y: 26, opacity: 0 },
@@ -392,13 +360,18 @@ export class ColorsSection extends SectionBase {
     // .15–.3: settle the drag-tilt partway, parallax comes alive
     // (source: settle power3.out @.15, parallax ON @.15).
     tl.to(r, { thetaOff: 0.42, phiOff: -0.18, parallaxScale: 1, duration: 0.15, ease: "power3.out" }, 0.15);
+    // .32–.46: the watch rides ~15% larger through the grey-line reveal
+    // window (gate-4 tune 4 — the small watch + grey block read
+    // under-tensioned at .40–.60), then the recenter returns it to plate
+    // scale. Paired ≤.2-window moves (law 7).
+    tl.to(r, { standoff: 6.6, duration: 0.14 }, 0.32);
     // .5–.7: recenter to the near-symmetric face-on plate; parallax OFF for
     // the plate (source: rotation→0 @.5; law 7 — parallax off during
     // macros). A small residual off-axis stays: dead-on the crystal sheets
     // the emissive dial at normal incidence (§7.2 — legibility over drama).
-    tl.to(r, { thetaOff: 0.12, phiOff: -0.05, lat: 0, parallaxScale: 0, duration: 0.2 }, 0.5);
+    tl.to(r, { thetaOff: 0.12, phiOff: -0.05, lat: 0, parallaxScale: 0, standoff: 7.6, duration: 0.2 }, 0.5);
     // .75–.9: a small press-in as the captions land (≤.2-window move).
-    tl.to(r, { standoff: 7.5, duration: 0.15 }, 0.75);
+    tl.to(r, { standoff: 7.1, duration: 0.15 }, 0.75);
     // .9–1: hand the camera back to the base rig pose.
     tl.to(r, { blend: 0, parallaxScale: 1, duration: 0.1 }, 0.9);
     return tl;
@@ -460,12 +433,12 @@ export class ColorsSection extends SectionBase {
     }
   }
 
-  /* ---- CONFIG_CHANGE consumer (P3 socket) --------------------------------- */
+  /* ---- CONFIG_CHANGE consumer --------------------------------------------- */
 
-  private applyEdition(finish: string, band: string): void {
-    const index = EDITIONS.findIndex((e) => e.finish === finish && e.band === band);
+  private applyEdition(cfg: ColorwayConfig): void {
+    const index = EDITIONS.findIndex((e) => e.id === cfg.id);
     const edition = EDITIONS[index];
-    if (!edition || index === this.activeIndex) return; // unknown ids: P3's vocabulary, ignore
+    if (!edition || index === this.activeIndex) return;
     this.activeIndex = index;
     this.slots.forEach((slot, i) => slot.classList.toggle("col__slot--active", i === index));
     // The §2 colorway declaration: CSS `--first/second-color` pair (scoped
@@ -487,16 +460,18 @@ function splitChars(text: string): string {
     .join("");
 }
 
-function slotMarkup(e: Edition, i: number): string {
-  const state = e.ready ? "" : " col__slot--reserved";
+function slotMarkup(e: ColorwayConfig, i: number): string {
   return `
-    <li class="col__slot${state}">
+    <li class="col__slot">
       <span class="col__slot-bar" aria-hidden="true"></span>
-      <span class="col__slot-index">0${i + 1}</span>
-      <span class="col__slot-name">${e.finishLabel}<em>${e.bandLabel}</em></span>
-      <span class="col__slot-chips" aria-hidden="true">
-        <i class="col__chip" style="--chip:${e.finishHex}"></i>
-        <i class="col__chip col__chip--band" style="--chip:${e.bandHex}"></i>
-      </span>
+      <button type="button" class="col__slot-btn" data-finish="${e.id}"
+              aria-label="${e.label}" title="${e.label}">
+        <span class="col__slot-index">0${i + 1}</span>
+        <span class="col__slot-name">${e.finishLabel}<em>${e.bandLabel}</em></span>
+        <span class="col__slot-chips" aria-hidden="true">
+          <i class="col__chip" style="--chip:${e.finishHex}"></i>
+          <i class="col__chip col__chip--band" style="--chip:${e.bandHex}"></i>
+        </span>
+      </button>
     </li>`;
 }

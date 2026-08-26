@@ -22,9 +22,10 @@
 
 .col__dawn {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 50%;
   top: 12svh;
+  transform: translateX(-50%);
+  width: max-content;
   text-align: center;
   opacity: 0;
   font-family: var(--font-mono);
@@ -33,12 +34,15 @@
   letter-spacing: var(--track-caps-wide);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--col-porcelain) 70%, transparent);
-  padding-block: 1.4rem;
-  /* §7.1 scrim from the outgoing ink ground — never a hard panel. */
+  padding: 2.2rem 7rem;
+  /* §7.1 scrim from the outgoing ink ground, shrunk to the text measure
+     (gate-4 tune 2 — it rendered as a viewport-wide band with hard
+     edges). The ellipse reaches alpha 0 exactly at the box edges, so the
+     falloff feathers in BOTH axes — never a clipped panel. */
   background: radial-gradient(
-    38% 150% at 50% 50%,
-    color-mix(in srgb, var(--ink) 55%, transparent),
-    transparent 75%
+    50% 50% at 50% 50%,
+    color-mix(in srgb, var(--ink) 38%, transparent),
+    transparent 100%
   );
   will-change: opacity;
 }
@@ -52,11 +56,12 @@
   max-width: 88vw;
   opacity: 0;
   padding: 2.5rem 3rem 2.5rem 0;
-  /* Text-over-3D scrim: gradient from the porcelain ground 0→~55% (§7.1). */
+  /* Text-over-3D scrim: gradient from the porcelain ground 0→~55% (§7.1);
+     the ellipse fits the box so the falloff never clips to a hard edge. */
   background: radial-gradient(
-    70% 105% at 35% 45%,
+    50% 50% at 42% 48%,
     color-mix(in srgb, var(--col-porcelain) 55%, transparent),
-    transparent 74%
+    transparent 100%
   );
   will-change: transform, opacity;
 }
@@ -117,9 +122,9 @@
   opacity: 0;
   padding: 2rem 2.5rem 1.25rem 0;
   background: radial-gradient(
-    80% 130% at 30% 70%,
+    50% 50% at 40% 50%,
     color-mix(in srgb, var(--col-porcelain) 55%, transparent),
-    transparent 74%
+    transparent 100%
   );
   will-change: transform, opacity;
 }
@@ -183,10 +188,13 @@
   width: min(78vw, 62rem);
   text-align: center;
   padding: 2.25rem 3rem 1.5rem;
+  /* Hidden until its beat — the scrim backing must never float alone
+     before the slots arrive (gate-4 tune 3); feathered inside the box. */
+  opacity: 0;
   background: radial-gradient(
-    75% 130% at 50% 60%,
+    50% 50% at 50% 52%,
     color-mix(in srgb, var(--col-porcelain) 55%, transparent),
-    transparent 78%
+    transparent 100%
   );
   will-change: transform, opacity;
 }
@@ -223,6 +231,30 @@
 .col__slot--active .col__slot-bar {
   height: 2px;
   background: var(--ink);
+}
+
+/* Slot content is a real button (the rail is dual-placement picker #3);
+   layout stays on the li — the button is a transparent hit surface. */
+.col__slot-btn {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+
+.col__slot-btn:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  outline-offset: 5px;
+}
+
+.col__slot-btn:hover .col__slot-name {
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
 }
 
 .col__slot-index {
@@ -266,13 +298,6 @@
   color: color-mix(in srgb, var(--ink) 65%, transparent);
 }
 
-/* Reserved slots: ghost tone (§4: 30–32% ghost layer), hollow band chip. */
-.col__slot--reserved .col__slot-name,
-.col__slot--reserved .col__slot-name em,
-.col__slot--reserved .col__slot-index {
-  color: color-mix(in srgb, var(--ink) 30%, transparent);
-}
-
 .col__slot-chips {
   display: flex;
   gap: 0.4rem;
@@ -285,11 +310,6 @@
   border-radius: 50%;
   background: var(--chip);
   border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
-}
-
-.col__slot--reserved .col__chip {
-  background: transparent;
-  border: 1px dashed color-mix(in srgb, var(--chip) 70%, var(--ink) 30%);
 }
 
 .col__caption {

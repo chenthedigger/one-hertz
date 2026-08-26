@@ -18,20 +18,26 @@
   display: block;
 }
 
-/* ---- Legibility scrim (§7.1 — slate copy over the 3D lineup below) ------- */
+/* ---- Legibility scrim (§7.1) — constrained to the slate text block's
+   band (gate-4 tune 2: the old full-width top-60% wash faded the rising
+   lineup to ~40% during the approach, violating §7.5). It fades in WITH
+   the slate (timeline-driven) and feathers to 0 inside its own box. */
 
 .outro__scrim {
   position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 60%;
+  left: 50%;
+  top: 2%;
+  width: min(62rem, 94vw);
+  height: 54%;
+  transform: translateX(-50%);
   pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
-    color-mix(in srgb, var(--porcelain) 36%, transparent) 50%,
+  opacity: 0;
+  background: radial-gradient(
+    50% 50% at 50% 46%,
+    color-mix(in srgb, var(--porcelain) 55%, transparent),
     transparent 100%
   );
+  will-change: opacity;
 }
 
 /* ---- The credits slate ---------------------------------------------------- */
@@ -146,6 +152,13 @@
   width: 75vw;
   pointer-events: none;
   opacity: 0;
+  /* Buttons re-enable their own pointer-events; visibility gates them off
+     until the lineup beat owns the frame (tickDom toggles the class). */
+  visibility: hidden;
+}
+
+.outro--models-on .outro__models {
+  visibility: visible;
 }
 
 .outro__model-list {
@@ -156,38 +169,116 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
+.outro__slot {
+  display: block;
+  text-align: center;
+}
+
+/* Model labels are real picker buttons now (P3 SWAP — every instance
+   really wears its config, so every label reads truthful ink; the resting
+   dim keeps hierarchy, live/selected rise to full ink). The §7.4
+   ground-colored text-shadow stays for the frames where a rising watch
+   passes behind. */
 .outro__model {
+  display: inline-block;
+  margin: 0;
+  padding: 0 0 0.6em;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
   font-family: var(--font-display);
   font-weight: 300;
   font-size: var(--type-title);
   letter-spacing: var(--track-title);
   text-transform: uppercase;
   text-align: center;
-  /* Dim-label tier (§4: 55%) + the §7.4 ground-colored text-shadow scrim —
-     the labels sit under the watch row and must read over titanium. */
   color: color-mix(in srgb, var(--ink) 55%, transparent);
   text-shadow:
     0 0 18px var(--porcelain),
     0 0 8px color-mix(in srgb, var(--porcelain) 90%, transparent),
     0 1px 3px color-mix(in srgb, var(--porcelain) 80%, transparent);
+  transition: color 0.35s linear;
   will-change: transform, opacity;
 }
 
-/* the one on stage — full ink + the biosignal tick (Straps rail parity) */
-.outro__model--live {
-  color: var(--ink);
-  position: relative;
+.outro__model:hover,
+.outro__model:focus-visible {
+  color: color-mix(in srgb, var(--ink) 85%, transparent);
 }
 
-.outro__model--live::after {
+.outro__model:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  outline-offset: 6px;
+}
+
+.outro__model-band {
+  display: block;
+}
+
+.outro__model-finish {
+  display: block;
+  margin-top: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+/* the one on stage — full ink + the biosignal tick (Straps rail parity) */
+.outro__model--live,
+.outro__model--selected {
+  color: var(--ink);
+}
+
+.outro__model--live::after,
+.outro__model--selected::after {
   content: "";
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: -0.55em;
+  bottom: 0;
   width: 1.2em;
   height: 2px;
   background: var(--biosignal);
+}
+
+/* SWAP — commits the previewed model and restarts the film from the top. */
+.outro__swap {
+  display: block;
+  margin: 1.6rem auto 0;
+  padding: 0.55em 1.9em;
+  background: none;
+  border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  border-radius: 999px;
+  cursor: pointer;
+  pointer-events: auto;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  color: color-mix(in srgb, var(--ink) 80%, transparent);
+  transition:
+    color 0.35s linear,
+    border-color 0.35s linear,
+    opacity 0.35s linear;
+}
+
+.outro__swap[aria-disabled="true"] {
+  opacity: 0.45;
+}
+
+.outro__swap:hover,
+.outro__swap:focus-visible {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--ink) 65%, transparent);
+}
+
+.outro__swap:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  outline-offset: 4px;
 }
 
 /* ---- Small screens: keep the slate breathing ------------------------------ */

@@ -32,9 +32,20 @@ export type CursorIconName =
 
 /** Payload map — the typed contract for every mechanic (PLAN §1). */
 export interface EnginePayloads {
-  /** Colorway swap: finish id + band id (consumed by materials, gallery
-   *  `<picture>` sets, screen canvas, accent tokens — PLAN §1 mechanic 4). */
-  [EngineEvent.ConfigChange]: { finish: string; band: string };
+  /** Colorway swap (PLAN §1 mechanic 4; consumed by materials, gallery
+   *  `<picture>` sets, screen canvas, accent tokens). Canonical form is
+   *  `{config: "<id>"}` (the eval harness's shape — ui/colorway.ts CONFIGS
+   *  ids); `{finish, band}` is the legacy P2-socket form, still resolved.
+   *  `duration` overrides the 1 s material tween (0 = instant);
+   *  `restart: true` is the outro SWAP loop — apply at duration 0, then
+   *  lenis.scrollTo(0, immediate) (PLAN §1 mechanic 5). */
+  [EngineEvent.ConfigChange]: {
+    config?: string;
+    finish?: string;
+    band?: string;
+    duration?: number;
+    restart?: boolean;
+  };
   /** Cursor icon channel; `null` clears it. `color` tints the
    *  finish-swatch icon (defaults to the cursor's swatch fallback). */
   [EngineEvent.SetCursorIcon]: { icon: CursorIconName | null; color?: string };

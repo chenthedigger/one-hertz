@@ -16,10 +16,18 @@
     <link rel="preload" href="/assets/fonts/Inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
+    <!-- Activity-rings loader (P3 vital lane): the ring triad colors are
+         spent HERE and nowhere else (PLAN §2 color law). pathLength=100 so
+         the Loader drives dash math in percent. On completion the rings SVG
+         is lifted and match-cut onto the hero dial (src/ui/loaderMatchCut.ts). -->
     <div id="loader" aria-hidden="true">
-      <svg id="loader-arc" viewBox="0 0 120 120" width="120" height="120">
-        <circle class="loader-arc__track" cx="60" cy="60" r="54" />
-        <circle class="loader-arc__fill" cx="60" cy="60" r="54" />
+      <svg id="loader-rings" viewBox="0 0 120 120" width="120" height="120">
+        <circle class="ring-track ring-track--a" cx="60" cy="60" r="52" />
+        <circle class="ring-track ring-track--b" cx="60" cy="60" r="42.5" />
+        <circle class="ring-track ring-track--c" cx="60" cy="60" r="33" />
+        <circle class="ring-fill ring-fill--a" cx="60" cy="60" r="52" pathLength="100" />
+        <circle class="ring-fill ring-fill--b" cx="60" cy="60" r="42.5" pathLength="100" />
+        <circle class="ring-fill ring-fill--c" cx="60" cy="60" r="33" pathLength="100" />
       </svg>
       <p class="loader__label">ONE HERTZ</p>
     </div>

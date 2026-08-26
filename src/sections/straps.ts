@@ -70,7 +70,10 @@ const CARD_EYEBROW = "BPM · CARD 03/03"; // ≤18 chars caps
 const CARD_UNIT = "bpm — the band"; // value + unit; name rides the unit line
 const CARD_CAPTION = "The heart at its ceiling. The band, unbothered."; // ≤60
 const FAMILY_LABEL = "THE FAMILY"; // ≤18 chars caps
-const FAMILY = ["OCEAN", "ALPINE", "TRAIL", "TITANIUM MILANESE"] as const;
+/** Family names — "MILANESE" (not "TITANIUM MILANESE") is the one canonical
+ *  name; the Footer lineup labels use the same vocabulary (gate-4 tune 5,
+ *  label continuity). */
+const FAMILY = ["OCEAN", "ALPINE", "TRAIL", "MILANESE"] as const;
 const FAMILY_CAPTION = "Four bands. One heartbeat."; // ≤60 chars
 
 /** Catalog card #3 counts from card #2's value to the peak (PLAN §2). */
@@ -295,9 +298,12 @@ export class StrapsSection extends SectionBase {
       tl.to(card, { y: -36, duration: 0.06, ease: "power2.in" }, 0.62);
     }
 
-    // Beat 3 · family callout rail (.67–.9): staggered rises timed to be
-    // fully SETTLED at the .75 catalog frame (last item lands .70+.05);
-    // restored/gone before the fling-out hands the frame back (done by .92).
+    // Beat 3 · family callout rail (.67–.87): staggered rises timed to be
+    // fully SETTLED at the .75 catalog frame (last item lands .70+.05).
+    // Departure finishes by ≤.875 (gate-3 tune 1): the base-rig watch case
+    // re-enters top-center from ~.9 as the camera blends out — every DOM
+    // departure must be resolved before that handoff so no rail text ever
+    // crosses the returning case (verified on page-truth .9/.95 captures).
     if (family) {
       tl.fromTo(family, { opacity: 0 }, { opacity: 1, duration: 0.04, ease: "none" }, 0.67);
       tl.fromTo(
@@ -306,8 +312,8 @@ export class StrapsSection extends SectionBase {
         { y: 0, opacity: 1, duration: 0.05, ease: "power3.out", stagger: 0.01 },
         0.67,
       );
-      tl.to(family, { opacity: 0, duration: 0.05, ease: "none" }, 0.88);
-      tl.to(family, { y: -30, duration: 0.05, ease: "power2.in" }, 0.88);
+      tl.to(family, { opacity: 0, duration: 0.05, ease: "none" }, 0.82);
+      tl.to(family, { y: -30, duration: 0.055, ease: "power2.in" }, 0.82);
     }
 
     tl.call(() => {}, [], 1); // pad — beat positions are window fractions

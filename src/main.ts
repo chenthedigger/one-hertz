@@ -12,6 +12,7 @@ import "./style.css";
 import { SECTION_ORDER, type SectionName } from "./core/constants";
 import { getClock, setClock } from "./core/clock";
 import { extendState, installDebugApi } from "./core/debug";
+import { isEvalMode } from "./core/determinism";
 import { bus, EngineEvent } from "./core/events";
 import { installMaterialsInspector } from "./core/inspector";
 import { Loader } from "./core/loader";
@@ -21,10 +22,14 @@ import { ScrollEngine } from "./core/scroll";
 import type { SectionBase } from "./core/section";
 import { StateStore } from "./core/state";
 import { createSection } from "./sections/index";
+import { provideLenis, setNocturneLedGate } from "./sections/disassemblyExplode";
 import { provideStage } from "./sections/stageRef";
 import { DialRenderer } from "./dial/renderer";
 import { installCursor } from "./ui/cursor/cursor";
 import { LongpressSystem } from "./ui/cursor/longpress";
+import { ColorwaySystem, provideColorway } from "./ui/colorway";
+import { runLoaderMatchCut } from "./ui/loaderMatchCut";
+import { LivingVital } from "./ui/vital/vital";
 import { LightKeyframeDriver } from "./gl/lightKeyframes";
 import { applyLook, DEFAULT_LOOK, loadLook, type LookConfig } from "./gl/look";
 import { CameraRig } from "./webgl/cameraRig";
@@ -122,10 +127,18 @@ function boot(): void {
   // + intensity + exposure + bloom + bgStage off the raw scroll, per frame.
   // Inert until a look with keyframes lands (DEFAULT_LOOK has none).
   const lightDriver = new LightKeyframeDriver(stage);
+  // Loader match-cut (P3 vital lane): at dismiss start the activity rings
+  // are lifted and flown onto the hero dial, tracking the live projected
+  // screen mesh (reviewer-resilience fallbacks inside the module).
+  loader.onDismissStart = (rings) => runLoaderMatchCut(rings, stage);
+  // Colorway swap system (P3 — constructed after the vital below; the look
+  // pipeline hands it the x_colorway variant tables whenever a look lands).
+  let colorway: ColorwaySystem | null = null;
   const applyLookToStage = async (look: LookConfig): Promise<void> => {
     const watch = await watchReady;
     await applyLook(stage, watch, look);
     lightDriver.setLook(look);
+    colorway?.setLook(look);
   };
   void watchReady.then(async () => {
     try {
@@ -173,11 +186,18 @@ function boot(): void {
   bus.on(EngineEvent.LongpressToggle, ({ intensity }) => rig.setLongpress(intensity));
   bus.on(EngineEvent.UpdateRotations, ({ speed }) => stage.setRotationSpeed(speed));
   // Per-section zoomMultiplier follows the viewport center line (PLAN §1).
+  // The Nocturne LED gate (P3 explode lane: sensor led_green pulses at real
+  // 1 Hz while Nocturne holds the center) rides the same lifecycle channel.
   registry.onLifecycle((e) => {
+    if (e.section === "Nocturne" && (e.type === "enterCenter" || e.type === "leaveCenter")) {
+      setNocturneLedGate(e.type === "enterCenter");
+    }
     if (e.type !== "enterCenter") return;
     const section = sectionsByName.get(e.section);
     if (section) rig.setZoomMultiplier(section.zoomMultiplier);
   });
+  // Explode drag-to-pan gesture arbitration needs lenis.stop()/start().
+  provideLenis(engine.lenis);
   // Mouse parallax feed (fine pointers only — touch has no resting pointer).
   if (window.matchMedia("(pointer: fine)").matches) {
     window.addEventListener(
@@ -192,6 +212,36 @@ function boot(): void {
     );
   }
   extendState("camera", () => rig.aux());
+
+  // -- Living BPM vital (P3 vital lane) --------------------------------------
+  // Persistent top-right chrome: simulated HR off the raw Lenis velocity,
+  // ECG trace drawn by the clock scalar, one-frame 1.006 beat tick on the
+  // stage canvas, bgStage-aware signal color off the keyframe driver,
+  // opt-in sound (default OFF — zero AudioContext until first click).
+  const vital = new LivingVital({
+    store,
+    stageCanvas: canvas,
+    getVelocity: () => engine.lenis.velocity,
+    getStageHex: () => lightDriver.stageHex(),
+  });
+  extendState("vital", () => vital.stats());
+
+  // -- Colorway swap (P3 swap lane) ------------------------------------------
+  // CONFIG_CHANGE owner: 1 s 5-param material tween + accent fan-out (dial,
+  // vital, --accent/--biosignal tokens) + StateStore colorway axis + the
+  // outro SWAP restart (scrollTo 0 immediate; eval settles synchronously so
+  // the harness reads scrollY 0 + the new finish in the same tick).
+  colorway = new ColorwaySystem({
+    stage,
+    store,
+    dial,
+    vital,
+    restart: () => {
+      engine.scrollTo(0, true);
+      if (isEvalMode) engine.settleSync(0);
+    },
+  });
+  provideColorway(colorway);
 
   engine.onResizeSettled(() => {
     stage.resize();
@@ -214,6 +264,7 @@ function boot(): void {
     }
     dial.update({ clockScalar: getClock(), scrollVelocity: engine.lenis.velocity }, dt);
     lightDriver.update(rawScroll); // pure function of scroll — eval-settles
+    vital.update(dt); // after the driver — reads its applied bgStage
     rig.update(dt);
     stage.render(dt);
   });
@@ -236,9 +287,18 @@ function boot(): void {
     },
     current: () => currentLookName,
   };
+  // Colorway entry point for evals/capture kit — emits on the bus (the one
+  // mutation path; every consumer hears it exactly like a picker click).
+  api.setConfig = (id: string, durationS?: number): void => {
+    bus.emit(EngineEvent.ConfigChange, {
+      config: id,
+      ...(durationS !== undefined ? { duration: durationS } : {}),
+    });
+  };
 
   loader.ready.then(() => {
     store.uiFlags.loaderDone = true;
+    vital.reveal();
     if (params.scroll !== null && params.solo === null) {
       api.gotoSection(params.scroll, 0);
     }

@@ -101,9 +101,9 @@ const ANNOTATIONS: readonly AnnotationSpec[] = [
     spec: "LTPO3 · 3000 NITS",
     token: "heart", // the thesis complication — one human hertz
     part: "part_screen",
-    ox: -0.14,
-    oy: 0.46,
-    oz: 0.09,
+    ox: -0.06,
+    oy: 0.56,
+    oz: 0.1,
   },
   {
     id: "glass",
@@ -111,9 +111,9 @@ const ANNOTATIONS: readonly AnnotationSpec[] = [
     spec: "SAPPHIRE · IOR 1.77",
     token: "depth", // the dive read lives under the glass slab
     part: "part_crystal",
-    ox: -0.44,
-    oy: 0.08,
-    oz: 0.12,
+    ox: -0.56,
+    oy: 0.02,
+    oz: 0.14,
   },
   {
     id: "bezel",
@@ -121,9 +121,9 @@ const ANNOTATIONS: readonly AnnotationSpec[] = [
     spec: "GRADE 5 · KNURLED",
     token: "compass", // the bezel carries the tangential scale
     part: "part_bezel",
-    ox: -0.9,
-    oy: -0.18,
-    oz: 0.06,
+    ox: -0.38,
+    oy: -0.7,
+    oz: 0.05,
   },
 ];
 

@@ -52,7 +52,9 @@ import { gsap } from "gsap";
 import { Euler, Vector3 } from "three";
 import { getClock } from "../core/clock";
 import { isEvalMode } from "../core/determinism";
+import { bus, EngineEvent } from "../core/events";
 import { SectionBase, timelineAdapter } from "../core/section";
+import { CONFIGS, resolveConfig, type ColorwayConfig } from "../ui/colorway";
 import { productAttitude } from "../webgl/stage";
 import type { CameraPoseOverride, CameraRig } from "../webgl/cameraRig";
 import "./parts.css";
@@ -82,10 +84,16 @@ const SUMMARY_MODEL = "MODEL 1HZ";
 const SUMMARY_LABEL = "TOTAL WEIGHT";
 const SUMMARY_VALUE = "immaterial"; // ≤12 — the inversion's punchline
 
-/** Colorway picker slot copy (P3 SWAP wiring; truthful current state). */
+/** Colorway picker copy (P3 SWAP lane — live dual-placement picker #1).
+ *  Name/sub render from the ACTIVE config (ui/colorway CONFIGS is the one
+ *  table); the eyebrow is the only static string. */
 const PICKER_EYEBROW = "COLORWAY";
-const PICKER_NAME = "Natural Titanium";
-const PICKER_SUB = "Ocean band";
+
+/** "Natural Titanium · Tide" → { name: "Natural Titanium", sub: "Ocean · Tide" }. */
+function pickerCopy(cfg: ColorwayConfig): { name: string; sub: string } {
+  const [name = cfg.label, band = cfg.bandLabel] = cfg.label.split(" · ");
+  return { name, sub: `Ocean · ${band}` };
+}
 
 /* ---- grey-line reveals (scrub:2 grammar — LIGHT-ground colors, §7.3) ------ */
 
@@ -132,11 +140,24 @@ function smooth(t: number): number {
  * top + height − vh] and hits 1 exactly at pin release (engine.md §1);
  * reveals ride the middle half, everything resolved before the release. */
 
-/** Camera blend plateau: in .05–.22, hold, out .82–.97 (0 at boundaries). */
+/** Camera blend plateau: in .05–.22, hold, out .96–1 (0 at boundaries).
+ *  The out-plateau moved from .82–.97 (gate-4 tune 1): the card-slot pose
+ *  holds until the pin releases, so the blend-out never drags the enlarged
+ *  watch left across the still-inked table while the section owns the
+ *  frame. The residual crossfade lives in the last 4% of travel, and the
+ *  RETREAT below shrinks the product first so the blend starts small. */
 function plateau(p: number): number {
   const rise = smooth(clamp01((p - 0.05) / 0.17));
-  const fall = 1 - smooth(clamp01((p - 0.82) / 0.15));
+  const fall = 1 - smooth(clamp01((p - 0.96) / 0.04));
   return Math.min(rise, fall);
+}
+
+/** Exit retreat .9–1 (gate-4 tune 1, second half): the card-slot watch
+ *  presses AWAY (standoff 10→12.6) and drifts higher before the blend
+ *  releases — the product leaves by shrinking in its own slot, never by
+ *  sweeping across the type block. */
+function retreat(p: number): number {
+  return smooth(clamp01((p - 0.9) / 0.1));
 }
 
 /** Row stagger: row i rises at ROW_T0 + i·ROW_STEP over ROW_DUR. */
@@ -220,12 +241,56 @@ export class PartsSection extends SectionBase {
     });
 
     this.addDomAdapter(timelineAdapter(this.buildDomTimeline(pin)));
+    this.wirePicker(pin);
 
     // scrub:2 catch-up lag on the shared ticker (live only — eval applies
     // targets directly in tickDom so settleSync captures are final).
     if (!isEvalMode) {
       gsap.ticker.add((_t, deltaMs) => this.tickLag(deltaMs / 1000));
     }
+  }
+
+  /* ---- colorway picker (P3 SWAP — dual-placement #1, CALIBRE card) -------- */
+
+  /**
+   * ONE mutation path: a swatch click only EMITS CONFIG_CHANGE; the card's
+   * own labels/ring update through the same bus listener every other
+   * consumer uses (so the harness's emit and the outro's picker move this
+   * card identically — rubric colorway-dual-placement).
+   */
+  private wirePicker(pin: HTMLElement): void {
+    const picker = pin.querySelector<HTMLElement>(".prt__picker");
+    if (!picker) return;
+    const name = picker.querySelector<HTMLElement>(".prt__picker-name");
+    const sub = picker.querySelector<HTMLElement>(".prt__picker-sub");
+    const swatches = Array.from(picker.querySelectorAll<HTMLElement>(".prt__swatch"));
+
+    picker.addEventListener("click", (e) => {
+      const swatch =
+        e.target instanceof Element ? e.target.closest<HTMLElement>("[data-finish]") : null;
+      const id = swatch?.dataset["finish"];
+      if (id) bus.emit(EngineEvent.ConfigChange, { config: id });
+    });
+
+    const apply = (cfg: ColorwayConfig): void => {
+      const index = CONFIGS.indexOf(cfg);
+      const copy = pickerCopy(cfg);
+      if (name) name.textContent = copy.name;
+      if (sub) sub.textContent = copy.sub;
+      // Ring grammar: quarter-arc walks to the active config (CSS 1 s
+      // easeOutCubic transition — the source picker's circle-svg move);
+      // the core disc wears the band chip.
+      picker.style.setProperty("--prt-arc-rot", `${index * 90}deg`);
+      picker.style.setProperty("--prt-core", cfg.bandHex);
+      for (const s of swatches) {
+        s.classList.toggle("prt__swatch--active", s.dataset["finish"] === cfg.id);
+      }
+    };
+    bus.on(EngineEvent.ConfigChange, (payload) => {
+      const cfg = resolveConfig(payload);
+      if (cfg) apply(cfg);
+    });
+    apply(CONFIGS[0] as ColorwayConfig); // boot state — INITIAL_STATE.colorway
   }
 
   /* ---- DOM channel -------------------------------------------------------- */
@@ -289,13 +354,15 @@ export class PartsSection extends SectionBase {
       );
     }
 
-    // Picker card — arrives from below (the image-grid rise grammar).
+    // Picker card — arrives from below (the image-grid rise grammar),
+    // riding WITH the first table rows (.24–.34, gate-4 tune 3) instead of
+    // parking fully-rendered before the section has begun.
     if (picker) {
       tl.fromTo(
         picker,
         { opacity: 0, y: 44 },
         { opacity: 1, y: 0, duration: 0.1, ease: "power3.out" },
-        0.18,
+        0.24,
       );
     }
 
@@ -395,17 +462,18 @@ export class PartsSection extends SectionBase {
     const n = this.scratchNormal.copy(cs.zAxis).applyEuler(this.scratchEuler);
     const aim = this.scratchAim.copy(cs.origin).applyEuler(this.scratchEuler);
 
+    const r = retreat(progress);
     const o = this.poseOverride;
     o.theta = Math.atan2(n.x, n.z) + CAM_THETA_OFF;
     o.phi = Math.min(
       Math.PI - 0.15,
       Math.max(0.15, Math.acos(Math.min(1, Math.max(-1, n.y))) + CAM_PHI_OFF),
     );
-    o.radius = CAM_STANDOFF;
+    o.radius = CAM_STANDOFF + 2.6 * r; // retreat: press away in the slot
     // aim left + below the case → the watch composes upper-right.
-    o.targetX = aim.x - Math.cos(o.theta) * CAM_LATERAL;
-    o.targetZ = aim.z + Math.sin(o.theta) * CAM_LATERAL;
-    o.targetY = aim.y + CAM_AIM_Y;
+    o.targetX = aim.x - Math.cos(o.theta) * (CAM_LATERAL + 0.4 * r);
+    o.targetZ = aim.z + Math.sin(o.theta) * (CAM_LATERAL + 0.4 * r);
+    o.targetY = aim.y + CAM_AIM_Y - 0.25 * r;
     o.fov = 35;
     o.parallaxScale = 1; // not a macro — parallax stays live (law 7)
     o.blend = blend;
@@ -457,7 +525,19 @@ function rowMarkup([label, index, domain, value]: readonly [
     </li>`;
 }
 
+/** One config swatch: finish disc over band disc (UI chips only — never
+ *  material truth; the material tween is the ColorwaySystem's). */
+function swatchMarkup(c: ColorwayConfig): string {
+  return `
+        <button type="button" class="prt__swatch" data-finish="${c.id}"
+                aria-label="${c.label}" title="${c.label}">
+          <i class="prt__swatch-finish" style="--chip:${c.finishHex}"></i>
+          <i class="prt__swatch-band" style="--chip:${c.bandHex}"></i>
+        </button>`;
+}
+
 function buildMarkup(): string {
+  const boot = CONFIGS[0] as ColorwayConfig;
   return `
     <div class="prt__scrim prt__scrim--title" aria-hidden="true"></div>
     <div class="prt__scrim prt__scrim--table" aria-hidden="true"></div>
@@ -469,12 +549,16 @@ function buildMarkup(): string {
       </h2>
       <p class="prt__lead">${LEAD}</p>
     </header>
-    <aside class="prt__picker" data-colorway-slot="parts" data-cursor-text="swap">
+    <aside class="prt__picker" data-colorway-slot="parts" data-colorway-picker
+           data-cursor-text="swap" aria-label="Colorway picker">
       <span class="prt__picker-dot" aria-hidden="true"></span>
       <span class="prt__picker-copy">
         <span class="prt__picker-eyebrow">${PICKER_EYEBROW}</span>
-        <span class="prt__picker-name">${PICKER_NAME}</span>
-        <span class="prt__picker-sub">${PICKER_SUB}</span>
+        <span class="prt__picker-name">${pickerCopy(boot).name}</span>
+        <span class="prt__picker-sub">${pickerCopy(boot).sub}</span>
+        <span class="prt__picker-swatches" role="group" aria-label="Finishes">
+          ${CONFIGS.map(swatchMarkup).join("")}
+        </span>
       </span>
       <svg class="prt__picker-ring" viewBox="0 0 44 44" aria-hidden="true">
         <circle cx="22" cy="22" r="19" class="prt__picker-ring-track" />

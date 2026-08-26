@@ -173,6 +173,15 @@ export class LightKeyframeDriver {
   constructor(private readonly stage: Stage) {}
 
   /**
+   * Last APPLIED stage ground hex (null while parked — DEFAULT_LOOK or
+   * pre-first-frame). The living vital reads this for its bgStage-aware
+   * signal/counter-color swap (ADDITIVE — P3 vital lane).
+   */
+  stageHex(): string | null {
+    return this.applied?.bgStage ?? null;
+  }
+
+  /**
    * Adopt the active look: its keyframes (if any) and the base values its
    * per-key fallbacks resolve against. A look without keyframes parks the
    * driver (applyLook's static lightRig values then own the frame).

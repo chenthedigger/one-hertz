@@ -66,8 +66,10 @@ import "./curves.css";
 
 /* ---- copy (working copy per LOOKBIBLE §8 budgets — P4 polishes wording) --- */
 
-/** Pre-title index — the catalog page counter (≤18 chars caps). */
-const PRE_TITLE = "CATALOG · 01/03";
+/** Pre-title index — section number + catalog page counter (≤18 chars caps;
+ *  the "07" keeps the site's numbered eyebrow spine intact — gate-3
+ *  continuity: Movement 06 → Curves 07 → MWR 08). */
+const PRE_TITLE = "07 · CATALOG 01/03";
 /** Headline ≤3 lines · ≤18 chars/line at colossal. */
 const HEADLINE_LINES = ["GUARDED", "CONTOURS"];
 /** Sub-copy: the raised guarding lip (grey-line reveal pair, ≤220 each). */

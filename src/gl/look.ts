@@ -65,6 +65,15 @@ export interface MaterialOverride {
    */
   ior?: number;
   envMapIntensity?: number;
+  /**
+   * Colorway tween channel (rubric mechanic 4). three.js has no such
+   * scalar — the colorway system (src/ui/colorway.ts) OWNS this field and
+   * writes metalness × metalnessMapIntensity to material.metalness
+   * (metalness IS the metalnessMap multiplier, so scaling the factor
+   * scales the map's contribution). `applyLook` deliberately ignores it:
+   * author it only inside `x_colorway` variant tables.
+   */
+  metalnessMapIntensity?: number;
   /** Extra levers first-pass fixes exposed (crystal etc.). */
   opacity?: number;
   emissive?: string;
@@ -115,6 +124,22 @@ export interface LookConfig {
   x_sectionLightKeyframes?: {
     comment?: string;
     keyframes?: SectionLightKeyframe[];
+  };
+  /**
+   * Colorway variant tables (P3 swap mechanic — DATA in the look JSON,
+   * consumed by src/ui/colorway.ts, never by applyLook). `finishes` keys
+   * are finish tokens ("natural" / "black-dlc"), `bands` keys are Ocean
+   * recolor tokens; each value maps mat_* names to the FIVE tween params
+   * {color, roughness, metalness, envMapIntensity, metalnessMapIntensity}.
+   * The "natural"+"tide" tables MUST mirror the look's base
+   * materialOverrides — they are the boot state the first swap tweens FROM.
+   * (Supersedes the x_dlcVariant stash; first-class like
+   * x_sectionLightKeyframes, other x_* keys stay ignored-by-design.)
+   */
+  x_colorway?: {
+    comment?: string;
+    finishes?: Record<string, Record<string, MaterialOverride>>;
+    bands?: Record<string, Record<string, MaterialOverride>>;
   };
 }
 

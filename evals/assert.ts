@@ -351,17 +351,24 @@ const CHECKS: Record<string, Check> = {
     await gotoSection(ctx.page, dis.id, 0.5);
     let clicksOk = 0;
     let clicksTried = 0;
-    for (const p of parts) {
+    for (let i = 0; i < parts.length; i++) {
+      // screenPos is a live projection — re-read AFTER the goto (and after
+      // each close) so the click lands on the part's current fan position.
+      const live = pick(await state(ctx), "explode.parts") as unknown[];
+      const p = live?.[i];
       const pos = pick(p, "screenPos") as { x: number; y: number } | undefined;
       const id = pick(p, "id");
-      if (!pos) continue;
+      if (!pos || pos.x < 0) continue;
       clicksTried++;
       await ctx.page.mouse.click(pos.x, pos.y);
       await ctx.page.waitForTimeout(500);
       if (pick(await state(ctx), "explode.selected") === id) clicksOk++;
       await ctx.page.keyboard.press("Escape").catch(() => {});
-      const close = await ctx.page.$("[data-explode-close]");
-      if (close) await close.click().catch(() => {});
+      if (pick(await state(ctx), "explode.selected") != null) {
+        // Escape did not close (or is unbound) — use the overlay button.
+        const close = await ctx.page.$("[data-explode-close]");
+        if (close) await close.click({ timeout: 2000 }).catch(() => {});
+      }
       await ctx.page.waitForTimeout(300);
     }
     const pass = noProxy === 0 && clicksTried > 0 && clicksOk === clicksTried;
@@ -372,20 +379,33 @@ const CHECKS: Record<string, Check> = {
   },
 
   "explode-lookat-lerp": async (ctx) => {
-    const st = await state(ctx);
-    const parts = need<unknown[]>(st, "explode.parts");
-    const pos = pick(parts[0], "screenPos") as { x: number; y: number } | undefined;
-    if (!pos) throw new SkipError("explode.parts[].screenPos not exposed");
+    need<unknown[]>(await state(ctx), "explode.parts");
     const dis = findSection(ctx, "disassembly", "explode");
     await gotoSection(ctx.page, dis.id, 0.5);
+    // Live projection: read the click target AFTER the goto settles.
+    const parts = need<unknown[]>(await state(ctx), "explode.parts");
+    const pos = pick(parts[0], "screenPos") as { x: number; y: number } | undefined;
+    if (!pos) throw new SkipError("explode.parts[].screenPos not exposed");
     await ctx.page.mouse.click(pos.x, pos.y);
-    const lookAts: { x: number; y: number; z: number }[] = [];
-    for (let i = 0; i < 10; i++) {
-      const la = pick(await state(ctx), "camera.lookAt") as { x: number; y: number; z: number } | undefined;
-      if (!la) throw new SkipError("state().camera.lookAt not exposed");
-      lookAts.push(la);
-      await ctx.page.waitForTimeout(80);
-    }
+    // Sample IN-PAGE (per-sample CDP round-trips would stretch the cadence)
+    // and SPAN the whole 2s open lerp + settled tail: 13 samples × 165ms.
+    // The 30% per-sample jump bound is calibrated against the full approach
+    // (power3.inOut mid slope 1.5/s → ~25% peak at this cadence); a shorter
+    // window would only see the flat head and skew the ratio.
+    const lookAts = (await ctx.page.evaluate(async () => {
+      const out: unknown[] = [];
+      for (let i = 0; i < 13; i++) {
+        const api = (window as unknown as Record<string, unknown>).__ONE_HERTZ__ as {
+          state(): { camera?: { lookAt?: unknown } };
+        };
+        const la = api.state().camera?.lookAt;
+        if (!la) return null;
+        out.push(JSON.parse(JSON.stringify(la)));
+        await new Promise((r) => setTimeout(r, 165));
+      }
+      return out;
+    })) as { x: number; y: number; z: number }[] | null;
+    if (!lookAts) throw new SkipError("state().camera.lookAt not exposed");
     const d = (a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }) =>
       Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
     const target = lookAts[lookAts.length - 1]!;
@@ -426,6 +446,10 @@ const CHECKS: Record<string, Check> = {
 
   "explode-anchored-overlay": async (ctx) => {
     need(await state(ctx), "explode");
+    // Park the pointer: hovering the card freezes its anchor by design
+    // (buttons must not slide out from under the cursor).
+    await ctx.page.mouse.move(30, 30);
+    await ctx.page.waitForTimeout(150);
     const overlay = await ctx.page.$("[data-explode-overlay]");
     if (!overlay) throw new SkipError("[data-explode-overlay] not in DOM");
     const sp = pick(await state(ctx), "explode.selectedScreenPos") as { x: number; y: number } | undefined;
@@ -498,8 +522,9 @@ const CHECKS: Record<string, Check> = {
 
   "explode-drag-gating": async (ctx) => {
     need(await state(ctx), "explode");
-    const rot0 = pick(await state(ctx), "explode.clusterRotation");
-    if (rot0 === undefined) throw new SkipError("explode.clusterRotation not exposed");
+    if (pick(await state(ctx), "explode.clusterRotation") === undefined) {
+      throw new SkipError("explode.clusterRotation not exposed");
+    }
     const c = await stageCenter(ctx.page);
     const drag = async () => {
       await ctx.page.mouse.move(c.x - 150, c.y);
@@ -508,9 +533,21 @@ const CHECKS: Record<string, Check> = {
       await ctx.page.mouse.up();
       await ctx.page.waitForTimeout(300);
     };
-    const selected = pick(await state(ctx), "explode.selected");
-    if (selected == null) throw new SkipError("no part selected — gating needs a selected part first");
-    const a = Number(rot0);
+    // The gating contrast needs a selected part — establish one ourselves
+    // (previous checks legitimately close their selections).
+    if (pick(await state(ctx), "explode.selected") == null) {
+      const dis = findSection(ctx, "disassembly", "explode");
+      await gotoSection(ctx.page, dis.id, 0.5);
+      const parts = pick(await state(ctx), "explode.parts") as unknown[] | undefined;
+      const pos = pick(parts?.[0], "screenPos") as { x: number; y: number } | undefined;
+      if (!pos) throw new SkipError("no part selected and no clickable screenPos to select one");
+      await ctx.page.mouse.click(pos.x, pos.y);
+      await ctx.page.waitForTimeout(500);
+    }
+    if (pick(await state(ctx), "explode.selected") == null) {
+      throw new SkipError("no part selected — gating needs a selected part first");
+    }
+    const a = Number(pick(await state(ctx), "explode.clusterRotation"));
     await drag();
     const b = Number(pick(await state(ctx), "explode.clusterRotation"));
     const close = await ctx.page.$("[data-explode-close]");
@@ -529,6 +566,20 @@ const CHECKS: Record<string, Check> = {
 
   "explode-tap-tolerance-15px": async (ctx) => {
     const page = await ctx.mobilePage();
+    // The explode roster registers only after the hero GLB + internals land
+    // (not loader tasks) — give the fresh mobile page time to populate.
+    await page
+      .waitForFunction(
+        () => {
+          const api = (window as unknown as Record<string, unknown>).__ONE_HERTZ__ as
+            | { state(): { explode?: { parts?: unknown[] } } }
+            | undefined;
+          return (api?.state().explode?.parts?.length ?? 0) > 0;
+        },
+        null,
+        { timeout: 20000 },
+      )
+      .catch(() => {});
     const st = await getState(page);
     const parts = pick(st, "explode.parts") as unknown[] | undefined;
     if (!parts || parts.length === 0) throw new SkipError("explode.parts not exposed (mobile)");
@@ -536,7 +587,11 @@ const CHECKS: Record<string, Check> = {
     const dis = sections.find((s) => (s.sourceRole ?? s.id).toLowerCase().includes("disassembly"));
     if (!dis) throw new SkipError("no disassembly section (mobile)");
     await gotoSection(page, dis.id, 0.5);
-    const pos = pick(parts[0], "screenPos") as { x: number; y: number } | undefined;
+    // Live projection — read the tap target AFTER the goto settles.
+    const liveParts = pick(await getState(page), "explode.parts") as unknown[] | undefined;
+    const pos = pick(liveParts?.[0] ?? parts[0], "screenPos") as
+      | { x: number; y: number }
+      | undefined;
     if (!pos) throw new SkipError("parts[].screenPos not exposed (mobile)");
     const gesture = async (movePx: number) => {
       const cdp = await page.context().newCDPSession(page);
@@ -550,8 +605,10 @@ const CHECKS: Record<string, Check> = {
     };
     await gesture(10);
     const sel10 = pick(await getState(page), "explode.selected");
-    const close = await page.$("[data-explode-close]");
-    if (close) await close.click().catch(() => {});
+    if (sel10 != null) {
+      const close = await page.$("[data-explode-close]");
+      if (close) await close.click({ timeout: 2000 }).catch(() => {});
+    }
     await page.waitForTimeout(400);
     await gesture(20);
     const sel20 = pick(await getState(page), "explode.selected");

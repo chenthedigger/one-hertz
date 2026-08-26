@@ -1,12 +1,13 @@
 /**
  * Disassembly — horology-to-silicon exploded view (PLAN §2 beat 4, P2 build).
  *
- * P2 scope: structure / camera / DOM. The raycast drag+tap explode
- * interaction is P3 — this lane ships the exploded LAYOUT on the hero GLB's
- * real separate meshes (crystal, screen, backCrystal, lug screws) plus the
- * in-house internals roster (sip / battery / taptic — all landed, stubs
- * keep slots if an asset ever fails), the copy grammar (struck-through
- * horology terms over silicon truths), and the authored camera + attitude.
+ * P2 shipped structure / camera / DOM; P3 (explode-system lane) added the
+ * full interaction layer via `disassemblyExplode.ts` (proxy-hitbox raycast
+ * select, drag-pan, XPLOD_ALL, part overlay, taptic tick-back, Nocturne
+ * LED) and completed the internals roster to 7/7 (display, crown_asm,
+ * speaker, sensor_array joined sip / battery / taptic; stubs keep slots if
+ * an asset ever fails). Copy grammar (struck-through horology terms over
+ * silicon truths) and the authored camera + attitude are unchanged.
  *
  * Motion law (docs/p15/motion-bible.md — nothing invented):
  *   - WebGL channel = scrub-FRACTION domain, timeline padded to 1 (law 4);
@@ -36,8 +37,9 @@
  *
  * State contract: enters needing {explode:"assembled"}, exits guaranteeing
  * {explode:"assembled"} — truthfully: the scrub explode is transient and
- * fully re-assembled by webgl p=1 (and this section never writes the
- * StateStore; P3 mechanics own store writes).
+ * fully re-assembled by webgl p=1; the interaction system's transient
+ * store-token writes (assembled/exploded/part-focus) are closed out by
+ * onLeave/onLeaveCenter before any neighbour can observe them.
  */
 
 import { gsap } from "gsap";
@@ -49,6 +51,7 @@ import { SectionBase, timelineAdapter } from "../core/section";
 import type { CameraRig, OrbitProxy } from "../webgl/cameraRig";
 import type { Stage } from "../webgl/stage";
 import type { WatchAsset } from "../webgl/watch";
+import { ExplodeInteraction } from "./disassemblyExplode";
 import { loadInternals, type LoadedInternal } from "./disassemblyInternals";
 import { getStage } from "./stageRef";
 
@@ -74,18 +77,35 @@ const HERO_SLOTS: HeroSlot[] = [
   { part: "part_backCrystal", dist: -0.92, twist: 0.16 },
 ];
 
-/** Internals stack: base = resting offset under the display, inside the case. */
+/** Internals stack: base = resting offset under the display, inside the
+ * case; dist = fan travel along the dial normal; lateral = case-frame
+ * (x, y) offset at full explode — the crown fans +X off the case flank and
+ * the speaker joins the battery plane sideways (internals-continue §
+ * "suggested explode-line slots"). */
 interface InternalSlot {
   part: string;
   base: number;
   dist: number;
+  lateral?: [number, number];
 }
 
+/* Full A2 roster (7/7 — docs/p2/internals-continue.md): display laminate
+ * between the screen and the SiP, speaker on the battery plane (lateral),
+ * sensor array below the Taptic toward the back crystal, crown off +X. */
 const INTERNAL_LAYOUT: InternalSlot[] = [
-  { part: "part_sip", base: -0.04, dist: 1.38 },
-  { part: "part_battery", base: -0.1, dist: 1.0 },
-  { part: "part_taptic", base: -0.16, dist: 0.64 },
+  { part: "part_display", base: -0.02, dist: 1.5, lateral: [0, -0.42] },
+  { part: "part_sip", base: -0.04, dist: 1.22 },
+  { part: "part_battery", base: -0.1, dist: 0.96 },
+  { part: "part_speaker", base: -0.12, dist: 0.9, lateral: [-0.72, -0.72] },
+  { part: "part_taptic", base: -0.16, dist: 0.62 },
+  { part: "part_sensor_array", base: -0.2, dist: 0.42, lateral: [0.1, -0.5] },
+  { part: "part_crown_asm", base: -0.08, dist: 0.75, lateral: [0.75, 0.2] },
 ];
+
+/** sensor_foam_peel scrub beat: closed → peeled across the fan's later half
+ * (shipped rest pose IS peeled; closed = identity local rotation —
+ * internals-continue contract: rotate, never translate). */
+const FOAM_PEEL_WINDOW: readonly [number, number] = [0.55, 0.9];
 
 const SCREW_PARTS = [
   "band_lugScrew_01",
@@ -131,6 +151,7 @@ const ATT_PITCH = 0.1; // rad — gentle cascade on the line
  * ------------------------------------------------------------------------- */
 
 interface ExplodeNode {
+  id: string;
   node: Object3D;
   basePos: Vector3;
   baseQuat: Quaternion;
@@ -162,11 +183,21 @@ export class DisassemblySection extends SectionBase {
   private heroNodes: ExplodeNode[] = [];
   private screwNodes: ScrewNode[] = [];
   private internalWrappers = new Map<string, Group>();
+  private internalRest = new Map<string, Vector3>();
   private internals: LoadedInternal[] | null = null;
   private internalsReady = false;
   private explodeInitDone = false;
   private wasActive = false;
   private inViewFlag = false;
+
+  /* P3 explode interaction system (raycast select / drag / XPLOD_ALL /
+   * taptic tick-back / Nocturne LED) — null only in exotic stage-less
+   * embeddings, same guard as the stage itself. */
+  private readonly interaction: ExplodeInteraction | null = null;
+
+  /* sensor_foam_peel scrub beat (closed → peeled inside the fan window). */
+  private foamNode: Object3D | null = null;
+  private foamRest: Quaternion | null = null;
 
   /* Label DOM */
   private labelEls: { spec: LabelSpec; el: HTMLElement; rule: HTMLElement; textH: number }[] = [];
@@ -208,6 +239,11 @@ export class DisassemblySection extends SectionBase {
     this.buildWebglTimeline();
     this.authorCamera();
 
+    const pin = this.element.querySelector<HTMLElement>(".pin");
+    if (this.stage && pin) {
+      this.interaction = new ExplodeInteraction(this.stage, rig, pin);
+    }
+
     // Internals load starts at construction (needed by the time the user
     // scrolls to section 4; NOT a loader task — first paint never waits on
     // them, source-parity progressive loading).
@@ -233,6 +269,10 @@ export class DisassemblySection extends SectionBase {
     super.tickWebgl(progress); // scrubs the fx timeline
     this.rig.setProgress(progress); // camera master (rig lerps internally)
     this.applyExplode();
+    // Interaction post-pass EVERY frame (selected-part idle rotation, focus
+    // camera chase, taptic tick-back, Nocturne LED, overlay projection) —
+    // it composes over the pose applyExplode just wrote.
+    this.interaction?.frame();
     this.projectLabels();
   }
 
@@ -247,6 +287,15 @@ export class DisassemblySection extends SectionBase {
 
   override onLeave(): void {
     this.inViewFlag = false;
+    // Contract duty: never hand a selection/drag into the neighbours —
+    // guaranteedExitState {explode:"assembled"} stays truthful.
+    this.interaction?.reset();
+  }
+
+  override onLeaveCenter(): void {
+    // Close early (before another section's camera recipe can own the rig
+    // override seam) — the fan itself still re-assembles on the scrub.
+    this.interaction?.reset();
   }
 
   /* ---- DOM --------------------------------------------------------------- */
@@ -486,7 +535,7 @@ export class DisassemblySection extends SectionBase {
     const worldDir = watch.caseSpace.zAxis.clone().applyQuaternion(rootQuat);
     const worldOrigin = watch.root.getWorldPosition(new Vector3());
 
-    const capture = (node: Object3D, dist: number, twist: number): ExplodeNode => {
+    const capture = (id: string, node: Object3D, dist: number, twist: number): ExplodeNode => {
       const parent = node.parent ?? watch.root;
       this.mTmp.copy(parent.matrixWorld).invert();
       const a = worldOrigin.clone().applyMatrix4(this.mTmp);
@@ -497,6 +546,7 @@ export class DisassemblySection extends SectionBase {
       const b2 = worldOrigin.clone().add(worldDir).applyMatrix4(nodeInv);
       const axisLocal = b2.sub(a2).normalize();
       return {
+        id,
         node,
         basePos: node.position.clone(),
         baseQuat: node.quaternion.clone(),
@@ -510,14 +560,23 @@ export class DisassemblySection extends SectionBase {
     this.heroNodes = [];
     for (const slot of HERO_SLOTS) {
       const node = watch.parts.get(slot.part);
-      if (node) this.heroNodes.push(capture(node, slot.dist, slot.twist));
-      else console.warn(`disassembly: hero part "${slot.part}" missing from GLB`);
+      if (node) {
+        const entry = capture(slot.part, node, slot.dist, slot.twist);
+        this.heroNodes.push(entry);
+        // Proxy hitbox + roster registration (rubric explode-proxy-hitboxes).
+        this.interaction?.registerPart(entry.id, node, () =>
+          node.position.distanceTo(entry.basePos),
+        );
+      } else console.warn(`disassembly: hero part "${slot.part}" missing from GLB`);
     }
     this.screwNodes = [];
     SCREW_PARTS.forEach((name, k) => {
       const node = watch.parts.get(name);
       if (node) {
-        this.screwNodes.push({ ...capture(node, SCREW_LIFT, 0), phase: k / SCREW_PARTS.length });
+        this.screwNodes.push({
+          ...capture(name, node, SCREW_LIFT, 0),
+          phase: k / SCREW_PARTS.length,
+        });
       }
     });
 
@@ -535,6 +594,34 @@ export class DisassemblySection extends SectionBase {
       wrapper.visible = false;
       watch.root.add(wrapper);
       this.internalWrappers.set(item.spec.name, wrapper);
+
+      // Roster registration (loaded geometry only — a contract-named stub
+      // keeps the layout slot but is not a clickable part).
+      const slot = INTERNAL_LAYOUT.find((s) => s.part === item.spec.name);
+      if (item.loaded && slot && this.interaction) {
+        const rest = cs.origin.clone().addScaledVector(cs.zAxis, slot.base);
+        this.internalRest.set(item.spec.name, rest);
+        this.interaction.registerPart(
+          item.spec.name,
+          wrapper,
+          () => wrapper.position.distanceTo(rest),
+          cs.quaternion,
+        );
+      }
+    }
+
+    // Graft targets: taptic_mass (tick-back) + sensor LEDs (Nocturne pulse).
+    this.interaction?.adoptInternalExtras(this.internalWrappers);
+    // sensor_foam_peel: shipped rest = peeled; the scrub beat closes it at
+    // fan-rest and re-peels it across FOAM_PEEL_WINDOW.
+    if (this.foamNode === null) {
+      const foam = this.internalWrappers
+        .get("part_sensor_array")
+        ?.getObjectByName("sensor_foam_peel");
+      if (foam) {
+        this.foamNode = foam;
+        this.foamRest = foam.quaternion.clone();
+      }
     }
   }
 
@@ -554,18 +641,26 @@ export class DisassemblySection extends SectionBase {
     }
 
     const { explode, attitude, screws, turn } = this.fx;
-    const active = explode > 0 || attitude > 0 || screws > 0;
+    const ix = this.interaction;
+    // Interaction composition: XPLOD_ALL widens/forces the fan; the scrub
+    // beat reports into the state machine for mode derivation.
+    ix?.reportScrub(explode);
+    const eff = ix ? ix.effectiveExplode(explode) : explode;
+    const distMult = ix ? ix.distMultiplier() : 1;
+    ix?.setGate(this.inViewFlag && eff > 0.05);
+    const active = eff > 0 || attitude > 0 || screws > 0 || (ix?.engaged ?? false);
     if (!active) {
       if (this.wasActive) this.restoreBase(watch);
       return;
     }
     this.wasActive = true;
 
-    // --- Authored attitude: root counter-rotated against the product spin.
+    // --- Authored attitude: root counter-rotated against the product spin
+    //     (+ the drag-pan cluster yaw, gated by the interaction system).
     const product = watch.root.parent;
     if (product && attitude > 0) {
       product.getWorldQuaternion(this.qProduct);
-      const yaw = ATT_YAW_IN + (ATT_YAW_OUT - ATT_YAW_IN) * turn;
+      const yaw = ATT_YAW_IN + (ATT_YAW_OUT - ATT_YAW_IN) * turn + (ix?.clusterYaw ?? 0);
       this.qAuthored.setFromAxisAngle(this.vTmp.set(0, 1, 0), yaw);
       this.qTmp.setFromAxisAngle(this.vTmp.set(1, 0, 0), ATT_PITCH);
       this.qAuthored.premultiply(this.qTmp); // pitch ∘ yaw
@@ -583,11 +678,11 @@ export class DisassemblySection extends SectionBase {
     for (const h of this.heroNodes) {
       h.node.position
         .copy(h.basePos)
-        .addScaledVector(h.dirLocal, h.dist * explode);
-      if (h.twist !== 0) {
-        this.qTmp.setFromAxisAngle(h.axisLocal, h.twist * explode);
-        h.node.quaternion.copy(h.baseQuat).multiply(this.qTmp);
-      }
+        .addScaledVector(h.dirLocal, h.dist * eff * distMult);
+      // Always re-seat the orientation (the interaction post-pass composes
+      // the selected-part idle spin over this fresh base every frame).
+      this.qTmp.setFromAxisAngle(h.axisLocal, h.twist * eff);
+      h.node.quaternion.copy(h.baseQuat).multiply(this.qTmp);
     }
 
     // --- Lug screws: counter-rotate + lift, cascade (source grammar).
@@ -603,9 +698,23 @@ export class DisassemblySection extends SectionBase {
     for (const slot of INTERNAL_LAYOUT) {
       const wrapper = this.internalWrappers.get(slot.part);
       if (!wrapper) continue;
-      wrapper.visible = explode > 0.02;
-      const d = slot.base + slot.dist * explode;
+      wrapper.visible = eff > 0.02;
+      const d = slot.base + slot.dist * eff * distMult;
       wrapper.position.copy(cs.origin).addScaledVector(cs.zAxis, d);
+      if (slot.lateral) {
+        wrapper.position
+          .addScaledVector(cs.xAxis, slot.lateral[0] * eff)
+          .addScaledVector(cs.yAxis, slot.lateral[1] * eff);
+      }
+      // Re-base orientation every frame — the interaction post-pass
+      // composes the selected-part idle spin on top without accumulating.
+      wrapper.quaternion.copy(cs.quaternion);
+    }
+
+    // --- sensor_foam_peel: closed at fan-rest → peeled across the window.
+    if (this.foamNode && this.foamRest) {
+      const t = clamp01((eff - FOAM_PEEL_WINDOW[0]) / (FOAM_PEEL_WINDOW[1] - FOAM_PEEL_WINDOW[0]));
+      this.foamNode.quaternion.copy(this.qIdentity).slerp(this.foamRest, t);
     }
   }
 
@@ -620,6 +729,7 @@ export class DisassemblySection extends SectionBase {
       s.node.quaternion.copy(s.baseQuat);
     }
     for (const wrapper of this.internalWrappers.values()) wrapper.visible = false;
+    if (this.foamNode) this.foamNode.quaternion.copy(this.qIdentity);
     this.wasActive = false;
   }
 

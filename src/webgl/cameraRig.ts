@@ -237,6 +237,11 @@ export class CameraRig {
       dolly: Math.round(this.effectiveRadius * 1e5) / 1e5,
       parallaxGain: this.parallaxGain,
       zoomMultiplier: this.zoomMultiplier,
+      lookAt: {
+        x: Math.round(this.target.x * 1e5) / 1e5,
+        y: Math.round(this.target.y * 1e5) / 1e5,
+        z: Math.round(this.target.z * 1e5) / 1e5,
+      },
     };
   }
 

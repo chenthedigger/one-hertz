@@ -1,339 +1,470 @@
 {
-  "name": "instrument",
-  "envFile": "/assets/looks/instrument.hdr",
-  "lightRig": {
+ "name": "instrument",
+ "envFile": "/assets/looks/instrument.hdr",
+ "lightRig": {
+  "envRotationDeg": 0,
+  "envIntensity": 1.0,
+  "exposure": 1.05
+ },
+ "postTune": {
+  "bloomThreshold": 1.0,
+  "bloomStrength": 0.6,
+  "bloomRadius": 0.3,
+  "grainAmount": 0.048,
+  "vignetteNocturne": 0.36
+ },
+ "bgTokens": {
+  "stage": "#E8EAED",
+  "ink": "#0A0B0D"
+ },
+ "contactShadow": {
+  "opacity": 0.3,
+  "radius": 1.15,
+  "falloff": 2.4
+ },
+ "materialOverrides": {
+  "mat_titanium_case": {
+   "color": "#cfccc6",
+   "metalness": 1.0,
+   "roughness": 0.38,
+   "envMapIntensity": 1.15
+  },
+  "mat_titanium_brushed": {
+   "color": "#d2cfc9",
+   "metalness": 1.0,
+   "roughness": 0.34,
+   "envMapIntensity": 1.2
+  },
+  "mat_titanium_polished": {
+   "color": "#dcdad6",
+   "metalness": 1.0,
+   "roughness": 0.1,
+   "envMapIntensity": 1.3,
+   "anisotropy": 0.3
+  },
+  "mat_titanium_crown": {
+   "color": "#cfccc6",
+   "metalness": 1.0,
+   "roughness": 0.32,
+   "envMapIntensity": 1.2,
+   "anisotropy": 0.7
+  },
+  "mat_crown_knurl": {
+   "color": "#c9c6c0",
+   "metalness": 1.0,
+   "roughness": 0.36,
+   "envMapIntensity": 1.25,
+   "anisotropy": 0.5
+  },
+  "mat_titanium_hardware": {
+   "color": "#c5c2bc",
+   "metalness": 1.0,
+   "roughness": 0.42,
+   "envMapIntensity": 1.1
+  },
+  "mat_bezel": {
+   "color": "#b9b6b0",
+   "metalness": 1.0,
+   "roughness": 0.3,
+   "envMapIntensity": 1.2,
+   "anisotropy": 0.8,
+   "anisotropyRotation": 1.5708
+  },
+  "mat_case_top": {
+   "color": "#cfccc6",
+   "metalness": 1.0,
+   "roughness": 0.36,
+   "envMapIntensity": 1.15
+  },
+  "mat_case_ao": {
+   "roughness": 1.0,
+   "metalness": 0.0,
+   "envMapIntensity": 0.0
+  },
+  "mat_crystal_sapphire": {
+   "color": "#f4f6f9",
+   "opacity": 0.16,
+   "roughness": 0.02,
+   "clearcoat": 1.0,
+   "clearcoatRoughness": 0.03,
+   "ior": 1.77,
+   "envMapIntensity": 0.7
+  },
+  "mat_back_spun": {
+   "color": "#34363a",
+   "metalness": 1.0,
+   "roughness": 0.32,
+   "envMapIntensity": 1.1,
+   "anisotropy": 0.85,
+   "anisotropyRotation": 1.5708
+  },
+  "mat_back_ceramic": {
+   "color": "#121316",
+   "roughness": 0.24,
+   "clearcoat": 0.7,
+   "clearcoatRoughness": 0.12,
+   "envMapIntensity": 1.0
+  },
+  "mat_back_lens": {
+   "color": "#08090b",
+   "roughness": 0.06,
+   "clearcoat": 1.0,
+   "clearcoatRoughness": 0.02,
+   "envMapIntensity": 1.3
+  },
+  "mat_back_matte": {
+   "color": "#17181a",
+   "roughness": 0.8
+  },
+  "mat_back_ring": {
+   "color": "#d5d3cf",
+   "metalness": 1.0,
+   "roughness": 0.18,
+   "envMapIntensity": 1.2,
+   "anisotropy": 0.6,
+   "anisotropyRotation": 1.5708
+  },
+  "mat_sensor_dark": {
+   "color": "#0c0d0f",
+   "roughness": 0.5
+  },
+  "mat_sensor_trim": {
+   "color": "#9fa0a3",
+   "metalness": 1.0,
+   "roughness": 0.3
+  },
+  "mat_cavity_black": {
+   "color": "#060708",
+   "roughness": 0.9
+  },
+  "mat_band_ocean": {
+   "color": "#1f6153",
+   "roughness": 0.56,
+   "envMapIntensity": 0.4
+  },
+  "mat_band_tab": {
+   "color": "#1f6153",
+   "roughness": 0.62,
+   "envMapIntensity": 0.4
+  },
+  "mat_band_hardware_dark": {
+   "color": "#3a3c40",
+   "metalness": 1.0,
+   "roughness": 0.35
+  },
+  "mat_accent_orange_ring": {
+   "color": "#e04f18",
+   "metalness": 0.4,
+   "roughness": 0.42
+  },
+  "mat_actionButton_orange": {
+   "color": "#d94a16",
+   "roughness": 0.5
+  },
+  "mat_button_trim": {
+   "color": "#b6b3ad",
+   "metalness": 1.0,
+   "roughness": 0.35
+  }
+ },
+ "x_sectionLightKeyframes": {
+  "comment": "Per-section lighting choreography (env rotation + intensity + exposure), driven off the clock scalar via stage.setEnvRotation/setEnvIntensity/toneMappingExposure. Linear interp between section centers; full 360 revolution over the page so the outro restart loops seamlessly. P2 sections own the wiring.",
+  "keyframes": [
+   {
+    "section": "Intro",
     "envRotationDeg": 0,
     "envIntensity": 1.0,
+    "exposure": 1.05,
+    "note": "hero pose \u2014 key upper-left, rim behind right"
+   },
+   {
+    "section": "Timeless",
+    "envRotationDeg": 15,
+    "envIntensity": 1.0,
     "exposure": 1.05
-  },
-  "postTune": {
-    "bloomThreshold": 1.0,
-    "bloomStrength": 0.6,
-    "bloomRadius": 0.3,
-    "grainAmount": 0.048,
-    "vignetteNocturne": 0.36
-  },
-  "bgTokens": {
-    "stage": "#E8EAED",
-    "ink": "#0A0B0D"
-  },
-  "contactShadow": {
-    "opacity": 0.3,
-    "radius": 1.15,
-    "falloff": 2.4
-  },
-  "materialOverrides": {
+   },
+   {
+    "section": "VerticalText",
+    "envRotationDeg": 35,
+    "envIntensity": 0.95,
+    "exposure": 1.05,
+    "note": "light quiets under the word stack"
+   },
+   {
+    "section": "Disassembly",
+    "envRotationDeg": 70,
+    "envIntensity": 1.1,
+    "exposure": 1.1,
+    "note": "key sweeps across the exploded parts, hardest read of the page"
+   },
+   {
+    "section": "Mechanism",
+    "envRotationDeg": 110,
+    "envIntensity": 1.05,
+    "exposure": 1.05,
+    "bgStage": "#101216",
+    "note": "dark beat \u2014 bgStage darkens the DOM ground so live metal reads against ink (LOOKBIBLE 1.4 live-parity law)"
+   },
+   {
+    "section": "Movement",
+    "envRotationDeg": 140,
+    "envIntensity": 0.95,
+    "exposure": 1.05
+   },
+   {
+    "section": "Curves",
+    "envRotationDeg": 170,
+    "envIntensity": 1.0,
+    "exposure": 1.05,
+    "note": "streak strip grazes the chamfer \u2014 the signature spec crawl"
+   },
+   {
+    "section": "MovementWatchRight",
+    "envRotationDeg": 200,
+    "envIntensity": 1.0,
+    "exposure": 1.05
+   },
+   {
+    "section": "Hands",
+    "envRotationDeg": 245,
+    "envIntensity": 0.9,
+    "exposure": 1.05,
+    "note": "env delta 225->245 picked by the live-attitude sweep (gate-3 Hands tune 1): at 225 the crystal face mirrors streak_chamfer into a blown sheet through .5-.92; 245 holds the ink read and keeps the revolution monotonic (MWR 200 < 245 < Straps 250)"
+   },
+   {
+    "section": "Straps",
+    "envRotationDeg": 250,
+    "envIntensity": 1.05,
+    "exposure": 1.05,
+    "note": "band macro \u2014 fill side faces camera, fluoroelastomer stays matte"
+   },
+   {
+    "section": "Images",
+    "envRotationDeg": 250,
+    "envIntensity": 1.05,
+    "exposure": 1.05,
+    "note": "DOM section \u2014 hold"
+   },
+   {
+    "section": "Nocturne",
+    "envRotationDeg": 290,
+    "envIntensity": 0.35,
+    "exposure": 0.95,
+    "bloomStrength": 0.85,
+    "bgStage": "#0A0B0D",
+    "note": "GRAFT from dusk (council law): continuum dip to 0.35 \u2014 not blackout \u2014 with hot dial bloom 0.85; vignette flag on. The deep 0.045 blackout survives only as the AOD match-cut beat INSIDE the section (porcelain graft), restored to 0.35 by the section's own exit"
+   },
+   {
+    "section": "Colors",
+    "envRotationDeg": 330,
+    "envIntensity": 1.0,
+    "exposure": 1.05,
+    "note": "recovery ramp out of Nocturne; bloomStrength dipped \u2014 dial reads ink at plate standoff (gate-4 shared dial-wash tune)",
+    "bloomStrength": 0.22
+   },
+   {
+    "section": "Parts",
+    "envRotationDeg": 350,
+    "envIntensity": 1.0,
+    "exposure": 1.05,
+    "bloomStrength": 0.25,
+    "note": "bloomStrength dipped \u2014 card-slot dial reads ink at standoff 10 (gate-4 shared dial-wash tune)"
+   },
+   {
+    "section": "Footer",
+    "envRotationDeg": 360,
+    "envIntensity": 1.0,
+    "exposure": 1.05,
+    "note": "full revolution \u2014 restart loop lands on the Intro pose; bloomStrength dipped for row-scale lineup dials (gate-4 shared dial-wash tune)",
+    "bloomStrength": 0.3
+   }
+  ]
+ },
+ "x_colorway": {
+  "comment": "P3 colorway-swap variant tables (src/ui/colorway.ts). finishes x bands = the 4 shipped configs (2 Ti finishes x Ocean COLOR recolors - founder 2026-08-26; Alpine/Trail geometry reserved pending purchase). natural+tide MUST mirror the base materialOverrides (boot state). metalnessMapIntensity is the colorway tween scalar (metalness x mmi is written to the material). Supersedes x_dlcVariant; the DLC anisotropy values it carried are dropped from the tween (5-param law) - look lane may re-add them as a static physical-upgrade pass.",
+  "finishes": {
+   "natural": {
     "mat_titanium_case": {
-      "color": "#cfccc6",
-      "metalness": 1.0,
-      "roughness": 0.38,
-      "envMapIntensity": 1.15
+     "color": "#cfccc6",
+     "roughness": 0.38,
+     "metalness": 1.0,
+     "envMapIntensity": 1.15,
+     "metalnessMapIntensity": 1.0
     },
     "mat_titanium_brushed": {
-      "color": "#d2cfc9",
-      "metalness": 1.0,
-      "roughness": 0.34,
-      "envMapIntensity": 1.2
+     "color": "#d2cfc9",
+     "roughness": 0.34,
+     "metalness": 1.0,
+     "envMapIntensity": 1.2,
+     "metalnessMapIntensity": 1.0
     },
     "mat_titanium_polished": {
-      "color": "#dcdad6",
-      "metalness": 1.0,
-      "roughness": 0.1,
-      "envMapIntensity": 1.3,
-      "anisotropy": 0.3
+     "color": "#dcdad6",
+     "roughness": 0.1,
+     "metalness": 1.0,
+     "envMapIntensity": 1.3,
+     "metalnessMapIntensity": 1.0
     },
     "mat_titanium_crown": {
-      "color": "#cfccc6",
-      "metalness": 1.0,
-      "roughness": 0.32,
-      "envMapIntensity": 1.2,
-      "anisotropy": 0.7
+     "color": "#cfccc6",
+     "roughness": 0.32,
+     "metalness": 1.0,
+     "envMapIntensity": 1.2,
+     "metalnessMapIntensity": 1.0
     },
     "mat_crown_knurl": {
-      "color": "#c9c6c0",
-      "metalness": 1.0,
-      "roughness": 0.36,
-      "envMapIntensity": 1.25,
-      "anisotropy": 0.5
+     "color": "#c9c6c0",
+     "roughness": 0.36,
+     "metalness": 1.0,
+     "envMapIntensity": 1.25,
+     "metalnessMapIntensity": 1.0
     },
     "mat_titanium_hardware": {
-      "color": "#c5c2bc",
-      "metalness": 1.0,
-      "roughness": 0.42,
-      "envMapIntensity": 1.1
+     "color": "#c5c2bc",
+     "roughness": 0.42,
+     "metalness": 1.0,
+     "envMapIntensity": 1.1,
+     "metalnessMapIntensity": 1.0
     },
     "mat_bezel": {
-      "color": "#b9b6b0",
-      "metalness": 1.0,
-      "roughness": 0.3,
-      "envMapIntensity": 1.2,
-      "anisotropy": 0.8,
-      "anisotropyRotation": 1.5708
+     "color": "#b9b6b0",
+     "roughness": 0.3,
+     "metalness": 1.0,
+     "envMapIntensity": 1.2,
+     "metalnessMapIntensity": 1.0
     },
     "mat_case_top": {
-      "color": "#cfccc6",
-      "metalness": 1.0,
-      "roughness": 0.36,
-      "envMapIntensity": 1.15
+     "color": "#cfccc6",
+     "roughness": 0.36,
+     "metalness": 1.0,
+     "envMapIntensity": 1.15,
+     "metalnessMapIntensity": 1.0
+    }
+   },
+   "black-dlc": {
+    "mat_titanium_case": {
+     "color": "#17181b",
+     "roughness": 0.3,
+     "metalness": 0.94,
+     "envMapIntensity": 1.0,
+     "metalnessMapIntensity": 0.85
     },
-    "mat_case_ao": {
-      "roughness": 1.0,
-      "metalness": 0.0,
-      "envMapIntensity": 0.0
+    "mat_titanium_brushed": {
+     "color": "#191a1d",
+     "roughness": 0.27,
+     "metalness": 0.94,
+     "envMapIntensity": 1.05,
+     "metalnessMapIntensity": 0.85
     },
-    "mat_crystal_sapphire": {
-      "color": "#f4f6f9",
-      "opacity": 0.16,
-      "roughness": 0.02,
-      "clearcoat": 1.0,
-      "clearcoatRoughness": 0.03,
-      "ior": 1.77,
-      "envMapIntensity": 0.7
+    "mat_titanium_polished": {
+     "color": "#1e1f23",
+     "roughness": 0.09,
+     "metalness": 0.96,
+     "envMapIntensity": 1.15,
+     "metalnessMapIntensity": 0.9
     },
-    "mat_back_spun": {
-      "color": "#34363a",
-      "metalness": 1.0,
-      "roughness": 0.32,
-      "envMapIntensity": 1.1,
-      "anisotropy": 0.85,
-      "anisotropyRotation": 1.5708
+    "mat_titanium_crown": {
+     "color": "#17181b",
+     "roughness": 0.28,
+     "metalness": 0.94,
+     "envMapIntensity": 1.05,
+     "metalnessMapIntensity": 0.85
     },
-    "mat_back_ceramic": {
-      "color": "#121316",
-      "roughness": 0.24,
-      "clearcoat": 0.7,
-      "clearcoatRoughness": 0.12,
-      "envMapIntensity": 1.0
+    "mat_crown_knurl": {
+     "color": "#151619",
+     "roughness": 0.32,
+     "metalness": 0.94,
+     "envMapIntensity": 1.1,
+     "metalnessMapIntensity": 0.85
     },
-    "mat_back_lens": {
-      "color": "#08090b",
-      "roughness": 0.06,
-      "clearcoat": 1.0,
-      "clearcoatRoughness": 0.02,
-      "envMapIntensity": 1.3
+    "mat_titanium_hardware": {
+     "color": "#1a1b1e",
+     "roughness": 0.38,
+     "metalness": 0.94,
+     "envMapIntensity": 1.0,
+     "metalnessMapIntensity": 0.85
     },
-    "mat_back_matte": {
-      "color": "#17181a",
-      "roughness": 0.8
+    "mat_bezel": {
+     "color": "#141518",
+     "roughness": 0.26,
+     "metalness": 0.96,
+     "envMapIntensity": 1.1,
+     "metalnessMapIntensity": 0.9
     },
-    "mat_back_ring": {
-      "color": "#d5d3cf",
-      "metalness": 1.0,
-      "roughness": 0.18,
-      "envMapIntensity": 1.2,
-      "anisotropy": 0.6,
-      "anisotropyRotation": 1.5708
-    },
-    "mat_sensor_dark": {
-      "color": "#0c0d0f",
-      "roughness": 0.5
-    },
-    "mat_sensor_trim": {
-      "color": "#9fa0a3",
-      "metalness": 1.0,
-      "roughness": 0.3
-    },
-    "mat_cavity_black": {
-      "color": "#060708",
-      "roughness": 0.9
-    },
+    "mat_case_top": {
+     "color": "#17181b",
+     "roughness": 0.28,
+     "metalness": 0.94,
+     "envMapIntensity": 1.0,
+     "metalnessMapIntensity": 0.85
+    }
+   }
+  },
+  "bands": {
+   "tide": {
     "mat_band_ocean": {
-      "color": "#1f6153",
-      "roughness": 0.56,
-      "envMapIntensity": 0.4
+     "color": "#1f6153",
+     "roughness": 0.56,
+     "metalness": 0.0,
+     "envMapIntensity": 0.4,
+     "metalnessMapIntensity": 1.0
     },
     "mat_band_tab": {
-      "color": "#1f6153",
-      "roughness": 0.62,
-      "envMapIntensity": 0.4
-    },
-    "mat_band_hardware_dark": {
-      "color": "#3a3c40",
-      "metalness": 1.0,
-      "roughness": 0.35
-    },
-    "mat_accent_orange_ring": {
-      "color": "#e04f18",
-      "metalness": 0.4,
-      "roughness": 0.42
-    },
-    "mat_actionButton_orange": {
-      "color": "#d94a16",
-      "roughness": 0.5
-    },
-    "mat_button_trim": {
-      "color": "#b6b3ad",
-      "metalness": 1.0,
-      "roughness": 0.35
+     "color": "#1f6153",
+     "roughness": 0.62,
+     "metalness": 0.0,
+     "envMapIntensity": 0.4,
+     "metalnessMapIntensity": 1.0
     }
-  },
-  "x_dlcVariant": {
-    "comment": "Black-DLC titanium — P3 colorway-swap payload (same MaterialOverride shape). Loader ignores x_* keys by design.",
-    "materialOverrides": {
-      "mat_titanium_case": {
-        "color": "#17181b",
-        "metalness": 1.0,
-        "roughness": 0.3,
-        "envMapIntensity": 1.0,
-        "anisotropy": 0.85
-      },
-      "mat_titanium_brushed": {
-        "color": "#191a1d",
-        "metalness": 1.0,
-        "roughness": 0.27,
-        "envMapIntensity": 1.05,
-        "anisotropy": 0.9
-      },
-      "mat_titanium_polished": {
-        "color": "#1e1f23",
-        "metalness": 1.0,
-        "roughness": 0.09,
-        "envMapIntensity": 1.15,
-        "anisotropy": 0.3
-      },
-      "mat_titanium_crown": {
-        "color": "#17181b",
-        "metalness": 1.0,
-        "roughness": 0.28,
-        "envMapIntensity": 1.05,
-        "anisotropy": 0.7
-      },
-      "mat_crown_knurl": {
-        "color": "#151619",
-        "metalness": 1.0,
-        "roughness": 0.32,
-        "envMapIntensity": 1.1,
-        "anisotropy": 0.5
-      },
-      "mat_titanium_hardware": {
-        "color": "#1a1b1e",
-        "metalness": 1.0,
-        "roughness": 0.38,
-        "envMapIntensity": 1.0
-      },
-      "mat_bezel": {
-        "color": "#141518",
-        "metalness": 1.0,
-        "roughness": 0.26,
-        "envMapIntensity": 1.1,
-        "anisotropy": 0.8,
-        "anisotropyRotation": 1.5708
-      },
-      "mat_case_top": {
-        "color": "#17181b",
-        "metalness": 1.0,
-        "roughness": 0.28,
-        "envMapIntensity": 1.0,
-        "anisotropy": 0.85
-      }
+   },
+   "graphite": {
+    "mat_band_ocean": {
+     "color": "#33363a",
+     "roughness": 0.52,
+     "metalness": 0.0,
+     "envMapIntensity": 0.5,
+     "metalnessMapIntensity": 1.0
+    },
+    "mat_band_tab": {
+     "color": "#303338",
+     "roughness": 0.58,
+     "metalness": 0.0,
+     "envMapIntensity": 0.48,
+     "metalnessMapIntensity": 1.0
     }
-  },
-  "x_sectionLightKeyframes": {
-    "comment": "Per-section lighting choreography (env rotation + intensity + exposure), driven off the clock scalar via stage.setEnvRotation/setEnvIntensity/toneMappingExposure. Linear interp between section centers; full 360 revolution over the page so the outro restart loops seamlessly. P2 sections own the wiring.",
-    "keyframes": [
-      {
-        "section": "Intro",
-        "envRotationDeg": 0,
-        "envIntensity": 1.0,
-        "exposure": 1.05,
-        "note": "hero pose — key upper-left, rim behind right"
-      },
-      {
-        "section": "Timeless",
-        "envRotationDeg": 15,
-        "envIntensity": 1.0,
-        "exposure": 1.05
-      },
-      {
-        "section": "VerticalText",
-        "envRotationDeg": 35,
-        "envIntensity": 0.95,
-        "exposure": 1.05,
-        "note": "light quiets under the word stack"
-      },
-      {
-        "section": "Disassembly",
-        "envRotationDeg": 70,
-        "envIntensity": 1.1,
-        "exposure": 1.1,
-        "note": "key sweeps across the exploded parts, hardest read of the page"
-      },
-      {
-        "section": "Mechanism",
-        "envRotationDeg": 110,
-        "envIntensity": 1.05,
-        "exposure": 1.05,
-        "bgStage": "#101216",
-        "note": "dark beat — bgStage darkens the DOM ground so live metal reads against ink (LOOKBIBLE 1.4 live-parity law)"
-      },
-      {
-        "section": "Movement",
-        "envRotationDeg": 140,
-        "envIntensity": 0.95,
-        "exposure": 1.05
-      },
-      {
-        "section": "Curves",
-        "envRotationDeg": 170,
-        "envIntensity": 1.0,
-        "exposure": 1.05,
-        "note": "streak strip grazes the chamfer — the signature spec crawl"
-      },
-      {
-        "section": "MovementWatchRight",
-        "envRotationDeg": 200,
-        "envIntensity": 1.0,
-        "exposure": 1.05
-      },
-      {
-        "section": "Hands",
-        "envRotationDeg": 225,
-        "envIntensity": 0.9,
-        "exposure": 1.05
-      },
-      {
-        "section": "Straps",
-        "envRotationDeg": 250,
-        "envIntensity": 1.05,
-        "exposure": 1.05,
-        "note": "band macro — fill side faces camera, fluoroelastomer stays matte"
-      },
-      {
-        "section": "Images",
-        "envRotationDeg": 250,
-        "envIntensity": 1.05,
-        "exposure": 1.05,
-        "note": "DOM section — hold"
-      },
-      {
-        "section": "Nocturne",
-        "envRotationDeg": 290,
-        "envIntensity": 0.35,
-        "exposure": 0.95,
-        "bloomStrength": 0.85,
-        "bgStage": "#0A0B0D",
-        "note": "GRAFT from dusk (council law): continuum dip to 0.35 — not blackout — with hot dial bloom 0.85; vignette flag on. The deep 0.045 blackout survives only as the AOD match-cut beat INSIDE the section (porcelain graft), restored to 0.35 by the section's own exit"
-      },
-      {
-        "section": "Colors",
-        "envRotationDeg": 330,
-        "envIntensity": 1.0,
-        "exposure": 1.05,
-        "note": "recovery ramp out of Nocturne"
-      },
-      {
-        "section": "Parts",
-        "envRotationDeg": 350,
-        "envIntensity": 1.0,
-        "exposure": 1.05
-      },
-      {
-        "section": "Footer",
-        "envRotationDeg": 360,
-        "envIntensity": 1.0,
-        "exposure": 1.05,
-        "note": "full revolution — restart loop lands on the Intro pose"
-      }
-    ]
+   },
+   "ember": {
+    "mat_band_ocean": {
+     "color": "#b0431d",
+     "roughness": 0.58,
+     "metalness": 0.0,
+     "envMapIntensity": 0.42,
+     "metalnessMapIntensity": 1.0
+    },
+    "mat_band_tab": {
+     "color": "#a63f1c",
+     "roughness": 0.64,
+     "metalness": 0.0,
+     "envMapIntensity": 0.42,
+     "metalnessMapIntensity": 1.0
+    }
+   },
+   "midnight": {
+    "mat_band_ocean": {
+     "color": "#1b2740",
+     "roughness": 0.54,
+     "metalness": 0.0,
+     "envMapIntensity": 0.45,
+     "metalnessMapIntensity": 1.0
+    },
+    "mat_band_tab": {
+     "color": "#192338",
+     "roughness": 0.6,
+     "metalness": 0.0,
+     "envMapIntensity": 0.44,
+     "metalnessMapIntensity": 1.0
+    }
+   }
   }
+ }
 }

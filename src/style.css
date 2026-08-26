@@ -190,26 +190,49 @@ body::after {
   background: var(--porcelain);
 }
 
-#loader-arc {
-  transform: rotate(-90deg);
+/* Activity-rings triad — spent ONLY in the loader (PLAN §2 color law):
+   move red (= the biosignal family), exercise green, stand cyan. The vars
+   are scoped to #loader-rings so nothing downstream can borrow them. */
+#loader-rings {
+  --ring-move: #ff2d55;
+  --ring-exercise: #9bec2f;
+  --ring-stand: #00cde0;
+
+  transform: rotate(-90deg); /* arcs open at 12 o'clock, Apple grammar */
 }
 
-.loader-arc__track,
-.loader-arc__fill {
+.ring-track,
+.ring-fill {
   fill: none;
-  stroke-width: 3;
+  stroke-width: 7;
 }
 
-.loader-arc__track {
-  /* Ink-derived hairline track — no off-token greys (LOOKBIBLE §2).
-     Full activity-rings treatment is P3 match-cut work; this stub stays
-     one biosignal arc on a faint ink track. */
-  stroke: color-mix(in srgb, var(--ink) 8%, transparent);
-}
-
-.loader-arc__fill {
-  stroke: var(--biosignal);
+.ring-fill {
   stroke-linecap: round;
+}
+
+.ring-track--a {
+  stroke: color-mix(in srgb, var(--ring-move) 14%, transparent);
+}
+
+.ring-track--b {
+  stroke: color-mix(in srgb, var(--ring-exercise) 14%, transparent);
+}
+
+.ring-track--c {
+  stroke: color-mix(in srgb, var(--ring-stand) 14%, transparent);
+}
+
+.ring-fill--a {
+  stroke: var(--ring-move);
+}
+
+.ring-fill--b {
+  stroke: var(--ring-exercise);
+}
+
+.ring-fill--c {
+  stroke: var(--ring-stand);
 }
 
 .loader__label {
