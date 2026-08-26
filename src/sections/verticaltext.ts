@@ -234,23 +234,26 @@ export class VerticalTextSection extends SectionBase {
       0.5,
     );
     tl.fromTo(stackB, { opacity: 0 }, { opacity: 1, duration: 0.06, stagger: 0.03 }, 0.5);
-    tl.to(scrimB, { opacity: 1, duration: 0.05 }, 0.52);
-    tl.fromTo(blockB, { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0.52);
-    tl.fromTo(eyebrowB, { opacity: 0 }, { opacity: 1, duration: 0.05 }, 0.54);
-    tl.fromTo(eyebrowB, { y: 12 }, { y: 0, duration: 0.06, ease: "power3.out" }, 0.54);
+    /* gate-2 tune: act-B copy arrives ≈.48–.55 so the page-truth .5–.6
+     * frames carry content (the .5 beat was a dead frame — copy chain
+     * shifted 0.04 earlier; act A's block is gone by .48, clean overlap) */
+    tl.to(scrimB, { opacity: 1, duration: 0.05 }, 0.48);
+    tl.fromTo(blockB, { opacity: 0 }, { opacity: 1, duration: 0.04 }, 0.48);
+    tl.fromTo(eyebrowB, { opacity: 0 }, { opacity: 1, duration: 0.05 }, 0.5);
+    tl.fromTo(eyebrowB, { y: 12 }, { y: 0, duration: 0.06, ease: "power3.out" }, 0.5);
     tl.fromTo(
       charsB,
       { xPercent: -110 },
       { xPercent: 0, duration: 0.1, ease: "power3.out", stagger: 0.006 },
-      0.56,
+      0.52,
     );
-    tl.fromTo(charsB, { opacity: 0 }, { opacity: 1, duration: 0.05, stagger: 0.006 }, 0.56);
+    tl.fromTo(charsB, { opacity: 0 }, { opacity: 1, duration: 0.05, stagger: 0.006 }, 0.52);
     linesB.forEach((line, i) => {
       tl.fromTo(
         line,
         { color: REVEAL_FROM },
         { color: REVEAL_TO, duration: 0.1, ease: "power3.inOut" },
-        0.64 + (i % 2 === 0 ? 0 : 0.045) + Math.floor(i / 2) * 0.09,
+        0.58 + (i % 2 === 0 ? 0 : 0.045) + Math.floor(i / 2) * 0.09,
       );
     });
 

@@ -111,6 +111,36 @@ export interface MovementStateSnapshot {
   spinDeg: number;
 }
 
+/** Curves section telemetry (P2 — BPM catalog card #1 evidence). */
+export interface CurvesStateSnapshot {
+  /** Camera pose-override blend 0..1 (0 = base rig owns the frame). */
+  blend: number;
+  /** Macro standoff, world units (5.4 wide → 3.5 at the chamfer macro). */
+  standoff: number;
+  /** BPM numerator 0→58 (pure linear map of section progress). */
+  bpm: number;
+}
+
+/** Hands section telemetry (P2 — side-elevation beat evidence). */
+export interface HandsStateSnapshot {
+  /** Camera pose-override blend 0..1 (0 = base rig owns the frame). */
+  blend: number;
+  /** Telephoto dolly distance, world units (105 mm recipe). */
+  standoff: number;
+  /** Look-target height offset (case composes low when positive). */
+  frameY: number;
+}
+
+/** MovementWatchRight telemetry (P2 — annotated plate + hover-swap graft). */
+export interface MovementWatchRightStateSnapshot {
+  /** Annotation anchors resolved against the loaded GLB (part_bezel radius). */
+  anchorsReady: boolean;
+  /** Camera pose-override blend 0..1 (0 = base rig owns the frame). */
+  blend: number;
+  /** Hovered annotation id ("dial" | "glass" | "bezel") or null. */
+  active: string | null;
+}
+
 /** Registry of typed extension keys — P3 mechanics extend this interface. */
 export interface StateExtensions {
   cursor: CursorStateSnapshot;
@@ -120,6 +150,9 @@ export interface StateExtensions {
   watch: WatchStateSnapshot;
   disassembly: DisassemblyStateSnapshot;
   movement: MovementStateSnapshot;
+  movementWatchRight: MovementWatchRightStateSnapshot;
+  curves: CurvesStateSnapshot;
+  hands: HandsStateSnapshot;
 }
 
 const stateExtensions = new Map<string, () => unknown>();

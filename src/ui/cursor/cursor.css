@@ -97,10 +97,15 @@ html.is-longpressing * {
   font-size: 0.62rem;
   letter-spacing: 0.3em;
   color: var(--ink);
-  /* Legibility scrim over the 3D stage, cursor-sized. */
-  text-shadow:
-    0 0 8px rgb(235 235 235 / 95%),
-    0 0 3px rgb(235 235 235 / 95%);
+  /* §7.4 porcelain chip (gate-2 concern 5: the halo scrim read faint over
+   * the live stage, and over ink sections an ink label vanished outright).
+   * Literal porcelain — NOT var(--porcelain): the keyframe driver rewrites
+   * that token to the ink bgStage on dark beats, which would invert the
+   * chip. Matches the icon chip's fixed disc treatment above. */
+  padding: 4px 7px 3px 9px;
+  border-radius: 3px;
+  background: rgb(235 235 235 / 92%);
+  box-shadow: 0 1px 10px rgb(11 11 12 / 14%);
   opacity: 0;
   will-change: transform, opacity;
 }

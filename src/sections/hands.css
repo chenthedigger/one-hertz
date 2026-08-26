@@ -1,0 +1,235 @@
+/* Hands — the side-elevation beat ("PROUD PROFILE"). Scoped styles,
+   imported by src/sections/hands.ts only.
+
+   Ground law: the keyframe driver holds the porcelain ground at this
+   section's center (Hands key: rot 225 · envInt 0.9 · no bgStage) — scrims
+   track the LIVE --porcelain token (LOOKBIBLE §7.1). Reveal colors are the
+   light-ground law pair (#BCBCBC → #323232, §7.3) applied inline by the
+   module. The only saturated element in frame is the Action Button's
+   orange on the case itself — nothing here carries color. */
+
+.hnd {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (Mechanism lane pitfall #2). */
+  overflow: hidden;
+}
+
+/* ---- Legibility scrim (§7.1 — gradient from the live ground token) -------- */
+
+.hnd__scrim--copy {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 62%;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* ---- Registration hairlines (the source plate's technical crosshairs) ----- */
+
+.hnd__reg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hnd__reg-v {
+  position: absolute;
+  left: 50%;
+  top: 4vh;
+  width: 1px;
+  height: 52vh;
+  background: color-mix(in srgb, var(--ink) 14%, transparent);
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.hnd__reg-h {
+  position: absolute;
+  left: 14vw;
+  right: 14vw;
+  top: 57vh;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.hnd__reg-plus {
+  position: absolute;
+  left: 50%;
+  top: 5.5vh;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+/* ---- Centered copy plate (the Hands_* composition) ------------------------ */
+
+.hnd__copy {
+  position: absolute;
+  inset-inline: 0;
+  top: 10.5vh;
+  text-align: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.hnd__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: 2.6vh;
+  will-change: transform, opacity;
+}
+
+.hnd__headline {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 1.02;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.hnd__line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+  white-space: pre;
+}
+
+.hnd__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* body lines start at the light-ground FROM grey; the scrub:2 lag drives
+   them to #323232 (colors are law — §7.3) */
+.hnd__body {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.55;
+  max-width: 44ch;
+  margin-inline: auto;
+  color: #bcbcbc;
+  will-change: transform, opacity;
+}
+
+.hnd__body--a {
+  margin-top: 3.4vh;
+}
+
+.hnd__body--b {
+  margin-top: 0.4vh;
+}
+
+/* ---- BPM catalog card #2 (value + unit mono · caption — §8 slot) ---------- */
+
+.hnd__card {
+  position: absolute;
+  right: 6vw;
+  bottom: 9vh;
+  width: 15.5rem;
+  max-width: 34vw;
+  padding-top: 1.1rem;
+  text-align: left;
+  pointer-events: none;
+  will-change: transform, opacity;
+  /* §7.1: text-over-3D carries a gradient scrim from the ground token —
+     never a hard panel. Soft halo so the card survives any case crest. */
+  background: radial-gradient(
+    120% 130% at 50% 45%,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 60%,
+    transparent 100%
+  );
+}
+
+.hnd__card-rule {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 30%, transparent);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.hnd__card-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.hnd__card-zones {
+  margin-top: 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+.hnd__card-value {
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: var(--type-title);
+  font-weight: 500;
+  letter-spacing: var(--track-title);
+  color: var(--ink);
+}
+
+.hnd__card-sep {
+  padding-inline: 0.45rem;
+  color: color-mix(in srgb, var(--ink) 32%, transparent);
+}
+
+.hnd__card-unit {
+  margin-left: 0.5rem;
+  font-size: 0.68rem;
+  letter-spacing: var(--track-caps);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+/* caption is a reveal line (#BCBCBC → #323232, module-driven) */
+.hnd__card-caption {
+  margin-top: 0.55rem;
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  color: #bcbcbc;
+}
+
+/* ---- Small screens: keep the plate breathing ------------------------------ */
+
+@media (max-width: 720px) {
+  .hnd__copy {
+    top: 8vh;
+  }
+
+  .hnd__body {
+    max-width: 78vw;
+  }
+
+  .hnd__card {
+    right: 6vw;
+    bottom: 6vh;
+    max-width: 70vw;
+  }
+
+  .hnd__reg-h {
+    left: 8vw;
+    right: 8vw;
+  }
+}

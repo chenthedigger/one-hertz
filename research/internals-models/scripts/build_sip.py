@@ -34,6 +34,13 @@ scene = bpy.context.scene
 lib.setup_cycles(scene, samples=64)
 kit = lib.material_kit()
 
+# Gate-2 Movement tune (SiP silver caps blow to clipped white at the .75
+# beat under the instrument env): satin-grade the two bright steels for
+# THIS part only — connector tops + retaining bracket read satin steel,
+# not chrome. Kit defaults untouched for the other parts.
+kit["nickel_tab"] = lib.simple_mat("nickel_tab", "#CFD2D4", 1.0, 0.42)
+kit["steel_bare"] = lib.simple_mat("steel_bare", "#D7D9DB", 1.0, 0.38)
+
 parts = []
 
 # ------------------------------------------------- emissive floorplan texture

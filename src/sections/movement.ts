@@ -412,7 +412,10 @@ export class MovementSection extends SectionBase {
     // crosses it (landing near frame-center, clear of the label rail); the
     // die floorplan wakes ("highly attentive")
     tl.to(r, { standoff: 1.55, lat: 0.06, duration: 0.35 }, 0.15);
-    tl.to(r, { glow: 2.4, duration: 0.25 }, 0.3);
+    // gate-2 tune: emissive peak 2.4 → 4.5 — the die must read LIT from
+    // emission alone at .5 (bloomThreshold 1.0 law untouched; the ramp
+    // 1→4.5 is the visible "silicon wakes" step the thesis needs)
+    tl.to(r, { glow: 4.5, duration: 0.25 }, 0.3);
     // .5–.75: orbit drift — the streak light crawls the gold pad ring
     tl.to(r, { theta: 1.3, phi: 0.84, duration: 0.25 }, 0.5);
     // .75–.9: ease back off (closer runs ~0.6× the opener, law 3 shape)

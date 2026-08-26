@@ -1,0 +1,260 @@
+/* Curves — BPM catalog card #1 ("58 / 220 bpm — Guarded Contours").
+   Scoped styles, imported by src/sections/curves.ts only.
+
+   Ground law: the keyframe driver holds the porcelain ground at this
+   section's center (Curves key has no bgStage — rot 170, the streak strip
+   grazing the chamfer). Scrims track the LIVE --porcelain token
+   (LOOKBIBLE §7.1); grey reveals are the light-ground pair
+   #BCBCBC → #323232 (§7.3), applied inline by the module. */
+
+.crv {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (Mechanism lane pitfall #2). */
+  overflow: hidden;
+}
+
+/* ---- Hairline crosshair guides (the source card's technical drawing) ----- */
+
+.crv__guides {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.crv__guide {
+  position: absolute;
+  background: color-mix(in srgb, var(--ink) 16%, transparent);
+  will-change: transform, opacity;
+}
+
+/* Vertical hairline through the page center — draws downward. */
+.crv__guide--vt {
+  left: 50%;
+  top: 4vh;
+  bottom: 0;
+  width: 1px;
+  transform-origin: top center;
+}
+
+/* Horizontal hairline just above the watch head — draws from the left. */
+.crv__guide--hz {
+  left: 6vw;
+  right: 6vw;
+  top: 56%;
+  height: 1px;
+  transform-origin: left center;
+}
+
+.crv__mark {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
+  transform: translate(-50%, -50%);
+  will-change: opacity;
+}
+
+.crv__mark--a {
+  left: 50%;
+  top: 7vh;
+}
+
+.crv__mark--b {
+  left: 6vw;
+  top: 56%;
+}
+
+/* ---- Legibility scrim (§7.1 — gradient from the live ground token) ------- */
+
+/* The card copy sits over 3D in the top half: a soft vertical gradient
+   scrim from the porcelain ground, never a hard panel. */
+.crv__scrim {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 62%;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 34%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* ---- The catalog card (centered column — source-verbatim grammar) -------- */
+
+.crv__card {
+  position: absolute;
+  inset-inline: 0;
+  top: 9vh;
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+  text-align: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.crv__pretitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  will-change: transform, opacity;
+}
+
+/* Display tier, not colossal — the source card's headline holds ~32% of
+   the frame width per line so the watch macro owns the lower half; the
+   colossal voice stays with the word-stacks (Timeless/Movement). */
+.crv__headline {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 1.02;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.crv__line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+  white-space: pre;
+}
+
+.crv__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Sub-copy: starts at the light-ground FROM grey; the scrub:2 lag drives
+   it to #323232 (colors are law — §7.3). */
+.crv__sub {
+  display: grid;
+  gap: 0.15rem;
+  will-change: transform, opacity;
+}
+
+.crv__subline {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.55;
+  color: #bcbcbc;
+}
+
+/* ---- BPM figure (the page-flip grammar: numerator flips, /220 stays) ----- */
+
+.crv__figure {
+  position: absolute;
+  left: 6vw;
+  bottom: 7vh;
+  pointer-events: none;
+  isolation: isolate;
+  will-change: transform, opacity;
+}
+
+/* Local scrim so the figure stays legible if the band drifts under it. */
+.crv__figure::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -2rem -3rem -1.5rem -2rem;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--porcelain) 52%, transparent) 0%,
+    transparent 78%
+  );
+}
+
+.crv__value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+/* BPM numerals: display face 300 — the oval bowls are the point (§4). */
+.crv__num {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  min-width: 2ch; /* tabular counting never reflows the row */
+}
+
+.crv__den {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.crv__caption {
+  margin-top: 0.7rem;
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  max-width: 30ch;
+}
+
+/* Page rail: 01 active in full ink, siblings dim — the flip 58→96→142. */
+.crv__pages {
+  margin-top: 1.1rem;
+  display: flex;
+  gap: 1.4rem;
+  list-style: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--track-caps-wide);
+  color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.crv__page.is-active {
+  color: var(--ink);
+  position: relative;
+}
+
+.crv__page.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.45rem;
+  height: 1px;
+  background: var(--ink);
+}
+
+/* ---- Small screens: keep the card breathing ------------------------------ */
+
+@media (max-width: 720px) {
+  .crv__headline {
+    font-size: var(--type-headline);
+  }
+
+  .crv__card {
+    top: 11vh;
+    gap: 0.8rem;
+  }
+
+  .crv__sub {
+    max-width: 82vw;
+    margin-inline: auto;
+  }
+
+  .crv__num {
+    font-size: var(--type-headline);
+  }
+
+  .crv__figure {
+    bottom: 5vh;
+  }
+
+  .crv__pages {
+    margin-top: 0.8rem;
+  }
+}

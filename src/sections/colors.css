@@ -1,0 +1,343 @@
+/* Colors — section-owned styles (imported by src/sections/colors.ts).
+   Ground = the recovery ramp: the keyframe driver walks --porcelain from
+   Nocturne's #0A0B0D back to #E8EAED across this beat's first half, so the
+   live --porcelain var is the STAGE token (Nocturne pitfall #1) — type here
+   is INK on the recovered light ground, scrims ride the ground tokens
+   (LOOKBIBLE §7.1), and the one porcelain-as-color literal below serves the
+   dawn tag that lives on the dark tail. */
+
+.col {
+  /* LOOKBIBLE §2 porcelain as a COLOR — the live var is the stage token. */
+  --col-porcelain: #e8eaed;
+  /* Colorway pair (LOOKBIBLE §2 declaration) — rewritten by the
+     CONFIG_CHANGE consumer; defaults = Natural / Ocean. */
+  --first-color: #cfccc6;
+  --second-color: #1f6153;
+  /* Ring indicator angle — walks to the active slot on CONFIG_CHANGE. */
+  --col-arc-rot: 0deg;
+}
+
+/* ---- Beat 0 · dawn tag (the night's last breath, ink-scrim safe on any
+   ground — it exits before the ramp lightens) ------------------------------ */
+
+.col__dawn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 12svh;
+  text-align: center;
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--col-porcelain) 70%, transparent);
+  padding-block: 1.4rem;
+  /* §7.1 scrim from the outgoing ink ground — never a hard panel. */
+  background: radial-gradient(
+    38% 150% at 50% 50%,
+    color-mix(in srgb, var(--ink) 55%, transparent),
+    transparent 75%
+  );
+  will-change: opacity;
+}
+
+/* ---- Beat 1 · headline (colossal ink over the recovered ground) ---------- */
+
+.col__head {
+  position: absolute;
+  left: 6vw;
+  top: 15svh;
+  max-width: 88vw;
+  opacity: 0;
+  padding: 2.5rem 3rem 2.5rem 0;
+  /* Text-over-3D scrim: gradient from the porcelain ground 0→~55% (§7.1). */
+  background: radial-gradient(
+    70% 105% at 35% 45%,
+    color-mix(in srgb, var(--col-porcelain) 55%, transparent),
+    transparent 74%
+  );
+  will-change: transform, opacity;
+}
+
+.col__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  /* dim label = 55% of the ground's counter-color (§4 tone law) */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.col__headline {
+  margin-top: 1.2rem;
+  font-family: var(--font-display);
+  font-size: min(var(--type-colossal), 10.6vw);
+  font-weight: 300; /* §4: 600 banned at display sizes */
+  line-height: 0.96;
+  letter-spacing: var(--track-colossal);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.col__line {
+  display: block;
+  overflow: clip; /* chars slide in from x:-105% under the clip */
+  white-space: nowrap;
+}
+
+/* §4: staggered second line indent ≈ 0.55× cap-height of the line above. */
+.col__line--indent {
+  margin-left: 0.4em;
+}
+
+.col__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.col__lead {
+  margin-top: 1.5rem;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* ---- Beat 2 · grey-line reveals (§7.3 light-ground greys, left column) --- */
+
+.col__lines {
+  position: absolute;
+  left: 6vw;
+  top: 38svh;
+  max-width: 44vw;
+  display: grid;
+  gap: 0.45rem;
+  opacity: 0;
+  padding: 2rem 2.5rem 1.25rem 0;
+  background: radial-gradient(
+    80% 130% at 30% 70%,
+    color-mix(in srgb, var(--col-porcelain) 55%, transparent),
+    transparent 74%
+  );
+  will-change: transform, opacity;
+}
+
+.col__lines p {
+  font-family: var(--font-body);
+  font-size: var(--type-lead);
+  line-height: 1.25;
+  color: #bcbcbc; /* motion-bible grey; tickDom reveals to #323232 */
+}
+
+/* ---- Beat 3 · the edition ring (scroll-drawn around the beauty plate) ---- */
+
+.col__ring {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: min(64svh, 46vw);
+  height: min(64svh, 46vw);
+  transform: translate(-50%, -50%) rotate(-90deg); /* draw starts at 12 o'clock */
+  opacity: 0;
+  overflow: visible;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.col__ring circle {
+  fill: none;
+}
+
+.col__ring-track {
+  stroke: color-mix(in srgb, var(--ink) 10%, transparent);
+  stroke-width: 0.35;
+}
+
+.col__ring-fill {
+  stroke: color-mix(in srgb, var(--ink) 55%, transparent);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+}
+
+/* Indicator dot walks to the active slot — the source picker's circle-svg
+   transform grammar: 1 s easeOutCubic (motion-bible CSS census). */
+.col__ring-cursor {
+  transform-origin: 50% 50%;
+  transform: rotate(var(--col-arc-rot));
+  transition: transform 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.col__ring-dot {
+  fill: var(--second-color);
+}
+
+/* ---- Beat 3 · editions rail (bottom center, over its own scrim) ---------- */
+
+.col__rail {
+  position: absolute;
+  left: 50%;
+  bottom: 6svh;
+  transform: translateX(-50%);
+  width: min(78vw, 62rem);
+  text-align: center;
+  padding: 2.25rem 3rem 1.5rem;
+  background: radial-gradient(
+    75% 130% at 50% 60%,
+    color-mix(in srgb, var(--col-porcelain) 55%, transparent),
+    transparent 78%
+  );
+  will-change: transform, opacity;
+}
+
+.col__slots {
+  display: flex;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.col__slot {
+  position: relative;
+  min-width: 7.5rem;
+  padding-top: 0.9rem;
+  text-align: left;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.col__slot-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 25%, transparent);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.col__slot--active .col__slot-bar {
+  height: 2px;
+  background: var(--ink);
+}
+
+.col__slot-index {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.col__slot-name {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  /* config-label crossfade: .5 s linear (source colorway grammar) */
+  transition: color 0.5s linear;
+}
+
+.col__slot-name em {
+  display: block;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.72em;
+  letter-spacing: var(--track-caps-wide);
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  transition: color 0.5s linear;
+}
+
+.col__slot--active .col__slot-name {
+  color: var(--ink);
+}
+
+.col__slot--active .col__slot-name em {
+  color: color-mix(in srgb, var(--ink) 65%, transparent);
+}
+
+/* Reserved slots: ghost tone (§4: 30–32% ghost layer), hollow band chip. */
+.col__slot--reserved .col__slot-name,
+.col__slot--reserved .col__slot-name em,
+.col__slot--reserved .col__slot-index {
+  color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+.col__slot-chips {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.col__chip {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: var(--chip);
+  border: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.col__slot--reserved .col__chip {
+  background: transparent;
+  border: 1px dashed color-mix(in srgb, var(--chip) 70%, var(--ink) 30%);
+}
+
+.col__caption {
+  margin-top: 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ---- mobile discipline ---------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .col__head {
+    top: 12svh;
+    max-width: 92vw;
+  }
+
+  .col__headline {
+    font-size: min(var(--type-colossal), 13vw);
+  }
+
+  .col__lines {
+    max-width: 80vw;
+    top: 32svh;
+  }
+
+  .col__ring {
+    width: min(52svh, 88vw);
+    height: min(52svh, 88vw);
+    top: 42%;
+  }
+
+  .col__rail {
+    width: 94vw;
+    padding-inline: 1rem;
+  }
+
+  .col__slots {
+    flex-wrap: wrap;
+    gap: 1.1rem 2rem;
+  }
+
+  .col__slot {
+    min-width: 6.4rem;
+  }
+}

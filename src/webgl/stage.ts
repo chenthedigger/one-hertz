@@ -255,7 +255,7 @@ export class Stage {
   /**
    * Screen-material contract (PLAN §3): hand the dial subsystem's
    * CanvasTexture to the emissive slot. The material keeps
-   * toneMapped=false + emissiveIntensity 2.8 so the display stays luminous
+   * toneMapped=false + SCREEN_EMISSIVE_INTENSITY so the display stays luminous
    * under ACES and is the ONLY thing the bloom pass sees. The caller owns
    * the texture (and its per-dirty-flag updates); only the built-in
    * placeholder dial is disposed here.

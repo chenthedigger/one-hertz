@@ -1,0 +1,300 @@
+/* Images — the gallery (editorial contact-sheet bento). Scoped styles,
+   imported by src/sections/images.ts only (zero style.css contention).
+
+   Ground law: Images holds the PORCELAIN stage (instrument.json Images key
+   has no bgStage — LOOKBIBLE §1.5 #11), and the plate itself is OPAQUE
+   ground token: the source's Images group is "webgl EMPTY, watch hidden,
+   pure DOM gallery" (motion bible §4/§8) — covering the fixed canvas with
+   the live ground token IS the hide, and it tracks bgStage ramps from the
+   keyframe driver (DOM + WebGL stay one surface) on both seams.
+
+   Inside the plate the stills are ink plates on porcelain — the site's
+   ink/porcelain alternation folded into one editorial spread. Figure
+   captions sit over the INK ground of the stills, so their scrim + type
+   ride the dark-ground grammar (§7.1/§7.3); the copy column rides the
+   light ground. */
+
+.gal {
+  position: absolute;
+  inset: 0;
+  background: var(--porcelain);
+  /* deliberate edges: the sheet is a plate sliding over the lit stage —
+     a hairline makes the DOM/canvas ground seam read authored */
+  border-block: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+  overflow: clip;
+  display: grid;
+  grid-template-columns: minmax(17rem, 24%) 1fr;
+  gap: clamp(1rem, 2vw, 2.2rem);
+  padding: clamp(1.2rem, 3.2vh, 2.6rem) clamp(1.2rem, 3vw, 3.4rem);
+}
+
+/* ---- Copy column (light ground — ink type, §4 tone hierarchy) ------------- */
+
+.gal__copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.gal__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: clamp(1rem, 3.5vh, 2.4rem);
+  will-change: transform, opacity;
+}
+
+.gal__title {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 0.96;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+.gal__t-line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+}
+
+/* ghost layer 31% + staggered second-line indent ≈0.55 cap-height (§4) */
+.gal__t-ghost {
+  color: color-mix(in srgb, var(--ink) 31%, transparent);
+}
+
+.gal__t-solid {
+  color: var(--ink);
+  padding-left: 0.55em;
+}
+
+.gal__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.gal__lines {
+  margin-top: clamp(0.9rem, 2.6vh, 1.8rem);
+  display: grid;
+  gap: 0.3rem;
+}
+
+.gal__line {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.5;
+  color: #bcbcbc; /* reveal start grey — module drives to #323232 (§7.3) */
+}
+
+/* Caption bar — the source caption grammar: fixed phrase + live colorway
+   (swaps with CONFIG_CHANGE; the biosignal dash marks the live finish,
+   the Straps family-rail convention). */
+.gal__caption {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  will-change: transform, opacity;
+}
+
+.gal__phrase {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.gal__colorway {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  margin-top: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.gal__colorway::before {
+  content: "";
+  width: 1.1em;
+  height: 2px;
+  background: var(--biosignal);
+}
+
+/* ---- The sheet (5 stills, 4 scales — hierarchy through scale, §dq) -------- */
+
+.gal__sheet {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: clamp(0.5rem, 0.9vw, 1rem);
+  min-height: 0;
+  min-width: 0;
+}
+
+.gal__fig {
+  position: relative;
+  margin: 0;
+  overflow: clip;
+  background: var(--ink); /* ink plate while bytes arrive — no white flash */
+  will-change: transform, opacity;
+}
+
+.gal__fig picture,
+.gal__fig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gal__fig img {
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* designed hover: the still leans in, its label lifts to full porcelain */
+@media (hover: hover) {
+  .gal__fig:hover img {
+    transform: scale(1.025);
+  }
+
+  .gal__fig:hover .gal__label {
+    color: var(--porcelain);
+  }
+}
+
+/* art-directed crops (square masters, cover-fit): 02 favors the crown
+   knurl, 05 lifts to the engraved WATCH ULTRA arc */
+.gal__fig--2 img {
+  object-position: 62% 45%;
+}
+
+.gal__fig--5 img {
+  object-position: 50% 35%;
+}
+
+/* LOOKBIBLE §6 shot-list placement — one colossal, one tall, two medium,
+   one wide grid-breaking strip (the 14.4 mm edge-on story). */
+.gal__fig--1 {
+  grid-area: 1 / 1 / 9 / 5;
+}
+.gal__fig--3 {
+  grid-area: 1 / 5 / 6 / 8;
+}
+.gal__fig--2 {
+  grid-area: 1 / 8 / 4 / 11;
+}
+.gal__fig--5 {
+  grid-area: 4 / 8 / 6 / 11;
+}
+.gal__fig--4 {
+  grid-area: 6 / 5 / 9 / 11;
+}
+
+/* Figure caption: mono micro-caps over the still's INK ground behind a
+   gradient scrim from the ink token (§7.1 — never a hard panel). */
+.gal__label {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 2.2rem 0.8rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--porcelain) 78%, transparent);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--ink) 55%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 28%, transparent) 55%,
+    transparent 100%
+  );
+  transition: color 0.4s ease;
+}
+
+.gal__label .tnum {
+  color: color-mix(in srgb, var(--porcelain) 45%, transparent);
+  margin-right: 0.5em;
+}
+
+/* ---- <1024: the art-direction breakpoint (source grammar) ------------------
+   Compact contact sheet: copy compresses to a header band, hero rides wide,
+   the four studies pair up beneath. Same five stills, denser crops. */
+
+@media (max-width: 1023px) {
+  .gal {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 0.9rem;
+    padding: 1rem 5vw 1.2rem;
+  }
+
+  .gal__copy {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 0.2rem 1rem;
+  }
+
+  .gal__eyebrow {
+    margin-bottom: 0.4rem;
+    grid-column: 1 / -1;
+  }
+
+  .gal__title {
+    font-size: var(--type-title);
+  }
+
+  .gal__t-solid {
+    padding-left: 0.55em;
+  }
+
+  .gal__lines {
+    display: none; /* art direction: the compact sheet drops the aside */
+  }
+
+  .gal__caption {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    text-align: right;
+  }
+
+  .gal__phrase {
+    display: none;
+  }
+
+  .gal__colorway {
+    justify-content: flex-end;
+  }
+
+  .gal__sheet {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 5fr 3fr 3fr;
+  }
+
+  .gal__fig--1 {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+  .gal__fig--3 {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  .gal__fig--2 {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+  .gal__fig--5 {
+    grid-area: 3 / 2 / 4 / 3;
+  }
+  .gal__fig--4 {
+    grid-area: 3 / 1 / 4 / 2;
+  }
+
+  .gal__label {
+    padding: 1.4rem 0.55rem 0.45rem;
+    font-size: 0.56rem;
+  }
+}

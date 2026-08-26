@@ -37,7 +37,12 @@ export const SECTION_VH = {
   Images: 100,
   Nocturne: 300, // additive beat — sanctioned deviation (PLAN §3)
   Colors: 450,
-  Parts: 100,
+  // Bumped 100→200 by the Parts lane: the source measures Parts at 161vh
+  // (content-sized) and motion-bible §8 marks it ⚠ with exactly this fix
+  // sanctioned ("budget bump, never a local hack") — at 100svh the unpinned
+  // track has ZERO scrub runway in ?solo= (track == viewport ⇒ degenerate
+  // bounds) and the table's reveal grammar cannot exist.
+  Parts: 200,
   Footer: 100,
 } as const;
 

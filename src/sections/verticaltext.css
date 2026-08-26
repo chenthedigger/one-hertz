@@ -24,13 +24,17 @@
   opacity: 0;
 }
 
+/* Gate-2 tune: alpha must hit exactly 0 WELL inside the box (transparent
+ * at 78% — the 10° gradient tilt projects ≈19% of the axis onto the far
+ * edge, so 100% stops leave a clipped hard seam at the box edge: the
+ * x=768 line every full-page frame showed). Intro pitfall #2 class. */
 .vt__scrim--a {
   left: 0;
   background: linear-gradient(
     100deg,
     color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
-    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
-    transparent 100%
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 45%,
+    transparent 78%
   );
 }
 
@@ -39,8 +43,8 @@
   background: linear-gradient(
     260deg,
     color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
-    color-mix(in srgb, var(--porcelain) 30%, transparent) 55%,
-    transparent 100%
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 45%,
+    transparent 78%
   );
 }
 

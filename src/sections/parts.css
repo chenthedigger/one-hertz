@@ -1,0 +1,364 @@
+/* Parts — "CALIBRE 1HZ" sensing table (imported by src/sections/parts.ts).
+   Light stage: the keyframe driver holds instrument's Parts key (rot 350 /
+   envInt 1.0, ground = look porcelain #E8EAED). Type rides the LOOKBIBLE
+   tokens (--type-* / --track-* ramp); the CALIBRE table is Geist Mono +
+   tnum by law (§4 data voice); tone hierarchy by alpha (§4: ghost 30–32%,
+   dim 55%); scrims are porcelain gradients, never hard panels (§7.1).
+
+   Reveal channel: each row carries --prt-reveal (scrub:2 grey pair
+   #BCBCBC→#323232, set inline by the module); name + value read it, the
+   dim columns derive from it via color-mix so a row inks in as ONE line. */
+
+.prt {
+  /* NOTE: .pin is position:sticky — never set `position` OR `height` here:
+     .pin owns height 100svh; a `height: 100%` would rebind it to the 200svh
+     track and kill the sticky travel (bit this lane on the first capture). */
+  color: var(--ink);
+}
+
+/* ---- scrims (§7.1: ground-token gradients behind every text block) ------- */
+
+.prt__scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Title column: porcelain builds from the left, clears the watch's right. */
+.prt__scrim--title {
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 30%, transparent) 38%,
+    transparent 56%
+  );
+}
+
+/* Table zone: porcelain rises under the rows, 0 → ~55% (§7.1). */
+.prt__scrim--table {
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    color-mix(in srgb, var(--porcelain) 40%, transparent) 52%,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 100%
+  );
+}
+
+/* ---- title stack (source: ghost MODEL over solid 146GR) ------------------ */
+
+.prt__head {
+  position: absolute;
+  top: 6svh;
+  left: 6vw;
+  z-index: 1;
+}
+
+.prt__eyebrow {
+  margin: 0 0 1.2rem;
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  will-change: transform, opacity;
+}
+
+.prt__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--type-display);
+  line-height: 0.92;
+  letter-spacing: var(--track-display);
+}
+
+.prt__line {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Ghost layer (§4: 30–32% of the counter-color) over the solid line;
+   staggered indent ≈0.55× cap-height of the line above (§4). */
+.prt__line--ghost {
+  color: color-mix(in srgb, var(--ink) 31%, transparent);
+}
+
+/* The number line goes colossal (source parity: 146GR carries the frame);
+   staggered indent ≈0.55× cap-height of the ghost line above (§4). */
+.prt__line--solid {
+  padding-left: 0.28em;
+  font-size: calc(var(--type-display) * 1.35);
+  letter-spacing: var(--track-colossal);
+  color: var(--ink);
+}
+
+.prt__char {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.prt__lead {
+  margin: 0.9rem 0 0 0.1em;
+  opacity: 0;
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  font-weight: 400;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  will-change: transform, opacity;
+}
+
+/* ---- colorway picker slot (dual-placement law; SWAP wiring = P3) --------- */
+
+.prt__picker {
+  position: absolute;
+  top: 7svh;
+  right: 6vw;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  opacity: 0;
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--porcelain) 45%, transparent);
+  will-change: transform, opacity;
+}
+
+.prt__picker-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--biosignal);
+  align-self: flex-start;
+  margin-top: 0.15rem;
+}
+
+.prt__picker-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.prt__picker-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: var(--track-caps-wide);
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+.prt__picker-name {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.prt__picker-sub {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.prt__picker-ring {
+  width: 44px;
+  height: 44px;
+}
+
+.prt__picker-ring-track {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink) 18%, transparent);
+  stroke-width: 1.5;
+}
+
+/* Quarter arc marks the active colorway on the ring (P3 animates it). */
+.prt__picker-ring-arc {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 30 90;
+  stroke-dashoffset: 8;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.prt__picker-ring-core {
+  fill: #1f6153; /* the Ocean band anchor (LOOKBIBLE §2) */
+}
+
+/* ---- the table (Geist Mono + tnum by law, §4) ---------------------------- */
+
+.prt__table {
+  position: absolute;
+  left: 6vw;
+  right: 6vw;
+  bottom: 9svh;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+}
+
+.prt__row {
+  --prt-reveal: #bcbcbc; /* scrub:2 from-grey (§7.3 light-ground pair) */
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1.15fr) 4rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0 1.5rem;
+  padding: clamp(0.45rem, 1.1svh, 0.9rem) 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.prt__plus {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--prt-reveal) 65%, transparent);
+}
+
+.prt__name {
+  font-size: clamp(0.95rem, 2svh, 1.25rem);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  color: var(--prt-reveal);
+}
+
+.prt__index {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: color-mix(in srgb, var(--prt-reveal) 45%, transparent);
+}
+
+.prt__domain {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: var(--track-caps);
+  color: color-mix(in srgb, var(--prt-reveal) 55%, transparent);
+}
+
+.prt__value {
+  justify-self: end;
+  font-size: clamp(0.85rem, 1.8svh, 1.1rem);
+  font-weight: 400;
+  color: var(--prt-reveal);
+}
+
+/* Hairline rule under each row — drawn scaleX 0→1 by the scrub timeline. */
+.prt__rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--ink) 14%, transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+/* ---- summary line (the inversion's punchline) ---------------------------- */
+
+.prt__summary {
+  --prt-reveal: #bcbcbc;
+  position: absolute;
+  left: 6vw;
+  right: 6vw;
+  bottom: 3svh;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 0 1.5rem;
+  margin: 0;
+  padding-top: clamp(0.5rem, 1.2svh, 1rem);
+  opacity: 0;
+  font-family: var(--font-mono);
+  will-change: transform, opacity;
+}
+
+.prt__summary-model {
+  font-size: clamp(0.95rem, 2svh, 1.25rem);
+  font-weight: 500;
+  letter-spacing: var(--track-caps);
+  color: var(--prt-reveal);
+}
+
+.prt__summary-label {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: var(--track-caps-wide);
+  color: color-mix(in srgb, var(--prt-reveal) 55%, transparent);
+}
+
+.prt__summary-value {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(0.95rem, 2svh, 1.2rem);
+  color: var(--prt-reveal);
+}
+
+/* Summary's rule sits ABOVE the line (it closes the table). */
+.prt__rule--summary {
+  bottom: auto;
+  top: 0;
+  background: color-mix(in srgb, var(--ink) 28%, transparent);
+}
+
+/* ---- responsive discipline ----------------------------------------------- */
+
+@media (max-width: 720px) {
+  .prt__title {
+    font-size: clamp(2.4rem, 14vw, 4rem);
+  }
+
+  .prt__picker {
+    top: auto;
+    bottom: 1.5svh;
+    right: 4vw;
+    padding: 0.6rem 0.8rem;
+    gap: 0.7rem;
+  }
+
+  .prt__table {
+    left: 4vw;
+    right: 4vw;
+    bottom: 16svh;
+  }
+
+  /* Drop the domain + index columns; keep name/value (source's mobile cut). */
+  .prt__row {
+    grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  }
+
+  .prt__index,
+  .prt__domain {
+    display: none;
+  }
+
+  .prt__summary {
+    left: 4vw;
+    right: 4vw;
+    bottom: 9svh;
+  }
+}
+
+@media (max-height: 720px) {
+  .prt__head {
+    top: 4svh;
+  }
+
+  .prt__row {
+    padding: 0.35rem 0;
+  }
+
+  .prt__table {
+    bottom: 12svh;
+  }
+}

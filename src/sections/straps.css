@@ -1,0 +1,230 @@
+/* Straps — "The Band" (BPM catalog card #3). Scoped styles, imported by
+   src/sections/straps.ts only (zero contention with style.css lanes).
+
+   Ground law: Straps holds the PORCELAIN stage (instrument.json Straps key
+   has no bgStage — LOOKBIBLE §1.5 #10), so type reads in ink and every
+   scrim below is a gradient from the live light ground token (§7.1 — never
+   a hard panel). Grey-line reveals use the light-ground colors (§7.3:
+   #BCBCBC → #323232), painted inline by the section module. */
+
+.strp {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (Mechanism lane pitfall #2; sticky is already the containing block). */
+  display: block;
+}
+
+/* ---- Legibility scrim (§7.1 — top-center copy over the 3D band) ---------- */
+
+.strp__scrim {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 62%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 38%, transparent) 45%,
+    transparent 100%
+  );
+}
+
+/* ---- Beat 1 · centered headline (source BRACELET composition) ------------- */
+
+.strp__head {
+  position: absolute;
+  inset-inline: 0;
+  top: 10%;
+  text-align: center;
+  pointer-events: none;
+  opacity: 1;
+  will-change: transform, opacity;
+}
+
+.strp__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: 1.2rem;
+  will-change: transform, opacity;
+}
+
+.strp__title {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+.strp__t-line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+}
+
+/* ghost layer: 31% of the ground's counter-color (§4 tone hierarchy) */
+.strp__t-ghost {
+  color: color-mix(in srgb, var(--ink) 31%, transparent);
+}
+
+.strp__t-solid {
+  color: var(--ink);
+}
+
+.strp__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.strp__body {
+  margin-top: 1.6rem;
+  display: grid;
+  gap: 0.3rem;
+  opacity: 0;
+}
+
+.strp__line {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.5;
+  color: #bcbcbc; /* reveal start grey — module drives to #323232 (§7.3) */
+}
+
+/* ---- Beat 2 · BPM catalog card #3 ---------------------------------------- */
+
+.strp__card {
+  position: absolute;
+  inset-inline: 0;
+  top: 12%;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* §4: BPM numerals in the display face at 300 — the oval bowls are the
+   point — tabular-nums because 96→142 animates under the scrub. */
+.strp__value {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--type-colossal);
+  line-height: 0.9;
+  letter-spacing: var(--track-colossal);
+  color: var(--ink);
+  margin-top: 0.4rem;
+}
+
+.strp__num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* shared denominator dims — the catalog's continuity device (55% tone) */
+.strp__denom {
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.strp__unit {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-top: 0.9rem;
+}
+
+.strp__caption {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-top: 0.5rem;
+}
+
+/* ---- Beat 3 · family callout rail (copy only — Ocean is on stage) --------- */
+
+.strp__family {
+  position: absolute;
+  inset-inline: 0;
+  top: 14%;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.strp__fam-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.4rem 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 2.6vw;
+  row-gap: 0.6rem;
+}
+
+.strp__fam-item {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--type-title);
+  letter-spacing: var(--track-title);
+  text-transform: uppercase;
+  /* Dim-label tier (§4: 55%), NOT ghost — the pending-family callouts are
+     the brief's copy and the rail crosses the band macro; §7.5 bans <40%
+     tone layers over the product. Text-shadow = the §7.4 ground-colored
+     scrim grammar, holds the caps legible where they cross the crest. */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  text-shadow:
+    0 0 18px var(--porcelain),
+    0 0 8px color-mix(in srgb, var(--porcelain) 90%, transparent),
+    0 1px 3px color-mix(in srgb, var(--porcelain) 80%, transparent);
+  will-change: transform, opacity;
+}
+
+/* the one on stage — full ink + the biosignal tick beneath */
+.strp__fam-item--live {
+  color: var(--ink);
+  position: relative;
+}
+
+.strp__fam-item--live::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.55em;
+  width: 1.2em;
+  height: 2px;
+  background: var(--biosignal);
+}
+
+.strp__family .strp__caption {
+  margin-top: 1.6rem;
+}
+
+/* ---- Small screens: keep the frame breathing ------------------------------ */
+
+@media (max-width: 720px) {
+  .strp__head {
+    top: 8%;
+    padding-inline: 6vw;
+  }
+
+  .strp__card {
+    top: 10%;
+    padding-inline: 6vw;
+  }
+
+  .strp__family {
+    top: 12%;
+    padding-inline: 6vw;
+  }
+
+  .strp__fam-list {
+    column-gap: 5vw;
+  }
+}

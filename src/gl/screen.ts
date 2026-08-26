@@ -27,8 +27,17 @@ import {
 /** Layer membership that admits a mesh into the selective bloom pass. */
 export const SCREEN_BLOOM_LAYER = 1;
 
-/** Contract default — luminous under ACES, above the bloom threshold. */
-export const SCREEN_EMISSIVE_INTENSITY = 2.8;
+/** Contract default — luminous under ACES, above the bloom threshold.
+ * Gate-2 Intro tune (dial hot-glow): 2.8 → 2.1. At 2.8 every white dial
+ * pixel carried 1.66 luminance over the bloom threshold and the hands +
+ * HEART RATE subdial washed into soft blobs on the most-judged frame; at
+ * 2.1 the over-threshold energy drops ~45% (halo tightens to a rim) while
+ * ACES still maps the whites ≈0.87 — the display stays luminous. Note:
+ * the gate named `src/dial/spec.ts GLASS.sheen/bloom`, but those baked
+ * sprite alphas are near-invisible at 1x (LOOKBIBLE §5 glass note) and
+ * are NOT the blob source — the post-bloom energy is; this constant is
+ * the declared contract knob (2–4 band) and stays in-band. */
+export const SCREEN_EMISSIVE_INTENSITY = 2.1;
 
 /** The one screen material — emissive slot filled via `setScreenTexture`. */
 export function createScreenMaterial(emissiveMap: Texture): MeshStandardMaterial {

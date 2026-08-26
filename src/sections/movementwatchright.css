@@ -1,0 +1,285 @@
+/* MovementWatchRight — the annotated instrument plate.
+   Scoped styles, imported by src/sections/movementwatchright.ts only.
+
+   Ground law: the keyframe driver holds porcelain at this section's center
+   (MovementWatchRight key: rot 200, no bgStage). Scrim + hairlines ride
+   the LIVE tokens (LOOKBIBLE §7.1); reveal colors are the light-ground law
+   pair (#BCBCBC → #323232, §7.3) applied inline by the module. The hover
+   highlight runs the recon Details .8 s grammar as CSS transitions
+   (cubic-bezier(.65,0,.35,1) ≈ power3.inOut). */
+
+.mwr {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin. */
+  overflow: hidden;
+}
+
+/* ---- Radiating hairlines (source-echo: the faint diagonals behind the
+   watch — decor only; the LOAD-BEARING lines live in the SVG overlay) ---- */
+
+.mwr__rays {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.mwr__ray {
+  position: absolute;
+  left: 24%;
+  right: -12%;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--ink) 7%, transparent) 30%,
+    color-mix(in srgb, var(--ink) 7%, transparent) 78%,
+    transparent 100%
+  );
+  transform-origin: 78% 50%;
+}
+
+.mwr__ray--a {
+  transform: rotate(-27deg);
+}
+
+.mwr__ray--b {
+  transform: rotate(9deg);
+}
+
+.mwr__ray--c {
+  transform: rotate(41deg);
+}
+
+/* ---- Legibility scrim (§7.1 — gradient from the live ground token) ------- */
+
+.mwr__scrim {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 52%;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    97deg,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 28%, transparent) 55%,
+    transparent 100%
+  );
+}
+
+/* ---- Copy column (eyebrow · ghost/solid headline · grey reveals) --------- */
+
+.mwr__copy {
+  position: absolute;
+  left: 7vw;
+  top: 13svh;
+  width: min(30vw, 34rem);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.mwr__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: 1.4rem;
+  will-change: transform, opacity;
+}
+
+.mwr__head {
+  /* max-content: the line masks size to their words — the solid line
+     ("INSTRUMENT") outgrows the copy column and may kiss the case during
+     transit (source Timeless grammar: solid ink over the watch is legal;
+     only GHOST layers are banned there, §7.5). Never clip a headline. */
+  width: max-content;
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 0.98;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  margin: 0 0 1.6rem;
+}
+
+.mwr__headline {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+  white-space: nowrap;
+}
+
+/* hierarchy by tone, not weight (§4): ghost 30%, solid full ink */
+.mwr__headline--ghost {
+  color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+
+/* staggered second line indent ≈ .55× cap-height of the line above (§4) */
+.mwr__headline--solid {
+  color: var(--ink);
+  margin-left: 0.52em;
+}
+
+.mwr__char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* reveal lines start at the light-ground FROM grey; the module drives the
+   color (scrub:2 grammar, ≈2 s lag live / instant in eval) */
+.mwr__sub {
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.55;
+  max-width: 34ch;
+  color: #bcbcbc;
+}
+
+/* ---- Detail rail (right-aligned rows — the hover-swap graft) ------------- */
+
+.mwr__rail {
+  position: absolute;
+  left: 7vw;
+  top: 46svh;
+  width: min(26vw, 24rem);
+  display: grid;
+  gap: 2.6rem;
+  justify-items: end;
+}
+
+.mwr__row {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0.35rem 0;
+  margin: 0;
+  text-align: right;
+  cursor: pointer;
+  pointer-events: none; /* module arms rows only while revealed */
+  will-change: transform, opacity;
+}
+
+.mwr__row-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500; /* §4: labels 500 */
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+  transition: color 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.mwr__row-spec {
+  display: block;
+  margin-top: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 38%, transparent);
+  transition: color 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.mwr__row.is-active .mwr__row-label,
+.mwr__row:focus-visible .mwr__row-label {
+  color: var(--ink);
+}
+
+.mwr__row.is-active .mwr__row-spec,
+.mwr__row:focus-visible .mwr__row-spec {
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.mwr__row:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--ink) 40%, transparent);
+  outline-offset: 6px;
+}
+
+/* ---- Projected annotations: hairline overlay + tracked dots -------------- */
+
+.mwr__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.mwr__line {
+  stroke: var(--ink);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.mwr__dot {
+  position: absolute;
+  top: -5px; /* transform translate() carries the projected px */
+  left: -5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  background: color-mix(in srgb, var(--porcelain) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: background-color 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform, opacity;
+}
+
+/* active: the dot fills and a calm ring blooms — ink only (red discipline:
+   biosignal stays reserved for HOLD/ECG; the DIAL answers in color) */
+.mwr__dot::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+    transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.mwr__dot.is-active {
+  background: var(--ink);
+}
+
+.mwr__dot.is-active::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---- Small screens: rail below the copy, plate breathes ------------------ */
+
+@media (max-width: 720px) {
+  .mwr__copy {
+    width: 72vw;
+    top: 9svh;
+  }
+
+  .mwr__head {
+    font-size: var(--type-headline);
+  }
+
+  .mwr__rail {
+    top: auto;
+    bottom: 9svh;
+    left: 6vw;
+    width: 60vw;
+    gap: 1.4rem;
+    justify-items: start;
+  }
+
+  .mwr__row {
+    text-align: left;
+  }
+
+  .mwr__rays {
+    display: none;
+  }
+}

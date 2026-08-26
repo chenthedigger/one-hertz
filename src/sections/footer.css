@@ -1,0 +1,219 @@
+/* Footer — the OUTRO end slate. Scoped styles, imported by
+   src/sections/footer.ts only (zero contention with style.css lanes).
+
+   Ground law: the Footer holds the PORCELAIN stage (instrument.json Footer
+   key has no bgStage — LOOKBIBLE §1.5 #15, the loop-closing frame), so type
+   reads in ink, the scrim is a gradient from the light ground token (§7.1 —
+   never a hard panel), and grey-line reveals use the light-ground colors
+   (#BCBCBC → #323232, §7.3), painted inline by the section module.
+
+   The credits slate is a DESIGNED film-credit card, not fine print: caps
+   eyebrow → Clash 300 wordmark → biosignal pulse rule → two-tone role/value
+   rows on a shared center axis → fin line. Tone hierarchy per §4 (dim
+   labels 55%; nothing under 40% crosses the product — §7.5). */
+
+.outro {
+  /* NOTE: never set `position` here — .pin's position:sticky IS the pin
+     (Mechanism lane pitfall; sticky is already the containing block). */
+  display: block;
+}
+
+/* ---- Legibility scrim (§7.1 — slate copy over the 3D lineup below) ------- */
+
+.outro__scrim {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 60%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--porcelain) 55%, transparent) 0%,
+    color-mix(in srgb, var(--porcelain) 36%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+/* ---- The credits slate ---------------------------------------------------- */
+
+.outro__slate {
+  position: absolute;
+  inset-inline: 0;
+  top: 6.5%;
+  margin-inline: auto;
+  max-width: 46rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.outro__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  margin-bottom: 1.1rem;
+  will-change: transform, opacity;
+}
+
+.outro__wordmark {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: 300; /* §4: display = 300, 600 banned */
+  line-height: 1;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.outro__wm-line {
+  display: block;
+  overflow: hidden; /* mask for the char x-slides */
+}
+
+.outro__wm-char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* The pulse rule — one beat of the biosignal between title and credits
+   (red discipline: an ECG echo, not decoration on every element). */
+.outro__pulse {
+  width: 2.6rem;
+  height: 2px;
+  margin: 1.5rem auto 1.6rem;
+  background: var(--biosignal);
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* Two-tone film-credit rows: dim mono role (right-aligned) meets ink value
+   (left-aligned) on a shared center gutter — the classic end-crawl axis. */
+.outro__credits {
+  margin: 0;
+  display: grid;
+  row-gap: 0.55rem;
+}
+
+.outro__row {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  column-gap: 1.4rem;
+  align-items: baseline;
+  will-change: transform, opacity;
+}
+
+.outro__role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  text-align: right;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.outro__value {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--type-micro);
+  line-height: 1.45;
+  text-align: left;
+  color: #bcbcbc; /* reveal start grey — module drives to #323232 (§7.3) */
+}
+
+.outro__fin {
+  margin-top: 1.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: #bcbcbc; /* rides the last reveal window */
+  will-change: transform, opacity;
+}
+
+/* ---- Model labels under the four watches ---------------------------------- */
+
+/* 75vw with 4 equal columns puts the column centers exactly under the four
+   watch centers (camera fit keeps the row at 68% frame width — footer.ts:
+   width = 4·spacing/visibleWidth = 4·1.85/9.85 ≈ 0.75). */
+.outro__models {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 4.5%;
+  margin-inline: auto;
+  width: 75vw;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.outro__model-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.outro__model {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: var(--type-title);
+  letter-spacing: var(--track-title);
+  text-transform: uppercase;
+  text-align: center;
+  /* Dim-label tier (§4: 55%) + the §7.4 ground-colored text-shadow scrim —
+     the labels sit under the watch row and must read over titanium. */
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  text-shadow:
+    0 0 18px var(--porcelain),
+    0 0 8px color-mix(in srgb, var(--porcelain) 90%, transparent),
+    0 1px 3px color-mix(in srgb, var(--porcelain) 80%, transparent);
+  will-change: transform, opacity;
+}
+
+/* the one on stage — full ink + the biosignal tick (Straps rail parity) */
+.outro__model--live {
+  color: var(--ink);
+  position: relative;
+}
+
+.outro__model--live::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.55em;
+  width: 1.2em;
+  height: 2px;
+  background: var(--biosignal);
+}
+
+/* ---- Small screens: keep the slate breathing ------------------------------ */
+
+@media (max-width: 720px) {
+  .outro__slate {
+    top: 5%;
+    padding-inline: 6vw;
+  }
+
+  .outro__row {
+    grid-template-columns: 1fr;
+    row-gap: 0.1rem;
+  }
+
+  .outro__role,
+  .outro__value {
+    text-align: center;
+  }
+
+  .outro__models {
+    width: 92vw;
+  }
+
+  .outro__model {
+    font-size: 0.8rem;
+    letter-spacing: var(--track-caps);
+  }
+}
