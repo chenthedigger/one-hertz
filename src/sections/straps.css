@@ -17,13 +17,17 @@
 
 /* Gate-3 tune 3: the scrim holds ≥50% porcelain through the headline +
    body block's depth so the ghost line stays legible where the band
-   crosses behind it — still a gradient, never a hard panel (§7.1). */
+   crosses behind it — still a gradient, never a hard panel (§7.1).
+   P6 gate fix: the section timeline fades it out at .68–.74 (straps.ts),
+   after the last copy it protects departs — so the case re-entering from
+   ~.9 never reads half-faded behind it at the Straps→Images hand-off. */
 .strp__scrim {
   position: absolute;
   inset-inline: 0;
   top: 0;
   height: 62%;
   pointer-events: none;
+  will-change: opacity;
   background: linear-gradient(
     to bottom,
     color-mix(in srgb, var(--porcelain) 60%, transparent) 0%,

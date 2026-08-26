@@ -1,0 +1,254 @@
+{
+  "round": "p6-tune",
+  "rubricVersion": "1.1.0",
+  "target": "http://localhost:4573",
+  "ranAt": "2026-08-26T21:41:51.544Z",
+  "items": [
+    {
+      "itemId": "sections-14-order",
+      "pass": true,
+      "evidence": "all 14 canonical roles present once, in source order — loader via pre-scroll phase (boot HTML ships #loader; behavior gated by loader-honesty); 14 role-carrying sections of 15",
+      "area": "sections",
+      "severity": "CRITICAL",
+      "skipped": false
+    },
+    {
+      "itemId": "cursor-text-states",
+      "pass": true,
+      "evidence": "stage hover label=\"HOLD TO EXPLORE\"; outro hover label=\"SELECT MODEL\"; picker hover label=\"SWAP\" — 3/3 distinct context labels",
+      "area": "cursor",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "cursor-icon-states",
+      "pass": true,
+      "evidence": "SET_CURSOR_ICON round-trip reflected 5/5: [finish-swatch,cross,arrow-left,arrow-right,select]",
+      "area": "cursor",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "longpress-activation-500ms",
+      "pass": true,
+      "evidence": "300ms press active=false, held@450ms=false, held@570ms=true",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "longpress-ramp-reverse",
+      "pass": true,
+      "evidence": "intensity@0.5/1/2.1s=[0.00,0.03,0.99], post-release=0.00",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "longpress-lenis-stop",
+      "pass": true,
+      "evidence": "enabled during=false/after=true, wheel moved 0px during hold, LONGPRESS_TOGGLE events=94",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "longpress-zoom-parallax",
+      "pass": true,
+      "evidence": "hold dolly deltas {\"Timeless\":-1.34436,\"VerticalText\":-0.88537}, parallaxGain=1 (per-section multiplier proportionality needs constants exposure — partial check)",
+      "area": "longpress",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-proxy-hitboxes",
+      "pass": true,
+      "evidence": "10 parts, 0 without proxy hitbox, projected-center clicks selected 10/10",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-lookat-lerp",
+      "pass": true,
+      "evidence": "lookAt approach over 10 frames: total=2.471, monotonic=true, maxFrameJump=27% of distance",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-idle-rotation",
+      "pass": true,
+      "evidence": "selectedRotationY delta over 1s = 0.1519 rad (target 0.15±10%)",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-anchored-overlay",
+      "pass": true,
+      "evidence": "overlay anchor vs selectedScreenPos across 3 frames: worst 0.1px (gate 8px)",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-close-prevnext",
+      "pass": true,
+      "evidence": "next: part_crystal -> part_screen (in-order=true); close -> selected=null",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-xplod-all",
+      "pass": true,
+      "evidence": "mode==='all' at p=0.5; all parts offset from rest=true",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-drag-gating",
+      "pass": true,
+      "evidence": "drag with selection Δrot=0.00000 (want 0), after close Δrot=1.80000 (want >0)",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "explode-tap-tolerance-15px",
+      "pass": true,
+      "evidence": "10px-move tap selected=part_crystal; 20px-move gesture selected=null (want null)",
+      "area": "explode",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "colorway-5param-1s-tween",
+      "pass": true,
+      "evidence": "5/5 params changed over swap; mid-tween value distinct from both endpoints=true (graded, not instant)",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "colorway-dual-placement",
+      "pass": true,
+      "evidence": "3 picker roots in sections [Colors, Parts, Footer] (need parts-table + outro)",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "colorway-config-consumers",
+      "pass": true,
+      "evidence": "active=natural-anchor-blue, materials.preset=natural-anchor-blue, dial.accent=#ff2d55, --accent='#ff2d55'",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "colorway-gallery-resrc",
+      "pass": true,
+      "evidence": "5 pictures: 5 carry finish token 'natural-anchor-blue', 5 keep min-width:1024 art-direction source",
+      "area": "colorway",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "outro-4watch-lineup",
+      "pass": true,
+      "evidence": "outro.instances=4 (want 4); stagger=0.1s ok (staggered-rise feel is judge-verified)",
+      "area": "outro",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "outro-swap-restart-loop",
+      "pass": true,
+      "evidence": "post-swap scrollY=0 (want 0, immediate), config.active=natural-neon-green (want natural-neon-green)",
+      "area": "outro",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "scrub-dual-speeds",
+      "pass": true,
+      "evidence": "15/15 sections declare both scrub channels (measured 2x catch-up ratio: TODO — needs per-channel progress in state())",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "dual-channel-timelines",
+      "pass": true,
+      "evidence": "15 webgl sections expose extended bounds; 0 violate webglStart<=domStart<=domEnd<=webglEnd",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "lifecycle-events",
+      "pass": true,
+      "evidence": "55 lifecycle events recorded over a full pass (per-section exactly-once ordering: refine once payloads carry section ids)",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "sticky-pinning-vh-budget",
+      "pass": true,
+      "evidence": "11 pinned tracks, 0 non-sticky pins [], 0 tracks off vh-budget ±5% [] (iOS jitter is judge-verified)",
+      "area": "scroll",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "loader-honesty",
+      "pass": true,
+      "evidence": "warm-cache loader ran 3.71s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure",
+      "area": "loader",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "mobile-svh-dvh",
+      "pass": true,
+      "evidence": "svh/dvh rules=52, bare-vh height rules=0, touchResizeFilter=true, manifest identical mobile/desktop=true",
+      "area": "mobile",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "mobile-touch-hold",
+      "pass": true,
+      "evidence": "touch-hold 700ms active=true, scroll moved 0px during hold, released active=false",
+      "area": "mobile",
+      "severity": "HIGH",
+      "skipped": false
+    },
+    {
+      "itemId": "deeplink-params",
+      "pass": true,
+      "evidence": "4/4 params work — ?scroll: activeSection=Timeless (want Timeless); ?autoscroll: y 2099->3255 advancing=true; ?materials: flags.materialsDebug=true; ?eval=1: flags.eval=true",
+      "area": "debug",
+      "severity": "HIGH",
+      "skipped": false
+    }
+  ],
+  "judgeVerifiedItems": [],
+  "summary": {
+    "total": 29,
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "gate": {
+      "criticals": [],
+      "criticalCount": 0,
+      "passRate": 1,
+      "passRateMin": 0.9,
+      "pass": true
+    }
+  }
+}

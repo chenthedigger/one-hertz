@@ -341,6 +341,19 @@ export class StrapsSection extends SectionBase {
       tl.to(card, { y: -36, duration: 0.06, ease: "power2.in" }, 0.62);
     }
 
+    // Scrim retirement (P6 gate fix — the Straps→Images "semi-transparent
+    // case" artifact): the top legibility scrim's job ends when the card
+    // departs — beat 3's family rail lives bottom-left on bare porcelain.
+    // Held at full strength through the pin, its 50–60% porcelain gradient
+    // sat over the base-rig case re-entering top-center from ~.9, so any
+    // paused frame in the hand-off showed the case half-faded. Fade it out
+    // with the last copy it protects: gone by .74, a .16 margin before the
+    // case re-entry (scrub restores it symmetrically on the way back up).
+    const scrim = pin.querySelector<HTMLElement>(".strp__scrim");
+    if (scrim) {
+      tl.to(scrim, { opacity: 0, duration: 0.06, ease: "none" }, 0.68);
+    }
+
     // Beat 3 · family callout rail (.67–.87): staggered rises timed to be
     // fully SETTLED at the .75 catalog frame (last item lands .70+.05).
     // Departure finishes by ≤.875 (gate-3 tune 1): the base-rig watch case

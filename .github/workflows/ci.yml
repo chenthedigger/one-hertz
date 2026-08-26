@@ -64,7 +64,7 @@ jobs:
           SMOKE=0
           node evals/engine-smoke.mjs || SMOKE=$?
           if [ "$SMOKE" = "78" ]; then
-            echo "::notice title=eval-lite skipped::No WebGL on this runner — structural smoke skipped (typecheck+build still gate)."
+            echo "::notice title=eval-lite skipped::Runner cannot execute the structural smoke fully (no WebGL, or Lenis autoscroll no-ops under software rAF) — skipped checks noticed above; typecheck+build still gate."
             SMOKE=0
           fi
           kill $PREVIEW_PID || true

@@ -1,9 +1,13 @@
 import { chromium } from 'playwright-core';
 import { PNG } from 'pngjs';
 import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export const SITE = 'https://thewatch.60fps.fr';
-export const OUT = '/Users/simon/engineer/one-hertz/evals/reference/source';
+// evals/reference/source — derived from this file's location so the capture
+// scripts run from any clone path.
+export const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export const VIEWPORTS = {
   desktop: { viewport: { width: 1600, height: 900 }, deviceScaleFactor: 2 },

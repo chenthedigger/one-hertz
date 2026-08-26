@@ -308,7 +308,19 @@ export async function waitReady(page: Page, timeoutMs = 60_000): Promise<void> {
 export async function openTarget(page: Page, base: string, extraParams = ""): Promise<void> {
   const sep = base.includes("?") ? "&" : "?";
   const url = `${base}${sep}eval=1${extraParams ? "&" + extraParams : ""}`;
-  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  try {
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  } catch (error: unknown) {
+    // A stranger's first run dies here when nothing is serving the target —
+    // that deserves one actionable line, not a playwright stack trace.
+    if (String(error).includes("ERR_CONNECTION_REFUSED")) {
+      log(`\nERROR: nothing is serving ${base}`);
+      log("start the preview server: npm run preview   (then re-run this command)");
+      log("or point at a live target:  node evals/<script>.ts https://<url>\n");
+      process.exit(1);
+    }
+    throw error;
+  }
   await waitReady(page);
 }
 

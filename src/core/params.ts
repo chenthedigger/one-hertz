@@ -2,7 +2,12 @@
  * Debug / deep-link query params — parsed ONCE at boot, exposed as a frozen
  * typed object (PLAN §1 debug params + §6 eval transport):
  *
- *   ?scroll=<sectionName>          jump to a section after load
+ *   ?scroll=<sectionName>[:p]      jump to a section after load. Lands at
+ *                                  localProgress p (0..1) over the RAW
+ *                                  bounds; default 0.5 — the advertised
+ *                                  deep link should land on a section's
+ *                                  money moment, not its entry beat
+ *                                  (P6 gate tune).
  *   ?autoscroll                    scripted full-page scroll after load
  *   ?autoscrollspeed=<px/s>        override autoscroll velocity
  *   ?materials                     open the materials inspector stub
@@ -29,6 +34,9 @@ import { isSectionName, type SectionName } from "./constants";
 export interface EngineParams {
   /** Deep link: section to jump to once the loader resolves. */
   readonly scroll: SectionName | null;
+  /** Deep-link landing spot, localProgress 0..1 over the RAW bounds
+   *  (`?scroll=Nocturne:0.75`; default 0.5 = the section's settled beat). */
+  readonly scrollProgress: number;
   /** Scripted fixed-velocity scroll after load. */
   readonly autoscroll: boolean;
   /** Autoscroll velocity override, px/s (null = full page in ~60s). */
@@ -54,8 +62,19 @@ function parse(search: string): EngineParams {
   const speedRaw = q.get("autoscrollspeed");
   const speed = speedRaw !== null ? Number(speedRaw) : NaN;
 
+  // ?scroll=<name>[:p] — optional landing progress after a colon. Malformed
+  // p falls back to the 0.5 default; the name half still resolves normally.
+  const scrollRaw = q.get("scroll");
+  const colon = scrollRaw?.indexOf(":") ?? -1;
+  const scrollName = colon >= 0 ? (scrollRaw?.slice(0, colon) ?? null) : scrollRaw;
+  const progressRaw = colon >= 0 ? Number(scrollRaw?.slice(colon + 1)) : NaN;
+  const scrollProgress = Number.isFinite(progressRaw)
+    ? Math.min(1, Math.max(0, progressRaw))
+    : 0.5;
+
   return Object.freeze({
-    scroll: asSection(q.get("scroll")),
+    scroll: asSection(scrollName),
+    scrollProgress,
     autoscroll: q.has("autoscroll"),
     autoscrollSpeed: Number.isFinite(speed) && speed > 0 ? speed : null,
     materials: q.has("materials"),

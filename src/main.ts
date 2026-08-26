@@ -11,7 +11,7 @@
 import "./style.css";
 import { SECTION_ORDER, type SectionName } from "./core/constants";
 import { getClock, setClock } from "./core/clock";
-import { extendState, installDebugApi } from "./core/debug";
+import { extendState, installDebugApi, registerResidency } from "./core/debug";
 import { isEvalMode } from "./core/determinism";
 import { bus, EngineEvent } from "./core/events";
 import { installMaterialsInspector } from "./core/inspector";
@@ -174,20 +174,37 @@ function boot(): void {
     lightDriver.setLook(look);
     colorway?.setLook(look);
   };
-  void watchReady.then(async () => {
-    try {
-      const look = await lookPromise;
-      currentLookName = look.name ?? currentLookName;
-      await applyLookToStage(look);
-    } catch (error: unknown) {
-      console.warn(`look: "${String(params.look)}" failed (${String(error)}) — DEFAULT_LOOK applied`);
-      currentLookName = "default";
-      await applyLookToStage(DEFAULT_LOOK);
-    }
-    // P5 perf-hunt: warm the settled scene at idle (programs + texture
-    // uploads) so nothing pays a first-draw compile burst mid-scroll.
-    stage.requestWarm();
-  });
+  // P6 gate fix (Nocturne deep-jump gray knot on prod): the hero pipeline
+  // (GLB adopt + look apply) was the ONE deferred load with no residency
+  // provider, so `state().flags.assetsReady` could read true while the watch
+  // was still in flight over a slow uplink — under `?eval=1` the loader
+  // element is removed at construction, so the harness's waitReady() had
+  // nothing left to hold it, and a gotoSection deep-jump captured the
+  // placeholder torus knot. Provider law: settles on success, failure, or
+  // give-up (watchReady catches to null; the .finally below never wedges).
+  let heroSettled = false;
+  registerResidency(() => heroSettled);
+  void watchReady
+    .then(async () => {
+      try {
+        const look = await lookPromise;
+        currentLookName = look.name ?? currentLookName;
+        await applyLookToStage(look);
+      } catch (error: unknown) {
+        console.warn(`look: "${String(params.look)}" failed (${String(error)}) — DEFAULT_LOOK applied`);
+        currentLookName = "default";
+        await applyLookToStage(DEFAULT_LOOK);
+      }
+      // P5 perf-hunt: warm the settled scene at idle (programs + texture
+      // uploads) so nothing pays a first-draw compile burst mid-scroll.
+      // Synchronous pendingWarms++ inside requestWarm means the stage's
+      // warmSettled provider takes over BEFORE heroSettled flips — no gap
+      // where assetsReady reads true mid-pipeline.
+      stage.requestWarm();
+    })
+    .finally(() => {
+      heroSettled = true;
+    });
 
   // -- Scroll engine + sections ---------------------------------------------
   const engine = new ScrollEngine();
@@ -383,12 +400,14 @@ function boot(): void {
     store.uiFlags.loaderDone = true;
     vital.reveal();
     if (params.scroll !== null && params.solo === null) {
-      // Land the section's TRACK TOP, not rawStart: for unpinned sections
-      // rawStart is one viewport early (the enter edge), which leaves the
-      // center line — and state().activeSection — in the previous section
-      // (rubric deeplink-params wants the linked section active).
-      const target = registry.manifest().find((s) => s.name === params.scroll);
-      const y = target ? target.top : 0;
+      // Land INSIDE the beat, not on the enter edge: localProgress over the
+      // RAW bounds (default 0.5, `?scroll=<name>:<p>` overrides). The old
+      // track-top landing put the advertised `?scroll=Nocturne` link on the
+      // section's weakest entry frame (flat mid-grey, watch side-on) while
+      // the money moment sits half a pin deeper (P6 gate tune). Mid-track
+      // also keeps the center line — and state().activeSection — in the
+      // linked section (rubric deeplink-params).
+      const y = registry.scrollPositionFor(params.scroll, params.scrollProgress);
       engine.scrollTo(y, true);
       if (isEvalMode) engine.settleSync(y);
     }
