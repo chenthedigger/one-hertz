@@ -12,6 +12,7 @@ import { isSectionName, type SectionName } from "./constants";
 import { freezeClock as freezeClockScalar, getClock } from "./clock";
 import { isEvalMode, seedRandom } from "./determinism";
 import { bus, type EventBus } from "./events";
+import { params } from "./params";
 import type { SectionManifestEntry, PinState, SectionRegistry } from "./registry";
 import type { ScrollEngine } from "./scroll";
 import type { PartialState, StateStore, UiFlags } from "./state";
@@ -305,6 +306,18 @@ export interface EngineStateSnapshot {
   explode: string | ExplodeStateSnapshot;
   postStack: string;
   uiFlags: UiFlags;
+  /**
+   * Harness flag block (rubric debug_api: state() "…, flags"). ADDITIVE —
+   * `uiFlags` above stays the P1 store mirror; this block is the rubric's
+   * named read surface for boot params + engine capabilities:
+   * mobile-svh-dvh reads `touchResizeFilter`, deeplink-params reads
+   * `eval` / `materialsDebug`.
+   */
+  flags: {
+    eval: boolean;
+    materialsDebug: boolean;
+    touchResizeFilter: boolean;
+  };
   scroll: number;
   clock: number;
   qualityTier: number;
@@ -428,6 +441,11 @@ export function installDebugApi(
         explode: contract.explode,
         postStack: contract.postStack,
         uiFlags: { ...store.uiFlags },
+        flags: {
+          eval: isEvalMode,
+          materialsDebug: params.materials,
+          touchResizeFilter: engine.touchResizeFilterArmed,
+        },
         scroll: engine.lenis.scroll,
         clock: getClock(),
         qualityTier: stage.tier,

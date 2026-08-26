@@ -36,7 +36,11 @@
 
 ## Current state (2026-08-26)
 
-- **P2 COMPLETE: 15/15 sections live on prod** (v5c1c1554, one-hertz.ubonranto.workers.dev) · internals 7/7 · gate verdicts: zero REBUILD across 4 waves · gate-3/4 tune lists (28 items) frozen in docs/p2/gate-{3,4}.json, applied in P3 · next: P3 interactions (explode, SWAP+outro restart, living BPM, loader match-cut).
+- **P3 COMPLETE: all 5 interaction mechanics live on prod** (vc66bb51f, one-hertz.ubonranto.workers.dev) · rubric structural checklist **28/29 PASS, 0 FAIL, gate PASS** (criticals=0, passRate 0.966; the 1 SKIP = longpress-lenis-stop, schema-v1 scroll-scalar constraint — P5 council) · evals/reference/ours refreshed (150+16 frames, zero skips) · all six smokes + zero console errors both viewports · lane notes docs/p3/{tune-w3w4,explode,swap,vital,integrate}.md · next: P4 (asset weight ~13MB first-load is lever #1, gallery Cycles masters, copy review) + P5 council items listed in docs/p3/integrate.md.
+
+## Prior state (P2)
+
+- **P2 COMPLETE: 15/15 sections live on prod** (v5c1c1554) · internals 7/7 · gate verdicts: zero REBUILD across 4 waves · gate-3/4 tune lists (28 items) frozen in docs/p2/gate-{3,4}.json, applied in P3.
 
 ## Prior state
 

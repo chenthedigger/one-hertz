@@ -16,6 +16,15 @@ export enum EngineEvent {
   LongpressToggle = "LONGPRESS_TOGGLE",
   HoverPosition = "HOVER_POSITION",
   UpdateRotations = "UPDATE_ROTATIONS",
+  /* Section lifecycle crossings (ADDITIVE — P3 integrate lane). The
+   * registry is the one lifecycle OWNER (registry.onLifecycle stays the
+   * engine-internal channel); main.ts bridges every crossing onto the bus
+   * under these names because the rubric's `lifecycle-events` item
+   * subscribes to them via `api.bus.on("enter", …)` (evals/assert.ts). */
+  SectionEnter = "enter",
+  SectionLeave = "leave",
+  SectionEnterCenter = "enterCenter",
+  SectionLeaveCenter = "leaveCenter",
 }
 
 /**
@@ -66,6 +75,12 @@ export interface EnginePayloads {
   [EngineEvent.HoverPosition]: { x: number; y: number; part: string };
   /** Rotation-speed multiplier for idle/mechanism spins (1 = base rate). */
   [EngineEvent.UpdateRotations]: { speed: number };
+  /** Lifecycle crossings (bridged from the registry — one payload shape
+   *  for all four; direction 1 = scrolling down, -1 = up). */
+  [EngineEvent.SectionEnter]: { section: string; direction: 1 | -1 };
+  [EngineEvent.SectionLeave]: { section: string; direction: 1 | -1 };
+  [EngineEvent.SectionEnterCenter]: { section: string; direction: 1 | -1 };
+  [EngineEvent.SectionLeaveCenter]: { section: string; direction: 1 | -1 };
 }
 
 type Handler<E extends EngineEvent> = (payload: EnginePayloads[E]) => void;

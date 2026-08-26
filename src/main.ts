@@ -36,6 +36,14 @@ import { CameraRig } from "./webgl/cameraRig";
 import { Stage } from "./webgl/stage";
 import { loadWatch, retargetScreenTexture } from "./webgl/watch";
 
+/** Registry lifecycle type → its bus event name (main.ts bridge below). */
+const LIFECYCLE_BUS_EVENT = {
+  enter: EngineEvent.SectionEnter,
+  leave: EngineEvent.SectionLeave,
+  enterCenter: EngineEvent.SectionEnterCenter,
+  leaveCenter: EngineEvent.SectionLeaveCenter,
+} as const;
+
 function boot(): void {
   // Deep links + scrollytelling own the scroll position — the browser's
   // automatic restoration would fight Lenis (and `?scroll=`) after reload.
@@ -189,6 +197,10 @@ function boot(): void {
   // The Nocturne LED gate (P3 explode lane: sensor led_green pulses at real
   // 1 Hz while Nocturne holds the center) rides the same lifecycle channel.
   registry.onLifecycle((e) => {
+    // Bridge every crossing onto the typed bus (rubric lifecycle-events:
+    // the harness subscribes via api.bus.on("enter"/"leave"/…)). The
+    // registry stays the one lifecycle OWNER; the bus is a read fan-out.
+    bus.emit(LIFECYCLE_BUS_EVENT[e.type], { section: e.section, direction: e.direction });
     if (e.section === "Nocturne" && (e.type === "enterCenter" || e.type === "leaveCenter")) {
       setNocturneLedGate(e.type === "enterCenter");
     }
@@ -300,7 +312,14 @@ function boot(): void {
     store.uiFlags.loaderDone = true;
     vital.reveal();
     if (params.scroll !== null && params.solo === null) {
-      api.gotoSection(params.scroll, 0);
+      // Land the section's TRACK TOP, not rawStart: for unpinned sections
+      // rawStart is one viewport early (the enter edge), which leaves the
+      // center line — and state().activeSection — in the previous section
+      // (rubric deeplink-params wants the linked section active).
+      const target = registry.manifest().find((s) => s.name === params.scroll);
+      const y = target ? target.top : 0;
+      engine.scrollTo(y, true);
+      if (isEvalMode) engine.settleSync(y);
     }
     if (params.autoscroll) engine.startAutoscroll(params.autoscrollSpeed);
     if (params.materials) installMaterialsInspector(stage);

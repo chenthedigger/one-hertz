@@ -41,9 +41,9 @@
 .hnd__reg-v {
   position: absolute;
   left: 50%;
-  top: 4vh;
+  top: 4svh;
   width: 1px;
-  height: 52vh;
+  height: 52svh; /* stable unit — bare vh breathes under the iOS URL bar */
   background: color-mix(in srgb, var(--ink) 14%, transparent);
   transform-origin: top center;
   will-change: transform;

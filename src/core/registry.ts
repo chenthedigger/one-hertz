@@ -30,7 +30,7 @@
  * bounds — `scrollPositionFor` inverts exactly what `progressDom` measures.
  */
 
-import { CENTER_LINE_VH, SECTION_ORDER, type SectionName } from "./constants";
+import { CENTER_LINE_VH, SECTION_ORDER, SECTION_SOURCE_ROLE, type SectionName } from "./constants";
 import type { ScrollDirection, SectionBase } from "./section";
 import {
   contractConflicts,
@@ -49,6 +49,13 @@ export interface LifecycleEvent {
 
 export interface SectionManifestEntry {
   name: SectionName;
+  /** Source-site role this section recreates (rubric sections-14-order);
+   *  null = additive beat with no source counterpart. */
+  sourceRole: string | null;
+  /** Scrub channels this section is driven by (rubric scrub-dual-speeds).
+   *  Every section here runs both: raw DOM progress + the offset-extended
+   *  lerped WebGL master (progressDom / progressWebgl below). */
+  scrubChannels: readonly ["dom", "webgl"];
   vhBudget: number;
   pinned: boolean;
   startOffset: number;
@@ -238,6 +245,8 @@ export class SectionRegistry {
   manifest(): SectionManifestEntry[] {
     return this.measured.map((m) => ({
       name: m.section.name,
+      sourceRole: SECTION_SOURCE_ROLE[m.section.name],
+      scrubChannels: ["dom", "webgl"] as const,
       vhBudget: m.section.vhBudget,
       pinned: m.section.pinned,
       startOffset: m.section.startOffset,

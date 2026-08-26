@@ -1,21 +1,21 @@
 {
-  "round": "r0",
+  "round": "p3-integrate",
   "rubricVersion": "1.0.0",
-  "target": "http://localhost:4620",
-  "ranAt": "2026-08-26T12:30:10.002Z",
+  "target": "http://localhost:4600",
+  "ranAt": "2026-08-26T13:22:04.956Z",
   "items": [
     {
       "itemId": "sections-14-order",
-      "pass": false,
-      "evidence": "SKIP — sections[].sourceRole not exposed (manifest still Spike-B shape)",
+      "pass": true,
+      "evidence": "all 14 canonical roles present once, in source order — loader via pre-scroll phase (boot HTML ships #loader; behavior gated by loader-honesty); 14 role-carrying sections of 15",
       "area": "sections",
       "severity": "CRITICAL",
-      "skipped": true
+      "skipped": false
     },
     {
       "itemId": "cursor-text-states",
-      "pass": false,
-      "evidence": "stage hover label=null; outro hover label=\"SELECT MODEL\"; picker hover label=\"SWAP\" — 2/3 distinct context labels",
+      "pass": true,
+      "evidence": "stage hover label=\"HOLD TO EXPLORE\"; outro hover label=\"SELECT MODEL\"; picker hover label=\"SWAP\" — 3/3 distinct context labels",
       "area": "cursor",
       "severity": "HIGH",
       "skipped": false
@@ -55,7 +55,7 @@
     {
       "itemId": "longpress-zoom-parallax",
       "pass": true,
-      "evidence": "hold dolly deltas {\"Timeless\":-1.3441,\"VerticalText\":-0.8853}, parallaxGain=1 (per-section multiplier proportionality needs constants exposure — partial check)",
+      "evidence": "hold dolly deltas {\"Timeless\":-1.34415,\"VerticalText\":-0.8853}, parallaxGain=1 (per-section multiplier proportionality needs constants exposure — partial check)",
       "area": "longpress",
       "severity": "HIGH",
       "skipped": false
@@ -71,7 +71,7 @@
     {
       "itemId": "explode-lookat-lerp",
       "pass": true,
-      "evidence": "lookAt approach over 10 frames: total=2.454, monotonic=true, maxFrameJump=28% of distance",
+      "evidence": "lookAt approach over 10 frames: total=2.467, monotonic=true, maxFrameJump=28% of distance",
       "area": "explode",
       "severity": "HIGH",
       "skipped": false
@@ -79,7 +79,7 @@
     {
       "itemId": "explode-idle-rotation",
       "pass": true,
-      "evidence": "selectedRotationY delta over 1s = 0.1520 rad (target 0.15±10%)",
+      "evidence": "selectedRotationY delta over 1s = 0.1523 rad (target 0.15±10%)",
       "area": "explode",
       "severity": "HIGH",
       "skipped": false
@@ -174,11 +174,11 @@
     },
     {
       "itemId": "scrub-dual-speeds",
-      "pass": false,
-      "evidence": "SKIP — sections[].scrubChannels not exposed in manifest",
+      "pass": true,
+      "evidence": "15/15 sections declare both scrub channels (measured 2x catch-up ratio: TODO — needs per-channel progress in state())",
       "area": "scroll",
       "severity": "HIGH",
-      "skipped": true
+      "skipped": false
     },
     {
       "itemId": "dual-channel-timelines",
@@ -190,8 +190,8 @@
     },
     {
       "itemId": "lifecycle-events",
-      "pass": false,
-      "evidence": "0 lifecycle events recorded over a full pass (per-section exactly-once ordering: refine once payloads carry section ids)",
+      "pass": true,
+      "evidence": "55 lifecycle events recorded over a full pass (per-section exactly-once ordering: refine once payloads carry section ids)",
       "area": "scroll",
       "severity": "HIGH",
       "skipped": false
@@ -207,15 +207,15 @@
     {
       "itemId": "loader-honesty",
       "pass": true,
-      "evidence": "warm-cache loader ran 3.58s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure",
+      "evidence": "warm-cache loader ran 3.51s (floor 2.5s -10% = 2.25s); byte-honesty under throttled network: TODO — needs state().loader progress exposure",
       "area": "loader",
       "severity": "HIGH",
       "skipped": false
     },
     {
       "itemId": "mobile-svh-dvh",
-      "pass": false,
-      "evidence": "svh/dvh rules=50, bare-vh height rules=2, flags.touchResizeFilter not exposed, manifest identical mobile/desktop=true",
+      "pass": true,
+      "evidence": "svh/dvh rules=52, bare-vh height rules=0, touchResizeFilter=true, manifest identical mobile/desktop=true",
       "area": "mobile",
       "severity": "HIGH",
       "skipped": false
@@ -230,8 +230,8 @@
     },
     {
       "itemId": "deeplink-params",
-      "pass": false,
-      "evidence": "1/4 params work — ?scroll: activeSection=Intro (want Timeless); ?autoscroll: y 1874->3032 advancing=true; ?materials: flags.materialsDebug=undefined; ?eval=1: flags.eval=undefined",
+      "pass": true,
+      "evidence": "4/4 params work — ?scroll: activeSection=Timeless (want Timeless); ?autoscroll: y 1799->2956 advancing=true; ?materials: flags.materialsDebug=true; ?eval=1: flags.eval=true",
       "area": "debug",
       "severity": "HIGH",
       "skipped": false
@@ -240,17 +240,15 @@
   "judgeVerifiedItems": [],
   "summary": {
     "total": 29,
-    "passed": 22,
-    "failed": 4,
-    "skipped": 3,
+    "passed": 28,
+    "failed": 0,
+    "skipped": 1,
     "gate": {
-      "criticals": [
-        "sections-14-order"
-      ],
-      "criticalCount": 1,
-      "passRate": 0.759,
+      "criticals": [],
+      "criticalCount": 0,
+      "passRate": 0.966,
       "passRateMin": 0.9,
-      "pass": false
+      "pass": true
     }
   }
 }

@@ -50,6 +50,13 @@ export class ScrollEngine {
   private refreshPending = false;
   private readonly isTouch = window.matchMedia("(pointer: coarse)").matches;
 
+  /** True when the iOS URL-bar resize guard is armed on this device —
+   *  height-only resizes < TOUCH_RESIZE_IGNORE_PX are ignored (PLAN §3;
+   *  surfaced as state().flags.touchResizeFilter for the eval harness). */
+  get touchResizeFilterArmed(): boolean {
+    return this.isTouch;
+  }
+
   constructor() {
     this.lenis = new Lenis({ duration: LENIS_DURATION });
 

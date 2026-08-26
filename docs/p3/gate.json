@@ -1,0 +1,179 @@
+{
+ "continuity": "Walked the full 15-section page on one fresh build (npm run build clean; vite preview :4620; headless real Chrome via playwright-core channel chrome; 45 desktop + 8 mobile ?eval=1 frames + 10 interaction frames; ZERO console errors across every pass). The site now reads as one film: type voice (Clash ghost/solid stacks, mono eyebrows, Inter body, Geist Mono data) is identical Intro through Footer; the numbering spine is whole (01-14, Curves' missing 07 fixed); red discipline holds (biosignal only in the top hairline, ECG chip, colorway ticks, pulse rule); the ink-dial identity is FINALLY consistent at every judged scale \u2014 close-up (Curves/MWR), card scale (Parts), row scale (Footer 4-up), AOD (Nocturne) \u2014 the gate-3/4 defining defect class (dial wash/hot-glow) is resolved sitewide by the emissive drop + per-key bloom dips. The BPM catalog motif (58/96/142 over /220, page rail 01-03) still lands dead-on. Band naming is unified (MILANESE both places) and the outro's 'four identical Ocean bands lie' is GONE: the recolor axis ships four honestly distinct clones (Tide green / Graphite black / Ember orange / Midnight navy) labeled by config, and CONFIG_CHANGE grades 3D + dial + CSS accents + gallery + cursor coherently (verified live in Curves/Images/Parts/outro after swap). Seams: Parts\u2192Footer approach is now clean (footer rise waits for the table, .3/.5/.6/.75 frames verified), Straps exits without text-over-case, Images' exit strap sits on a staged ramping ground. Remaining continuity debts: (1) the fixed vital chip has no collision policy against section DOM \u2014 it overlaps the Parts picker card (.5-1), the 'TOTAL WEIGHT immaterial' bar at Footer ~.9, and on mobile the Footer label rail; one owner should give it awareness (dodge/dim) rather than three local fixes; (2) case-flank baked-texture mottling (look-lane, still open) reads as tarnish in Hands' 105mm macro and edges of MWR/Disassembly; (3) the live (non-eval) Intro entrance attitude renders numeral bloom hotter than any eval frame \u2014 the match-cut lands on the site's glowiest frame; worth one look-lane pass at the entrance attitude.",
+ "scopeConcerns": "1) RUBRIC HARNESS GATE CURRENTLY FAILS on the current build: node evals/assert.ts = 22/29 pass (75.9% &lt; 90%) with 1 critical (sections-14-order \u2014 sourceRole still not exposed, pre-existing SKIP escalated). My probes show the 4 FAILs are mostly debug-API surface debts, not behavior: cursor labels work live (assert's stage-center probe lands on a proxy hitbox \u2192 icon mode nulls the label); lifecycle enter/center is tracked in state but emits no bus events for the rubric's recorder; ?materials and ?eval work but under uiFlags.materialsInspector/evalMode instead of flags.materialsDebug/flags.eval; mobile svh scan finds 2 bare-vh rules + no touchResizeFilter flag. ONE REAL DEFECT: ?scroll=<early-section> (e.g. Timeless) lands at the viewport-clamped webgl window start (y=0, Intro active) because main.ts calls gotoSection(target, 0) over extended bounds \u2014 deep sections work (Nocturne verified). P4 must assign one owner to close the debug-API contract (sourceRole, scrubChannels, scroll.enabled, lifecycle bus events, flags naming, touchResizeFilter, deeplink landing inside DOM bounds) or P5's council gate will fail on harness surface while the site itself passes. 2) Perf gates NOT run this gate (rubric perf lane, own ceilings) \u2014 must run before ship. 3) Beauty council (5 blind judges vs frozen source captures) not run \u2014 this was a single-director gate; do not treat my PASS as the beauty gate. 4) Mobile Footer-100 layout break (see Footer row) must be fixed before any mobile captures/demo reel. 5) Look-lane debts: flank mottling (clean texture or reframe Hands), co-sign the two instrument.json data edits (Hands rot 245, bloom dips), and the hot live-entrance attitude. 6) Gallery non-natural config sets are interim lookdev conversions (visibly softer in cells 02/05 at black-graphite) \u2014 P4 Cycles masters on the same naming contract, wedge-AA explicitly on P4's checklist. 7) Dial-smoke's sweep check is CPU-contention flaky (failed once during a doubled run, passed twice clean solo) \u2014 run smokes serially in CI. 8) Stray preview server still listening on :4599 (another lane's, not mine \u2014 mine on :4620 killed); shared-port discipline cleanup pending.",
+ "verdicts": [
+  {
+   "section": "Loader + rings",
+   "verdict": "PASS",
+   "evidence": "Live run: activity-rings triad closes staggered over ONE HERTZ mono wordmark (x-loader-mid.png); vital-smoke 21/21 \u2014 completion 3.62s \u2265 2.5s floor, 43 monotonic samples, GLB bytes at 122ms \u226a completion (honesty preserved)."
+  },
+  {
+   "section": "Intro",
+   "verdict": "PASS",
+   "evidence": "d-Intro-50: ghost/solid ONE HERTZ stack, watch right-composed, HEART RATE 64 + ECG legible, vital chip live top-right. Nit: live (non-eval) entrance attitude (x-intro-live) blooms the 12/9/3 numerals hotter than any eval frame \u2014 look-lane note, not a blocker.",
+   "tuneList": [
+    "Look-lane: soften numeral bloom at the live entrance tumble attitude (the match-cut lands on the site's glowiest frame; eval frames are fine)"
+   ]
+  },
+  {
+   "section": "Timeless",
+   "verdict": "PASS",
+   "evidence": "d-Timeless-60: type-through-watch occlusion with the band loop threading TIRELESS/ELECTRICAL/WATCH; \u00a77.3 grey ramp intact; dial ink at speaker-side attitude."
+  },
+  {
+   "section": "VerticalText",
+   "verdict": "PASS",
+   "evidence": "d-VerticalText-35: CASE& FINISHES ghost/solid over macro watch, orange crown detail dominant, clean sticky pin (engine-smoke pin checks pass)."
+  },
+  {
+   "section": "Disassembly",
+   "verdict": "PASS",
+   "evidence": "d-Disassembly-50: 7-part fan with strikethrough-label rail (HESALITE DOME\u2192SAPPHIRE CRYSTAL grammar), DRAG & TAP affordance, 1Hz ghost numeral; explode interaction composes on top cleanly (x-explode-selected: anchored S10 SiP card 04/10 with prev/next/close, 0.1px anchor error)."
+  },
+  {
+   "section": "Mechanism",
+   "verdict": "PASS",
+   "evidence": "x-longpress-hold at .5: ELECTRICAL HEART dark macro with red ECG hairline and 30' numeral is an Awwwards-grade frame; longpress dolly composes without breaking the composition."
+  },
+  {
+   "section": "Movement",
+   "verdict": "TUNE",
+   "evidence": "d-Movement-70: HIGHLY ATTENTIVE SILICON MOVEMENT type-through-board reads well, but the right-rail annotation 'Neural Engine, on a wrist.' crosses the dark SiP board corner \u2014 dark-on-dark contrast dip at the overlap.",
+   "tuneList": [
+    "Shift the NEURAL ENGINE annotation block ~4vh down/right or add a \u00a77.4 porcelain chip so the copy never crosses the board silhouette at .65-.75"
+   ]
+  },
+  {
+   "section": "Curves",
+   "verdict": "PASS",
+   "evidence": "Gate-3 tunes verified on fresh frames: d-Curves-50/75 show ink dial with crisp batons and legible HEART RATE 64 (hot-glow fix real); both sub-copy lines sit on \u226555% scrim porcelain at .5 AND .75; eyebrow now '07 \u00b7 CATALOG 01/03' (numbering spine whole); 58/220 plate + crosshair grammar intact. Strongest catalog section."
+  },
+  {
+   "section": "MovementWatchRight",
+   "verdict": "PASS",
+   "evidence": "Gate-3's two page-truth defects both dead: d-MWR-25/50 ink dial (no milk veil, no diagonal glare); d-MWR-75 all three annotation rows full ink with re-spread anchor dots (12 / glass-left / bezel-low) and non-crossing height-ordered leaders (geometry checked on the frame). Hover-swap graft verified in P3 evidence; hover chip parking on row labels remains the acknowledged cursor-polish handoff (see Cursor row)."
+  },
+  {
+   "section": "Hands",
+   "verdict": "TUNE",
+   "evidence": "Glare fix verified: d-Hands-50/75/92 show a controlled specular line \u2014 flank, speaker ports, orange button own the frame; section exits clean; 96/220 BPM card full ink at .75. BUT the case-flank baked-texture mottling (gate-3 tune 3, look-lane handoff) is severe at this 105mm framing \u2014 dark tarnish-like smudges around the speaker ports in every frame; the section's entire beat macros exactly that surface.",
+   "tuneList": [
+    "Look-lane (inherited, still open): clean the flank baked texture or bias the Hands framing/light off the smudged region \u2014 target: machined satin titanium at page-truth .5/.75"
+   ]
+  },
+  {
+   "section": "Nocturne",
+   "verdict": "PASS",
+   "evidence": "d-Nocturne-50: AOD beat is gorgeous \u2014 outlined hands, red 64 BPM, 'AOD \u00b7 REAL SECONDS' caption on blackout; vital chip flips to nocturne signal (smoke-verified #ff375f). LED pulse mechanic gated + frozen under eval (see Nocturne LED row)."
+  },
+  {
+   "section": "Straps",
+   "verdict": "PASS",
+   "evidence": "All four gate-3 tunes verified: d-Straps-92 exit clean (family rail gone by case re-entry); rail relocated to bottom-left dead zone as clean ink (no scrim halo) with live OCEAN underline + canonical MILANESE label; 'WOVEN,' at 40% legible over the band at .25. Residue nit: third sub-copy line 'and forgets it.' still dips low-contrast where it crosses the band at .25.",
+   "tuneList": [
+    "Optional: raise the third grey-ramp line to \u226540% where it overlaps the band at .25 (same \u00a77.5 rule as 'WOVEN,')"
+   ]
+  },
+  {
+   "section": "Images",
+   "verdict": "PASS",
+   "evidence": "Hero-diagonal cell verified fixed: 2x nearest-neighbor crop of the wedge edge shows zero stair-stepping, zero upscale blur (crop-hero-edge.png); d-Images-12 plate enters clean (no bare grey rectangle); d-Images-90 exit strap sits on a staged ramping ground with contact shadow; bento hierarchy + ink-scrim captions portfolio-grade. Gallery re-src to black-graphite verified visually (x-swap-images) \u2014 note interim non-natural sets read slightly softer in cells 02/05 (P4 masters flagged).",
+   "tuneList": [
+    "P4 file-drop: Cycles masters for the 3 non-natural config sets (current lookdev conversions visibly softer at 2x in CROWN-KNURL/BACK-CRYSTAL cells)"
+   ]
+  },
+  {
+   "section": "Colors",
+   "verdict": "PASS",
+   "evidence": "All four gate-4 tunes verified: d-Colors-75/85 ink dial with individually resolvable markers + complication rings at plate standoff (bloom-dip fix real); stray pre-reveal rectangle gone at .06 and .85; DAYBREAK \u00b7 06:00 tag now a compact both-axes-feathered ellipse (reads as a soft authored cloud \u2014 borderline but acceptable); edition ring + 4-slot rail with honest config names is a designed moment; departures clean at .95.",
+   "tuneList": [
+    "Optional polish: DAYBREAK tag scrim still reads as a visible grey lozenge on the dawn ground \u2014 consider 30% ink or tighter vertical falloff"
+   ]
+  },
+  {
+   "section": "Parts",
+   "verdict": "TUNE",
+   "evidence": "Gate-4 tunes verified: d-Parts-97 shows the authored retreat (small lifted watch inside its slot, all 10 rows + 'TOTAL WEIGHT immaterial' fully legible \u2014 no sweep-across); card-slot dial ink all section; picker rise .24-.34 lands with rows 1-2 (mid-rise at .25 per acknowledged deviation). NEW defect: from .5 the picker card's top edge slides under the fixed vital chip \u2014 ECG trace crosses the card border, '64 BPM' + mute button sit on the card ground (crop-parts-vital.png). Two chrome systems stacking unplanned at the section's most-judged corner.",
+   "tuneList": [
+    "Drop the picker card's rest position ~40-50px (or dodge/dim the vital chip while the card occupies the top-right) so trace/BPM/mute never touch the card bounds at .5-1"
+   ]
+  },
+  {
+   "section": "Footer / outro section",
+   "verdict": "TUNE",
+   "evidence": "Desktop is earned: d-Footer-30 pure Parts tail (zero triple-exposure), -60/-75 lineup rises BELOW the table with per-slot contact shadows and unwashed full-contrast watches, -90/-100 full end slate (wordmark, two-tone credits incl. TYPE/LINEUP rows, FIN line, pulse rule, SWAP pill) over four honestly distinct clones labeled TIDE/GRAPHITE/EMBER/MIDNIGHT \u2014 every gate-4 Footer tune verified, and the four-Ocean-bands lie is resolved by the recolor axis. MOBILE destination frame is broken (m-Footer-100): lineup watches overlap the 'FIN \u00b7 THE HEART KEEPS COUNTING' line, the label rail sits ~500px detached below the watches (not under their centers), and the vital chip lands directly on the EMBER/MIDNIGHT labels. Minor desktop nit: vital chip crosses 'TOTAL WEIGHT immaterial' at ~.9 (transitional).",
+   "tuneList": [
+    "Mobile Footer: re-map the 4-up slot projection + label rail for 390x844 \u2014 labels under watch centers, FIN line clear of the lineup, and move/dim the vital chip at the end slate",
+    "Desktop nit: vital chip vs MODEL-1HZ bar overlap at ~.9 \u2014 same collision-policy fix as Parts"
+   ]
+  },
+  {
+   "section": "Mobile viewport (full-experience law)",
+   "verdict": "PASS",
+   "evidence": "Full experience confirmed at 390x844 DPR3 (not a cut-down): manifest identical to desktop, m-Curves-50 and m-Images-50 are genuinely strong mobile compositions, m-Disassembly-50 keeps the fan + affordance; touch-hold, tap-tolerance, drag-vs-scroll direction lock all pass under touch emulation (explode-smoke mobile page 4/4, mobile-touch-hold rubric item PASS). Sole mobile break is Footer-100 (tracked in the Footer row)."
+  },
+  {
+   "section": "Mechanic \u00b7 cursor states + icons",
+   "verdict": "PASS",
+   "evidence": "cursor-smoke ALL PASS re-run by me: HOLD TO EXPLORE over stage, SELECT MODEL in outro, SWAP after selection (swap-smoke); all 5 icon tokens (finish-swatch, cross, arrow-left, arrow-right, select) round-trip and fire from real triggers (picker hover\u2192swatch, part\u2192cross, prev/next\u2192arrows); icon precedence + null fallback correct. Known polish handoff stands: the chip parks on row/model labels (MWR rows, outro 'NATURAL' sub-label under the swatch chip).",
+   "tuneList": [
+    "P3 polish handoff (inherited): dot offset or label magnetism so the chip never occludes the label it points at (MWR rows, outro model labels)"
+   ]
+  },
+  {
+   "section": "Mechanic \u00b7 longpress hold-zoom",
+   "verdict": "PASS",
+   "evidence": "Re-run cursor-smoke longpress block: arms at 500ms (450ms=false/570ms=true), 300ms never arms, intensity ramps to 1.0 at ~2s and decays monotonically on release, lenis stopped + wheel inert during hold (0px), dolly 1.6x per-section multiplier, parallaxGain \u00d7(1+i), UPDATE_ROTATIONS speed=1+2i; x-longpress-hold frame confirms the zoom composes visually; mobile touch-hold freezes page scroll (rubric item PASS)."
+  },
+  {
+   "section": "Mechanic \u00b7 explode (8 sub-behaviors, 7 parts, tick-back, foam peel)",
+   "verdict": "PASS",
+   "evidence": "explode-smoke 39/39 + all 8 rubric explode items PASS re-run by me: 10-part roster all proxy-hitboxed, projected-center click selects 10/10, lookAt lerp monotonic (maxJump 27-28% < 30%), idle rotation 0.1507-0.1520 rad/s (\u00b110%), overlay anchored at 0.0-0.1px with real per-part copy (S10 SiP 135ch), prev/next wrap + close with correct arrow/cross icons, XPLOD_ALL ramp 1\u21920, drag gated OFF while selected (\u0394=0) / ON after (\u0394=1.8), 15px tap tolerance both ways on touch, internals 7/7 attached at the fan beat, taptic tick-back oscillates live (amp 0.39mm \u22640.4) and freezes under ?eval=1, foam peel per lane zoom-crop evidence; x-explode-selected frame confirms the overlay design."
+  },
+  {
+   "section": "Mechanic \u00b7 SWAP (both placements + gallery re-src)",
+   "verdict": "PASS",
+   "evidence": "swap-smoke 26/26 re-run by me: 4 configs; picker roots in Parts AND outro (+Colors rail bonus \u2014 rubric dual-placement satisfied); 5/5 material params tween gradedly, complete ~1s (\u00b10.15); consumers fan out (dial accent + --accent + --biosignal + caption); gallery 5/5 <picture> re-src'd with min-width:1024 art direction preserved \u2014 verified VISUALLY too (x-swap-images: full black-graphite set + caption; x-swap-curves: DLC case + graphite band + accent flip in 3D)."
+  },
+  {
+   "section": "Mechanic \u00b7 outro 4-up + restart loop",
+   "verdict": "PASS",
+   "evidence": "swap-smoke: 4 instances, 0.1s stagger manifest, SELECT MODEL preview grades live (x-outro-selected: ember accent floods hairline/rule/underline, cursor swatch chip on the model), SWAP restarts at scrollY=0 immediate with finish applied at duration 0, selection cleared for next loop, credits slate + labels coexist at p=1; live-page restart also verified. Mobile composition break tracked under Footer row."
+  },
+  {
+   "section": "Mechanic \u00b7 living BPM + sound toggle",
+   "verdict": "PASS",
+   "evidence": "vital-smoke 21/21 re-run by me + live observation: rest 58, wheel-blast \u2192 131.8 raw, recovery \u2192 81 at idle (asymmetric chase feels cardio-shaped); beats fire at rest; eval pins 64/phase 0/zero beats (byte-stable captures); sound OFF by default, zero AudioContext pre-opt-in, exactly one context ever, reduced-motion seals the toggle; Nocturne ground flips the signal token and back."
+  },
+  {
+   "section": "Mechanic \u00b7 loader match-cut",
+   "verdict": "PASS",
+   "evidence": "vital-smoke: rings land on the projected screen at dist=0.0px (mode:screen, \u2300355px) \u2014 the flight chases the live entrance tumble; honesty floor + monotonicity + assets-before-completion all hold warm-cache (3.62s); eval path correctly skips the flight."
+  },
+  {
+   "section": "Mechanic \u00b7 Nocturne LED",
+   "verdict": "PASS",
+   "evidence": "explode-smoke: gated on Nocturne enterCenter \u2014 led_green pulses at real 1Hz (0.47\u21941.69 over a 1.4s live window), led_red forced dark, frozen under ?eval=1 (2.5504 constant), gate releases outside Nocturne. Lane's honesty flag stands: the sensor sits inside the case during Nocturne, so the pulse is state-truth, not a visible beat \u2014 council decides if a visible LED moment is wanted (P5)."
+  },
+  {
+   "section": "Mechanic \u00b7 dial engine",
+   "verdict": "PASS",
+   "evidence": "dial-smoke: eval frozen at 10:09:30 with exactly 1 texture upload and wheel-inert hand; sweep regime under wheel velocity passes cleanly twice solo (\u039457.5s, 88 uploads); the single failure appeared only when run concurrently with another smoke (CPU contention) \u2014 run serially in CI."
+  },
+  {
+   "section": "Debug API / deeplinks / rubric harness surface",
+   "verdict": "TUNE",
+   "evidence": "assert.ts on this build: 22/29, 4 FAIL, 3 SKIP, gate FAIL (75.9% < 90%, 1 critical sections-14-order). My probes prove the mechanics behind 3 of 4 FAILs work (cursor labels live, lifecycle in state, ?materials/?eval under different flag names) \u2014 these are contract-surface debts frozen in the P0 rubric. One genuine behavior defect: ?scroll to early sections (Timeless) lands at y=0 with Intro active because gotoSection(target, 0) resolves over viewport-clamped extended bounds.",
+   "tuneList": [
+    "Fix ?scroll deeplink to land inside the target's own DOM bounds (or gotoSection localProgress relative to DOM window) \u2014 currently ?scroll=Timeless lands on Intro at y=0",
+    "Close the debug-API contract: expose sections[].sourceRole (clears the standing CRITICAL) + scrubChannels, state().scroll.enabled, flags.eval/flags.materialsDebug aliases, flags.touchResizeFilter, and bus lifecycle events for the rubric recorder",
+    "Re-point assert's cursor-text-states stage probe off the proxy-hitbox center (icon mode nulls the label) and purge the 2 remaining bare-vh height rules"
+   ]
+  },
+  {
+   "section": "Tune absorption w3w4 (28 gate-3/4 items vs fresh captures)",
+   "verdict": "PASS",
+   "evidence": "28/28 accounted for on fresh frames from this build: 23 verified applied and effective (dial hot-glow/veil/wash class dead at every judged scale; Hands glare gone at live attitude; Straps exit/rail/ghost/density all fixed; Images hero AA + plate entry; Colors tag/rectangle/composition; Parts exit/rise; Footer seam/scrim/shadows/labels; Curves scrim + 07 spine), 5 are explicit handoffs still open and correctly owned (Hands flank mottling + Images bgStage ramp timing \u2192 look/driver lanes, MWR cursor chip \u2192 P3 polish, gallery masters + Fraunces budget \u2192 P4). tune-w3w4.md's claims survive fresh-eyes re-capture \u2014 no evidence/page divergence found anywhere."
+  }
+ ]
+}

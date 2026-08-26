@@ -38,6 +38,10 @@ function check(name, ok, detail = "") {
 // loader (env decode + PMREM compile) far more time. Locally: real GPU, 15s.
 const IS_CI = !!process.env.CI;
 const LOADER_TIMEOUT_MS = IS_CI ? 60000 : 15000;
+// Remote targets (prod smoke over a slow uplink) need more than playwright's
+// 30s default to reach networkidle — ~13MB of GLB/HDR at a few hundred KB/s.
+// Local runs keep the default; override per run: NAV_TIMEOUT_MS=120000.
+const NAV_TIMEOUT_MS = Number(process.env.NAV_TIMEOUT_MS ?? 30000);
 const browser = await chromium.launch({
   channel: "chrome",
   headless: true,
@@ -65,7 +69,7 @@ async function newPage(url) {
   const errors = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   page.on("pageerror", (e) => errors.push(String(e)));
-  await page.goto(url, { waitUntil: "networkidle" });
+  await page.goto(url, { waitUntil: "networkidle", timeout: NAV_TIMEOUT_MS });
   return { page, errors };
 }
 

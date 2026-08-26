@@ -51,6 +51,40 @@ export type SectionName = keyof typeof SECTION_VH;
 /** Canonical page order, derived from the table above. */
 export const SECTION_ORDER = Object.keys(SECTION_VH) as SectionName[];
 
+/**
+ * Source-section role each of our sections recreates (rubric
+ * `sections-14-order`; PLAN §0's 14-section list: Loader → Intro → Timeless
+ * → Vertical → Disassembly → Mechanism → Movement → Curves → Details →
+ * Profile → Bracelet → 2D Gallery → Parts table → Colorway outro).
+ *
+ * The `loader` role is the PRE-SCROLL phase (activity-rings loader +
+ * match-cut, core/loader.ts) — it is not a scroll section here or on the
+ * source (the frozen sections.json has no loader entry), so it never
+ * appears in this map; the eval harness verifies it from the boot DOM.
+ * `Nocturne` is our sanctioned additive beat (null). `Colors` is a real
+ * source section whose role ("colorway") is outside the rubric's 14-name
+ * list — the outro role belongs to Footer, where the SWAP restart loop
+ * lives; the harness's ordered-subsequence walk ignores non-canonical
+ * role strings by construction.
+ */
+export const SECTION_SOURCE_ROLE: Record<SectionName, string | null> = {
+  Intro: "intro",
+  Timeless: "timeless",
+  VerticalText: "vertical",
+  Disassembly: "disassembly",
+  Mechanism: "mechanism",
+  Movement: "movement",
+  Curves: "curves",
+  MovementWatchRight: "details",
+  Hands: "profile",
+  Straps: "bracelet",
+  Images: "gallery",
+  Nocturne: null, // additive beat — ours, no source counterpart
+  Colors: "colorway", // source section; role outside the canonical 14 list
+  Parts: "parts-table",
+  Footer: "outro",
+};
+
 export function isSectionName(name: string): name is SectionName {
   return name in SECTION_VH;
 }
