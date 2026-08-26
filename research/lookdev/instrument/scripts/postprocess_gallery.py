@@ -24,7 +24,8 @@ import os
 
 from PIL import Image, ImageDraw, ImageFilter
 
-REPO = "/Users/simon/engineer/one-hertz"
+# repo root, derived from this file's location (…/research/lookdev/instrument/scripts/)
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 SRC = REPO + "/research/lookdev/instrument/gallery-masters"
 DST = REPO + "/public/assets/gallery"
 

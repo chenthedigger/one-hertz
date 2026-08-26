@@ -1,0 +1,59 @@
+{
+ "verdicts": [
+  {
+   "section": "README (first screen + click-path)",
+   "verdict": "TUNE",
+   "evidence": "First screen sells: thesis line, real-capture poster.gif (7.8s exploded-view loop), live link (HTTP 200, interactive ~8s, 0 console errors), and the 60fps credit lands as intent in line 5 AND a dedicated Credits section ('never presented as original design'). Numbers read credible, not vanity \u2014 every claim links a committed result file (evals/results/p5-integrate/assert.json, beauty-r1/report.md, p5-perf-hunt/ all exist) and the honest caveats ('these 24 frozen moments, not every scroll position'; 'CPU proxy, not a device claim') are exactly what makes a staff engineer trust the rest. Demo reel mp4s are real site captures (30.1s desktop 1600x900 + 11.3s mobile), story arc ends on the SWAP restart. BUT: the CI badge is RED \u2014 the last two main pushes (P4, P5) failed on the eval-lite autoscroll smoke ('moved 0px in \u226410s' on the software-rAF runner; run 33010140663), so the first badge a reviewer clicks says failing. And the Reproduce block is broken for a stranger: `npm run eval:assert` dies with a raw ERR_CONNECTION_REFUSED stack trace because nothing says to run `npm run preview` first (verified both ways \u2014 with the server up it reproduces 29/29 PASS, gate PASS, in one command).",
+   "tuneList": [
+    "Green the badge before public: the CI autoscroll smoke already knows software-rAF can't assert pace \u2014 make zero-movement-under-software-rAF a notice-skip (exit 78) like the WebGL-absent path, or root-cause why Lenis autoscroll no-ops on the runner; then re-run main",
+    "Reproduce section: add `npm run preview &` (or make evals/lib.ts print 'start the preview server: npm run preview' on ECONNREFUSED instead of a stack trace)",
+    "evals/README.md says `pnpm eval` twice; package.json and root README say `npm run eval` \u2014 pick one",
+    "Add one clause to the perf table: 'median pinned at the 120 Hz display cap' \u2014 five identical 120.48 values read as suspicious until the reader works out rAF quantization themselves",
+    "State explicitly (one line) that frozen source captures of thewatch.60fps.fr are not committed, so `npm run eval` regenerates ours-side only; beauty gate math is recomputable from the committed ballots.json + sealed answers.json"
+   ]
+  },
+  {
+   "section": "ARCHITECTURE.md",
+   "verdict": "PASS",
+   "evidence": "Legible in well under 5 minutes: 4 sections, each opens with the design law in bold ('Single smoothing owner', 'one clock scalar'), provenance told straight (Apple USDZ geometry donor named, internals in-house, 'never committed' for raw archives). Both mermaid blocks parse clean (validated with mermaid 11 in real headless Chrome: flowchart-v2, ok x2). All five deep-dive cross-links resolve (docs/p1/engine.md, docs/p15/plumbing.md, docs/p2/infra-gl.md, LOOKBIBLE.md, PLAN.md). The \u00a74 GC/bloom/compile hunt \u2014 'a forced full GC took 15 ms at rest and 165\u2013341 ms mid-scroll on the same 28 MB heap' \u2014 is the single strongest staff-signal paragraph in the repo.",
+   "tuneList": []
+  },
+  {
+   "section": "evals/ (reproducibility + beauty-r1 report)",
+   "verdict": "PASS",
+   "evidence": "Reproduced a headline claim in one command: `npm run eval:assert` against local preview \u2192 29/29 pass, 0 fail, 0 skip, gate PASS (criticals=0, passRate=1) \u2014 matching the README exactly. beauty-r1/report.md convinces a skeptic precisely because it argues against itself: full 24x5 unblinded outcome matrix including the 3 unanimous LOSSES, a ranked loss ledger with verbatim judge quotes ('A strands one small watch left of center...'), and caveats most portfolios would bury (axis self-assignment protocol deviation, seat-3 probe letter ambiguity with the excluding-seat-3 recount, judge tally \u00b11 discrepancies). Ballots + sealed key + pack manifest are committed (evals/judge/ballots.json, pack/answers.json), so the gate math is independently recomputable. Rubric v1.1.0 exists and is cited by version everywhere.",
+   "tuneList": [
+    "The `?eval=1` + gotoSection deep-jump path against PROD renders a giant gray knot in Nocturne instead of the watch (hm-nocturne-50/75.png) while natural scroll renders it perfectly \u2014 likely lazy-residency/assetsReady not honored on direct jump against the deployed bundle; root-cause it, since 'the harness drives the real page' is the portfolio claim",
+    "evals/README layout block still describes `results/r1/` naming; actual rounds are beauty-r1/p5-integrate etc. \u2014 trivial sync"
+   ]
+  },
+  {
+   "section": "Repo browse (src/, docs/, git log)",
+   "verdict": "TUNE",
+   "evidence": "src/ reads as the architecture doc promises: core/ (clock, registry, determinism, state) \u00b7 gl/ (post, lightKeyframes, quality) \u00b7 dial/ (face, complications, gear) \u00b7 sections/ (15 ts+css pairs) \u00b7 ui/ \u2014 18.7k lines, largest file 1063 lines, no junk drawer. git log --oneline (32 commits) genuinely reads as a build story: scaffold \u2192 PLAN v3 \u2192 rubric freeze \u2192 spikes \u2192 lookdev council \u2192 section waves \u2192 mechanics \u2192 hardening \u2192 gates; every message carries numbers; the three fix(ci) commits are root-caused, not spam. docs/ is organized by phase with gate evidence. The concerns: a fresh clone is ~885 MB (464 MB of docs/ evidence PNGs \u2014 a real first-five-minutes drag for any reviewer), and the P6 tree is mid-flight (README, ARCHITECTURE.md, docs/media/, docs/p6/, og.jpg all uncommitted; 8 modified tracked files) so the reviewed story is not yet on origin.",
+   "tuneList": [
+    "Resolve D3 as the sanitizer recommends: filter-repo slim of *.blend1 + superseded evidence PNG dumps with a keep-list of linked stills \u2014 885 MB \u2192 <200 MB clone while keeping the commit narrative",
+    "Land the P6 working tree as clean conventional commits (docs(p6): README+ARCHITECTURE, feat: og unfurl, chore: media) so the log's last chapter matches the rest"
+   ]
+  },
+  {
+   "section": "Sanitizer report",
+   "verdict": "PASS",
+   "evidence": "docs/p6/sanitizer.md is the real thing: full-history patch-stream secret sweep (token shapes enumerated), .env never committed, authorship 32/32 on the CHEN noreply, zero RANTO/Miska/DAIJAI/startup refs in tree or history, asset provenance verified per-file (assets-candidates never committed, HDRI CC0 + confirmed 404 on prod, zero marketplace bytes), dist token-leak scan clean with the single intended 60fps credit accounted for. Fixed items (absolute paths, .gitignore, gc) verified in the working tree. Three open founder decisions are correctly scoped as decisions, not silently made. One judgment note: D2 \u2014 Apple-extracted raw dial textures tracked in research/asset-qa/*/textures/ \u2014 exceeds PLAN's 'never raw source archives' letter; dropping those two dirs during the D3 rewrite is the cheap safe call.",
+   "tuneList": [
+    "Resolve D1\u2013D3 before flipping public (they are the gate); recommend D2=drop the two textures/ dirs inside the D3 filter-repo pass, D1=accept or neutral custom domain"
+   ]
+  },
+  {
+   "section": "The site (desktop + mobile full walk)",
+   "verdict": "PASS",
+   "evidence": "Full prod walk both viewports: loader \u2192 all 15 sections in source order \u2192 footer, ZERO console errors on desktop and mobile, manifest correct, deep link lands (engine confirms activeSection=Nocturne). No tab-close moment: hero (mobile hero especially \u2014 dial fills the fold, complications glowing) is a genuine screenshot-a-stranger-believes; Mechanism's ELECTRICAL HEART + live ECG over the caseback macro and the natural-scroll Nocturne (AOD dial in radiating darkness, sleep score counting up) are the two best beats on the page; footer colophon + 4-watch SWAP lineup closes clean. Remaining rough edges are the ones the beauty council already ledgered (T1\u2013T5, advisory).",
+   "tuneList": [
+    "?scroll=Nocturne \u2014 the README's advertised try-me link \u2014 lands on the section's ENTRY beat: a flat mid-gray frame with the watch side-on, the weakest static frame on the site, while the money moment sits ~0.5 deeper. Land section deep-links at an authored 'money progress' per section (Nocturne \u2248 0.45) or advertise a different link",
+    "Straps/Images transition beats show the case semi-transparent mid-crossfade (desktop 62% stop); harmless in motion, odd if a reviewer pauses there \u2014 consider tightening the fade window (council T3/T6 reframing lever already covers the worst of it)"
+   ]
+  }
+ ],
+ "continuity": "P6 gate walk complete; servers killed (vite preview :4173 terminated, verified). State for the next lane: (1) SINGLE MOST IMPACTFUL FIX = the red CI badge \u2014 main's last two runs failed on the eval-lite autoscroll smoke ('moved 0px in \u226410s', software-rAF runner, run 33010140663); make zero-movement-under-software-rAF a notice-skip like the WebGL path or root-cause the Lenis autoscroll no-op, then re-run main BEFORE flipping public, since the badge sits above the fold. (2) Prod is one deploy behind the tree: deployed HTML has NO og: tags and /assets/og.jpg 404s on prod (local index.html + dist/assets/og.jpg are ready) \u2014 social unfurl is broken until the P6 deploy. (3) P6 tree uncommitted: README, ARCHITECTURE.md, docs/media/ (reel 30.1s + mobile 11.3s + poster.gif + 3 stills, all verified real captures), docs/p6/, og.jpg untracked; 8 modified tracked files incl. sanitizer's F1/F2 fixes. (4) Founder decisions D1\u2013D3 still open (sanitizer.md) \u2014 D3 (885 MB clone \u2192 filter-repo slim) also fixes D2 (drop Apple-extracted textures/ dirs). (5) New bug found this walk: ?eval=1 gotoSection deep-jump against PROD renders a gray knot in Nocturne instead of the watch (screenshots hm-nocturne-{25,50,75}.png in scratchpad); natural scroll is perfect (hm-nocturne-natural.png) and local-preview captures pass, so suspect assetsReady/lazy-residency not honored on direct jump against the deployed bundle. (6) Reproduce path verified: assert 29/29 reproduces in one command but ONLY with `npm run preview` up \u2014 README omits the server step and evals/README still says `pnpm eval`. (7) Verified clean: both ARCHITECTURE.md mermaid blocks parse (mermaid 11, real Chrome), all doc cross-links resolve, ballots + sealed key committed, git log story intact, mobile+desktop prod walk zero console errors.",
+ "scopeConcerns": "Fresh-eyes gate only \u2014 no repo edits made (review-only lane; all fixes returned as verdict tune lists). Screenshots and probe scripts live in the session scratchpad, not the repo. Two items exceed this lane's authority and stay with the founder per house rules: D3 history rewrite (filter-repo/force-push is safety-floor irreversible \u2014 never without explicit OK) and the public flip itself (repo is still private; CI badge, P6 commit+deploy, and D1\u2013D3 are its blockers). The beauty council's T1\u2013T5 tune list remains advisory per the passed gate \u2014 nothing in this walk contradicts that verdict, and I did not re-litigate it. Mobile perf remains a CPU proxy: the 'real mid-tier device round still owed' caveat in CLAUDE.md still stands and the README wording already discloses it honestly."
+}

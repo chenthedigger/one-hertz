@@ -26,7 +26,8 @@ import os
 import bpy
 from mathutils import Vector
 
-REPO = "/Users/simon/engineer/one-hertz"
+# repo root, derived from this file's location (…/research/lookdev/instrument/scripts/)
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 GLB = REPO + "/research/asset-qa/ultra-3-draft.glb"
 HDR = REPO + "/public/assets/looks/instrument.hdr"
 OUT = os.environ.get("OUT_DIR", REPO + "/research/lookdev/instrument/gallery-masters") + "/"

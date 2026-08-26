@@ -29,6 +29,14 @@ build/
 # ai harness local state (remove this block if the project wants .planning committed)
 .claude/settings.local.json
 .planning/
+.impeccable/
+
+# local tool state
+.wrangler/
+
+# blender auto-backups — never commit (P6 sanitizer; 27MB of *.blend1 already in
+# history is flagged in docs/p6/sanitizer.md)
+*.blend1
 
 # heavy source-reference media — regenerable via evals/reference/source/capture-scripts
 evals/reference/source/desktop/
