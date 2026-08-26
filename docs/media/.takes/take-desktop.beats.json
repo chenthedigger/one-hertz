@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-08-26T20:38:37.196Z",
+  "url": "https://one-hertz.ubonranto.workers.dev",
+  "vp": "desktop",
+  "beats": {
+    "A_loader_hero": {
+      "nav": 1.284,
+      "ready": 6.749,
+      "end": 9.163
+    },
+    "B_descent": {
+      "start": 9.165,
+      "end": 17.587,
+      "toY": 5040,
+      "durationS": 8,
+      "arrived": {
+        "y": 5040,
+        "mode": "exploded"
+      }
+    },
+    "C_explode": {
+      "start": 17.587,
+      "end": 25.902
+    },
+    "D_nocturne": {
+      "jumped": 25.906,
+      "start": 28.706,
+      "end": 33.314
+    },
+    "E_swap_restart": {
+      "jumped": 33.317,
+      "start": 37.117,
+      "end": 44.443
+    }
+  }
+}
