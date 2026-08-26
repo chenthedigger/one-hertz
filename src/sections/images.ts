@@ -3,8 +3,8 @@
  * grid, min-width:1024 art direction, 5 stills, captions — motion bible §8
  * row 11). Ours is an editorial CONTACT SHEET: copy column on the light
  * ground, five ink-plate stills at four scales (LOOKBIBLE §6 shot list
- * frames 1–5 — hero-diagonal, crown-knurl, dial-faceon, side-14mm,
- * back-crystal), the 14.4 mm edge-on running as a wide grid-breaking strip.
+ * frames 1–5 — hero-diagonal, crown-knurl, dial-faceon, side-12mm,
+ * back-crystal), the 12 mm edge-on running as a wide grid-breaking strip.
  *
  * Dual timelines (engine contract, docs/p1/engine.md §1):
  *   - DOM channel: one PAUSED fraction-domain GSAP timeline via
@@ -30,12 +30,12 @@
  * template `/assets/gallery/${finish}_${n}.webp` (n = 1..5 in LOOKBIBLE §6
  * shot order). On CONFIG_CHANGE the new finish's set is preflighted with
  * one probe image, then all five `<picture>` sets + the caption's colorway
- * label swap in the same tick (instant, no tween). P4's per-colorway
- * Cycles masters are therefore a pure FILE DROP — ship
- * `black-titanium_{1..5}.webp` next to the natural set and the wiring
- * lights up; a missing set warns once and keeps the current stills (never
- * a broken-image frame). P2 ships TEMP natural-titanium stills converted
- * from the canonical P1.5 lookdev renders.
+ * label swap in the same tick (instant, no tween). Per-colorway masters
+ * are a pure FILE DROP; a missing set warns once and keeps the current
+ * stills (never a broken-image frame). P4 shipped real Cycles masters for
+ * all four configs (research/lookdev/instrument/scripts/
+ * render_gallery_masters.py + postprocess_gallery.py — the P2 TEMP
+ * lookdev conversions are gone).
  *
  * State contract (truthful): requires nothing (a 2D gallery cannot care
  * about camera/explode axes), writes nothing, guarantees nothing. It only
@@ -49,7 +49,7 @@ import { EngineEvent, bus } from "../core/events";
 import { isEvalMode } from "../core/determinism";
 import { params } from "../core/params";
 import { SectionBase, timelineAdapter } from "../core/section";
-import { resolveConfig } from "../ui/colorway";
+import { DEFAULT_CONFIG_ID, configById, resolveConfig } from "../ui/colorway";
 import type { CameraRig } from "../webgl/cameraRig";
 import "./images.css";
 
@@ -88,8 +88,11 @@ const SHOTS: readonly { name: string; alt: string }[] = [
     alt: "Full dial face-on, one continuous specular line on the bezel rim",
   },
   {
-    name: "SIDE-14MM",
-    alt: "Edge-on profile, 14.4 millimetres, chamfer streaks live",
+    // 12 mm case depth — apple.com Ultra 3 tech specs ("Depth: 12mm"),
+    // re-verified 2026-08-26 (14.4 mm was the Ultra 2; LOOKBIBLE §6's
+    // "side-14mm" frame NAME predates the Ultra 3 spec — flagged for P5).
+    name: "SIDE-12MM",
+    alt: "Edge-on profile, 12 millimeters, chamfer streaks live",
   },
   {
     name: "BACK-CRYSTAL",
@@ -146,9 +149,13 @@ function mixHex(from: number, to: number, t: number): string {
   return `rgb(${r} ${g} ${b})`;
 }
 
-/** Finish id → display label ("natural-titanium" → "Natural Titanium"). */
-function finishLabel(finish: string): string {
-  return finish
+/** Config id → the config table's honest display label ("natural-anchor-blue"
+ *  → "Natural Titanium · Anchor Blue"); id-derived words as the fallback so
+ *  an unknown id can never render an empty caption. */
+function configLabel(id: string): string {
+  const cfg = configById(id);
+  if (cfg) return cfg.label;
+  return id
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
@@ -168,7 +175,7 @@ export class ImagesSection extends SectionBase {
 
   /** The finish whose stills are on screen (colorway axis is P3-owned;
    *  we start from the INITIAL_STATE default and follow CONFIG_CHANGE). */
-  private finish = "natural-titanium";
+  private finish = DEFAULT_CONFIG_ID;
   /** Latest requested finish — preflight loads resolve out of order. */
   private pendingFinish: string | null = null;
   private readonly warnedFinishes = new Set<string>();
@@ -268,7 +275,7 @@ export class ImagesSection extends SectionBase {
           </div>
           <div class="gal__caption">
             <p class="gal__phrase">${CAPTION_PHRASE}</p>
-            <p class="gal__colorway"><span data-colorway>${finishLabel(this.finish)}</span></p>
+            <p class="gal__colorway"><span data-colorway>${configLabel(this.finish)}</span></p>
           </div>
         </div>
         <div class="gal__sheet" data-gallery>${figures}
@@ -380,7 +387,7 @@ export class ImagesSection extends SectionBase {
         still.source.srcset = url;
         still.img.src = url;
       }
-      this.colorwayEl.textContent = finishLabel(finish);
+      this.colorwayEl.textContent = configLabel(finish);
     };
     probe.onerror = () => {
       if (this.pendingFinish === finish) this.pendingFinish = null;

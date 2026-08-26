@@ -114,8 +114,9 @@
 
 .mvt__labels {
   position: absolute;
-  right: 4.5vw;
-  top: 54%;
+  right: 4vw;
+  top: 58%; /* gate:p3 Movement tune — ~4vh down (was 54%): the NEURAL
+     ENGINE copy no longer crosses the SiP board's dark corner at .65–.75 */
   width: 19.5rem;
   max-width: 36vw;
   display: grid;
@@ -123,8 +124,22 @@
   pointer-events: none;
 }
 
+/* §7.1 porcelain backing per block (gate:p3 Movement tune, second knob):
+   a both-axes-feathered ellipse from the live ground token — invisible on
+   bare porcelain, reads as a soft chip exactly where the animated board
+   silhouette passes behind the copy. Ellipse hits alpha 0 inside its own
+   box (Colors-lane pitfall: >100% gradient sizes clip to hard edges).
+   Padding+negative margin keep the text's visual position unchanged. */
 .mvt__block {
   will-change: transform, opacity;
+  padding: 1.2rem 1.6rem;
+  margin: -1.2rem -1.6rem;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    color-mix(in srgb, var(--porcelain) 85%, transparent),
+    color-mix(in srgb, var(--porcelain) 52%, transparent) 62%,
+    transparent 100%
+  );
 }
 
 .mvt__label {

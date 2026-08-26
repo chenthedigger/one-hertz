@@ -7,12 +7,12 @@
  * the OCEAN BAND CREST MACRO (LOOKBIBLE §6 shot 8 recipe — macro optics,
  * the fluoroelastomer loop's outer crest across the lower frame) under the
  * same centered-copy composition, sequenced as three beats over the 400svh
- * pin: headline "WOVEN, / NOT FORGED" → BPM catalog card #3 "142 / 220 bpm
- * — the band" (shared-denominator catalog, PLAN §2: 58 → 96 → 142 over
- * Curves/MovementWatchRight/Straps; the value counts 96→142 as a pure
- * function of progress — the heart-rate peak) → family callout rail
- * "OCEAN · ALPINE · TRAIL · TITANIUM MILANESE" (copy only; Ocean is the
- * geometry on stage, the others are catalog callouts).
+ * pin: headline "MOLDED, / NOT FORGED" → BPM catalog card #3 "142 / 220"
+ * (shared-denominator catalog, PLAN §2: 58 → 96 → 142 over
+ * Curves/Hands/Straps; the value counts 96→142 as a pure function of
+ * progress — the heart-rate peak) → Ocean color rail "BLACK · ANCHOR BLUE
+ * · NEON GREEN" (the shipped recolor axis; the live tick tracks the active
+ * config's band — founder 2026-08-26, real Apple Ocean colors only).
  *
  * Lighting: entirely the infra-gl keyframe driver's (instrument.json
  * Straps key: rot 250 · envInt 1.05 · porcelain stage — "band macro,
@@ -50,7 +50,9 @@ import { Euler, Vector3 } from "three";
 import { getClock } from "../core/clock";
 import type { OneHertzDebugApi } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
+import { bus, EngineEvent } from "../core/events";
 import { SectionBase, timelineAdapter } from "../core/section";
+import { CONFIGS, resolveConfig } from "../ui/colorway";
 import { productAttitude } from "../webgl/stage";
 import type { CameraPoseOverride, CameraRig } from "../webgl/cameraRig";
 import "./straps.css";
@@ -58,23 +60,37 @@ import "./straps.css";
 /* ---- copy (working copy per LOOKBIBLE §8 budgets — P4 polishes wording) --- */
 
 const EYEBROW = "10 · THE BAND"; // ≤18 chars caps
-const TITLE_GHOST = "WOVEN,"; // ≤18 chars/line at colossal
+/** The elastomer loop is MOLDED, not woven (woven is Alpine/Trail's craft —
+ *  the old ghost word overclaimed); the antithesis stays materials-true:
+ *  molded polymer against the source bracelet's forged links. */
+const TITLE_GHOST = "MOLDED,"; // ≤18 chars/line at colossal
 const TITLE_SOLID = "NOT FORGED";
 /** Body block — 3 grey-reveal lines, each ≤60 chars, one thought each. */
 const BODY_LINES = [
-  "One loop of fluoroelastomer, drawn under tension.",
+  "One loop of fluoroelastomer, molded without a seam.",
   "No links to machine. No pins to shake loose.",
   "It stretches at the sprint, and forgets it.",
 ] as const;
-const CARD_EYEBROW = "BPM · CARD 03/03"; // ≤18 chars caps
-const CARD_UNIT = "bpm — the band"; // value + unit; name rides the unit line
+const CARD_EYEBROW = "CATALOG 03/03"; // grammar unified with cards 01/02
+const CARD_UNIT = "bpm"; // value + unit; the caption carries the story
 const CARD_CAPTION = "The heart at its ceiling. The band, unbothered."; // ≤60
-const FAMILY_LABEL = "THE FAMILY"; // ≤18 chars caps
-/** Family names — "MILANESE" (not "TITANIUM MILANESE") is the one canonical
- *  name; the Footer lineup labels use the same vocabulary (gate-4 tune 5,
- *  label continuity). */
-const FAMILY = ["OCEAN", "ALPINE", "TRAIL", "MILANESE"] as const;
-const FAMILY_CAPTION = "Four bands. One heartbeat."; // ≤60 chars
+/** Family rail → Ocean color story (founder 2026-08-26: recolor-only axis).
+ *  The rail lists the three REAL Ocean colors (apple.com buy pages, checked
+ *  2026-08-26: Black / Anchor Blue / Neon Green — ui/colorway CONFIGS is the
+ *  one table, so the labels derive from it); the live tick tracks the ACTIVE
+ *  config's band over CONFIG_CHANGE. Alpine / Trail / Milanese exist in
+ *  Apple's catalog but not in this build — they no longer appear as dimmed
+ *  pseudo-options (the dim-as-honesty cue retires with the lie it flagged). */
+const FAMILY_LABEL = "OCEAN BAND"; // ≤18 chars caps
+interface FamilyItem {
+  readonly band: string;
+  readonly label: string;
+}
+const FAMILY: readonly FamilyItem[] = CONFIGS.reduce<FamilyItem[]>((acc, c) => {
+  if (!acc.some((f) => f.band === c.band)) acc.push({ band: c.band, label: c.bandLabel });
+  return acc;
+}, []);
+const FAMILY_CAPTION = "Three waters. One heartbeat."; // 28 ≤ 60 chars
 
 /** Catalog card #3 counts from card #2's value to the peak (PLAN §2). */
 const BPM_FROM = 96;
@@ -86,6 +102,12 @@ const BPM_WINDOW: readonly [number, number] = [0.4, 0.5];
 /* ---- grey-line reveal machinery (scrub:2 grammar, light ground §7.3) ------ */
 
 const REVEAL_FROM = 0xbcbcbc; // motion-bible grey (both grounds start here)
+/** Third-line floor (gate:p3 Straps tune, §7.5): the last body line crosses
+ *  the band macro at .25 mid-reveal, and the #BCBCBC start dips under 40%
+ *  contrast against the fluoroelastomer. Its ramp therefore STARTS at the
+ *  40%-ink-on-porcelain tone (same rule that lifted "WOVEN," to 40%) —
+ *  still reads as the pre-reveal grey tier, never under the §7.5 floor. */
+const REVEAL_FROM_BAND = 0x8f9193;
 const REVEAL_TO = 0x323232; // light-ground target (§7.3)
 /** scrub:2 catch-up rate (≈2 s to visually settle — Mechanism constant). */
 const REVEAL_LAG_K = 2.2;
@@ -94,6 +116,8 @@ interface RevealLine {
   el: HTMLElement;
   /** progress window [in, out] — per-line stagger on the 15/25 alternation */
   win: readonly [number, number];
+  /** ramp start color — line 3 floors at 40% ink (§7.5, gate:p3 tune). */
+  from: number;
   value: number;
   target: number;
 }
@@ -208,6 +232,19 @@ export class StrapsSection extends SectionBase {
 
     this.bpmValue = q<HTMLElement>("[data-bpm]");
 
+    // Family-rail live tick follows the ACTIVE band (CONFIG_CHANGE
+    // consumer — same normalization path as the gallery / Colors rail).
+    bus.on(EngineEvent.ConfigChange, (payload) => {
+      const cfg = resolveConfig(payload);
+      if (!cfg) return;
+      for (const item of pin.querySelectorAll<HTMLElement>(".strp__fam-item")) {
+        item.classList.toggle(
+          "strp__fam-item--live",
+          item.dataset["band"] === cfg.band,
+        );
+      }
+    });
+
     // Grey-line windows: staggered per-line on the 15/25 alternation shape
     // (motion bible §3 — expressed directly in the progress domain).
     const lines = Array.from(pin.querySelectorAll<HTMLElement>(".strp__line"));
@@ -219,9 +256,15 @@ export class StrapsSection extends SectionBase {
     this.reveals = lines.map((el, i) => ({
       el,
       win: wins[i] ?? [0.2, 0.33],
+      // Line 3 ("…and forgets it." tier) overlaps the band at .25 — floor
+      // its ramp start at 40% ink (§7.5; gate:p3 Straps tune).
+      from: i === 2 ? REVEAL_FROM_BAND : REVEAL_FROM,
       value: 0,
       target: 0,
     }));
+    // Paint the ramp starts once so the floored line never waits for its
+    // first reveal tick to leave the CSS #BCBCBC default.
+    for (const line of this.reveals) this.applyReveal(line);
 
     this.addDomAdapter(timelineAdapter(this.buildDomTimeline(pin)));
     this.addWebglAdapter(timelineAdapter(this.buildCameraTimeline()));
@@ -354,7 +397,7 @@ export class StrapsSection extends SectionBase {
   }
 
   private applyReveal(line: RevealLine): void {
-    line.el.style.color = mixHex(REVEAL_FROM, REVEAL_TO, easeInOutCubic(clamp01(line.value)));
+    line.el.style.color = mixHex(line.from, REVEAL_TO, easeInOutCubic(clamp01(line.value)));
   }
 
   /* ---- WebGL channel ------------------------------------------------------ */
@@ -485,9 +528,11 @@ function splitChars(word: string): string {
 }
 
 function buildMarkup(): string {
+  // Boot tick = the boot config's band (sections build before any swap).
+  const bootBand = CONFIGS[0]?.band;
   const famItems = FAMILY.map(
-    (name, i) =>
-      `<li class="strp__fam-item${i === 0 ? " strp__fam-item--live" : ""}">${name}</li>`,
+    (f) =>
+      `<li class="strp__fam-item${f.band === bootBand ? " strp__fam-item--live" : ""}" data-band="${f.band}">${f.label}</li>`,
   ).join("\n        ");
   return `
     <div class="strp__scrim" aria-hidden="true"></div>

@@ -94,8 +94,8 @@ const goto_ = (page, id, p) =>
   // config snapshot shape + truthful boot state
   const st0 = await state(page);
   check(
-    "config: 4 finishes exposed, boot active = natural-titanium",
-    st0.config?.finishes?.length === 4 && st0.config.active === "natural-titanium",
+    "config: 4 finishes exposed, boot active = natural-anchor-blue",
+    st0.config?.finishes?.length === 4 && st0.config.active === "natural-anchor-blue",
     `finishes=${st0.config?.finishes?.length} active=${st0.config?.active}`,
   );
   check(
@@ -123,7 +123,7 @@ const goto_ = (page, id, p) =>
 
   // Parts picker click → 1 s 5-param tween (in-page sampler, 100 ms cadence)
   await goto_(page, "Parts", 0.5);
-  await page.click('[data-colorway-slot="parts"] [data-finish="black-graphite"]');
+  await page.click('[data-colorway-slot="parts"] [data-finish="black-dlc-black"]');
   const tween = await page.evaluate(
     () =>
       new Promise((resolve) => {
@@ -162,10 +162,10 @@ const goto_ = (page, id, p) =>
   );
   const stSwap = await state(page);
   check(
-    "swap landed: config.active + materials.preset + colorway axis all black-graphite",
-    stSwap.config.active === "black-graphite" &&
-      stSwap.materials[0].preset === "black-graphite" &&
-      stSwap.colorway === "black-graphite",
+    "swap landed: config.active + materials.preset + colorway axis all black-dlc-black",
+    stSwap.config.active === "black-dlc-black" &&
+      stSwap.materials[0].preset === "black-dlc-black" &&
+      stSwap.colorway === "black-dlc-black",
     `active=${stSwap.config.active} preset=${stSwap.materials[0].preset}`,
   );
 
@@ -180,14 +180,14 @@ const goto_ = (page, id, p) =>
     accents.dial === "#ff453a" && accents.css === "#ff453a" && accents.bio === "#ff453a",
     JSON.stringify(accents),
   );
-  await page.screenshot({ path: `${SHOTS}/parts-picker-graphite.png` });
+  await page.screenshot({ path: `${SHOTS}/parts-picker-black.png` });
 
   // gallery re-src (probe image load is async — wait for the rewrite)
   await goto_(page, "Images", 0.5);
   await page.waitForFunction(
     () =>
       Array.from(document.querySelectorAll("[data-gallery] img")).every((i) =>
-        i.getAttribute("src")?.includes("black-graphite"),
+        i.getAttribute("src")?.includes("black-dlc-black"),
       ),
     null,
     { timeout: 5000 },
@@ -200,7 +200,7 @@ const goto_ = (page, id, p) =>
         [
           ...Array.from(p.querySelectorAll("source")).map((s) => s.getAttribute("srcset") ?? ""),
           p.querySelector("img")?.getAttribute("src") ?? "",
-        ].every((u) => u.includes("black-graphite")),
+        ].every((u) => u.includes("black-dlc-black")),
       ).length,
       art: pics.filter((p) =>
         Array.from(p.querySelectorAll("source")).some((s) =>
@@ -218,15 +218,15 @@ const goto_ = (page, id, p) =>
   check("gallery: min-width:1024 art-direction preserved", gallery.art === 5, `${gallery.art}/5`);
   check(
     "gallery: caption label follows",
-    gallery.caption === "Black Graphite",
+    gallery.caption === "Black Titanium · Black",
     `caption='${gallery.caption}'`,
   );
   await page.waitForTimeout(300); // decoded paint
-  await page.screenshot({ path: `${SHOTS}/gallery-graphite.png` });
+  await page.screenshot({ path: `${SHOTS}/gallery-black.png` });
 
   // Colors rail (dual-placement #3) drives the same config
   await goto_(page, "Colors", 0.75);
-  await page.click('[data-colorway-slot="colors"] [data-finish="natural-ember"]');
+  await page.click('[data-colorway-slot="colors"] [data-finish="natural-neon-green"]');
   await page.waitForTimeout(1200);
   const stEmber = await state(page);
   const crossFan = await page.evaluate(() => ({
@@ -237,18 +237,20 @@ const goto_ = (page, id, p) =>
     ),
   }));
   check(
-    "Colors rail: click emits canonical CONFIG_CHANGE (active=natural-ember)",
-    stEmber.config.active === "natural-ember",
+    "Colors rail: click emits canonical CONFIG_CHANGE (active=natural-neon-green)",
+    stEmber.config.active === "natural-neon-green",
     `active=${stEmber.config.active}`,
   );
   check(
     "cross-placement fan-out: Parts card + Colors rail follow the same bus",
     crossFan.partsName === "Natural Titanium" &&
-      crossFan.partsSub.includes("Ember") &&
+      // Slot 2 = natural-neon-green (real apple.com Ocean color names —
+      // founder 2026-08-26; "Ember" was the pre-recolor placeholder name).
+      crossFan.partsSub.includes("Neon Green") &&
       crossFan.activeSlot === 2,
     JSON.stringify(crossFan),
   );
-  await page.screenshot({ path: `${SHOTS}/colors-rail-ember.png` });
+  await page.screenshot({ path: `${SHOTS}/colors-rail-neon.png` });
 
   // Outro: lineup manifest + slate at the loop point
   await goto_(page, "Footer", 0.75);
@@ -274,11 +276,11 @@ const goto_ = (page, id, p) =>
   await page.screenshot({ path: `${SHOTS}/outro-slate-p1.png` });
 
   // SELECT MODEL previews → SWAP hard-restarts in the chosen finish
-  await page.click('[data-outro-model="black-midnight"]');
+  await page.click('[data-outro-model="black-dlc-anchor-blue"]');
   const stSel = await state(page);
   check(
     "outro: SELECT MODEL previews (outro.selected + config grade start)",
-    stSel.outro.selected === "black-midnight" && stSel.config.active === "black-midnight",
+    stSel.outro.selected === "black-dlc-anchor-blue" && stSel.config.active === "black-dlc-anchor-blue",
     `selected=${stSel.outro.selected} active=${stSel.config.active}`,
   );
   await page.click("[data-outro-swap]");
@@ -297,9 +299,9 @@ const goto_ = (page, id, p) =>
   );
   check(
     "restart: chosen finish applied at duration 0 (no tween in flight)",
-    restart.active === "black-midnight" &&
+    restart.active === "black-dlc-anchor-blue" &&
       restart.tweening === false &&
-      restart.m0.preset === "black-midnight",
+      restart.m0.preset === "black-dlc-anchor-blue",
     `active=${restart.active} tweening=${restart.tweening}`,
   );
   check(
@@ -308,7 +310,7 @@ const goto_ = (page, id, p) =>
     `selected=${String(restart.selected)}`,
   );
   await page.waitForTimeout(250);
-  await page.screenshot({ path: `${SHOTS}/restart-intro-midnight.png` });
+  await page.screenshot({ path: `${SHOTS}/restart-intro-anchor.png` });
 
   check("no console errors (eval page)", errors.length === 0, errors.slice(0, 3).join(" | "));
   await page.close();
@@ -332,7 +334,7 @@ const goto_ = (page, id, p) =>
   check("cursor: SELECT MODEL over the outro", label1 === "SELECT MODEL", `label=${label1}`);
 
   // finish-swatch icon over a model button
-  const btn = await page.$('[data-outro-model="natural-ember"]');
+  const btn = await page.$('[data-outro-model="natural-neon-green"]');
   const box = await btn.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.waitForTimeout(200);
@@ -356,7 +358,7 @@ const goto_ = (page, id, p) =>
   }));
   check(
     "live restart: scrollY 0 without smooth animation, finish applied",
-    live.y === 0 && live.active === "natural-ember" && live.tweening === false,
+    live.y === 0 && live.active === "natural-neon-green" && live.tweening === false,
     JSON.stringify(live),
   );
 

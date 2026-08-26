@@ -1,0 +1,272 @@
+{
+  "url": "http://localhost:4640/",
+  "label": "after-v2",
+  "timestamps": {
+    "domContentLoaded": 187,
+    "loaderPainted": 361,
+    "loaderReady": 3550,
+    "networkIdle": 3551
+  },
+  "totals": {
+    "requests": 36,
+    "totalBytes": 4358425,
+    "totalMB": 4.16,
+    "finishedBeforeLoaderReady": 36,
+    "bytesBeforeLoaderReady": 4358425,
+    "mbBeforeLoaderReady": 4.16
+  },
+  "requests": [
+    {
+      "url": "/",
+      "kb": 7.3,
+      "start": 7,
+      "end": 33,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-300.woff2",
+      "kb": 14.9,
+      "start": 30,
+      "end": 34,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/GeistMono-var-latin.woff2",
+      "kb": 22.6,
+      "start": 30,
+      "end": 34,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/Inter-var-latin.woff2",
+      "kb": 47.3,
+      "start": 31,
+      "end": 37,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/index-Bn380sxX.js",
+      "kb": 1004.3,
+      "start": 31,
+      "end": 59,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/index-Dm_t9d8C.css",
+      "kb": 57.7,
+      "start": 31,
+      "end": 37,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/looks/instrument.json",
+      "kb": 11.5,
+      "start": 186,
+      "end": 334,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/ultra-3.ktx2.glb",
+      "kb": 1210.1,
+      "start": 186,
+      "end": 334,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-400.woff2",
+      "kb": 14.8,
+      "start": 187,
+      "end": 289,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-500.woff2",
+      "kb": 14.9,
+      "start": 187,
+      "end": 289,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_1.webp",
+      "kb": 85.6,
+      "start": 187,
+      "end": 190,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_2.webp",
+      "kb": 32.6,
+      "start": 187,
+      "end": 190,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_3.webp",
+      "kb": 50.3,
+      "start": 187,
+      "end": 190,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_4.webp",
+      "kb": 25,
+      "start": 187,
+      "end": 190,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_5.webp",
+      "kb": 32.1,
+      "start": 187,
+      "end": 190,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/looks/instrument.hdr",
+      "kb": 394.7,
+      "start": 334,
+      "end": 360,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/f7da7e19-a51e-4802-9e00-0a18deecf97d",
+      "kb": 68.8,
+      "start": 338,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/feebf6ae-cf59-4454-86c9-abed2e06dc30",
+      "kb": 60.5,
+      "start": 338,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/16f183d3-5627-4cde-ba0f-0d75ef014209",
+      "kb": 17.3,
+      "start": 338,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/826a65f8-9356-4f36-afb8-7e26e7cd2b4a",
+      "kb": 56.4,
+      "start": 338,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/131d8042-e553-485e-a7d5-17ff259fafe9",
+      "kb": 9.6,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/2246ad51-8868-43a0-b6ad-ddfb3960dce7",
+      "kb": 0.8,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/1b625caa-6b9a-4902-8542-72b04fa36cf9",
+      "kb": 51.4,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/a6089eef-a56b-4fa7-b18c-963375fcf835",
+      "kb": 0.9,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/966792d1-9118-40aa-9ca7-38c3c92f8491",
+      "kb": 0.6,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/21d1b770-b102-406b-b5db-c791b19025e9",
+      "kb": 52.6,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/a7185e25-2241-4555-8be2-ed3e80d9e2ad",
+      "kb": 30.6,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/1d6284ba-f36c-460c-9a4f-a648b932c964",
+      "kb": 32.7,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/bceeafb7-fcd4-439d-a1e7-b01a84e41cd9",
+      "kb": 17,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/0314f332-903f-42e2-b76d-4f4e026eea6a",
+      "kb": 14.8,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/fb1be3c9-6b74-4b47-b920-2f0735771564",
+      "kb": 61,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/b53e5ab3-0e17-4488-860c-41439c19f25e",
+      "kb": 24.7,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/6e1a5d4e-50d6-44d0-a44c-f01dc92dc1cc",
+      "kb": 97.9,
+      "start": 341,
+      "end": 361,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/basis/basis_transcoder.js",
+      "kb": 56.2,
+      "start": 410,
+      "end": 454,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/basis/basis_transcoder.wasm",
+      "kb": 515,
+      "start": 410,
+      "end": 454,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/912d0890-ff87-49b0-85ac-b0531f87208f",
+      "kb": 61.9,
+      "start": 460,
+      "end": 466,
+      "beforeLoaderReady": true
+    }
+  ]
+}

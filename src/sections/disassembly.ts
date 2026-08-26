@@ -47,6 +47,8 @@ import { Group, Matrix4, Quaternion, Vector3, type Object3D } from "three";
 import { EASE } from "../core/constants";
 import { extendState } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
+import { bus, EngineEvent } from "../core/events";
+import { params } from "../core/params";
 import { SectionBase, timelineAdapter } from "../core/section";
 import type { CameraRig, OrbitProxy } from "../webgl/cameraRig";
 import type { Stage } from "../webgl/stage";
@@ -134,7 +136,7 @@ const LABELS: LabelSpec[] = [
   { anchor: "part_crystal", index: "01", struck: "hesalite dome", real: "sapphire crystal" },
   { anchor: "part_screen", index: "02", struck: "guilloché dial", real: "LTPO3 OLED · 1 Hz" },
   { anchor: "part_sip", index: "03", struck: "mainplate", real: "S10 SiP" },
-  { anchor: "part_battery", index: "04", struck: "mainspring barrel", real: "35.3 mAh cell" },
+  { anchor: "part_battery", index: "04", struck: "mainspring barrel", real: "42-hour cell" },
   { anchor: "part_taptic", index: "05", struck: "hammer & gongs", real: "Taptic Engine" },
   { anchor: "part_backCrystal", index: "06", struck: "tourbillon", real: "optical heart sensor" },
 ];
@@ -244,14 +246,38 @@ export class DisassemblySection extends SectionBase {
       this.interaction = new ExplodeInteraction(this.stage, rig, pin);
     }
 
-    // Internals load starts at construction (needed by the time the user
-    // scrolls to section 4; NOT a loader task — first paint never waits on
-    // them, source-parity progressive loading).
+    // Internals fetch policy (P4 perf — 4.6 MB of GLBs must not ride the
+    // first-load window). Progressive-loading resilience is unchanged: the
+    // fan beat attaches parts whenever they land, stubs keep the slots.
+    //   · eval mode  → load at construction (frame determinism vs the
+    //     reference captures outranks first-load weight under ?eval=1)
+    //   · solo=Disassembly → load now (sandbox goes straight to the beat)
+    //   · live → one-shot scroll-distance prefetch: the first lifecycle
+    //     `enter` of a section within two tracks of Disassembly (Timeless /
+    //     VerticalText approaching from above, Mechanism from below) — idle
+    //     visitors who never scroll fetch nothing.
     if (this.stage) {
-      void loadInternals(this.stage.renderer).then((loaded) => {
-        this.internals = loaded;
-        this.internalsReady = true;
+      const stage = this.stage;
+      let kicked = false;
+      const kick = (): void => {
+        if (kicked) return;
+        kicked = true;
+        offEnter();
+        void loadInternals(stage.renderer).then((loaded) => {
+          this.internals = loaded;
+          this.internalsReady = true;
+        });
+      };
+      const PREFETCH_SECTIONS = new Set([
+        "Timeless",
+        "VerticalText",
+        "Disassembly",
+        "Mechanism",
+      ]);
+      const offEnter = bus.on(EngineEvent.SectionEnter, ({ section }) => {
+        if (PREFETCH_SECTIONS.has(section)) kick();
       });
+      if (isEvalMode || params.solo === "Disassembly") kick();
     } else {
       this.internalsReady = true; // exotic embedding: slots become stubs
     }
@@ -315,7 +341,7 @@ export class DisassemblySection extends SectionBase {
           <span>Drag &amp; tap to explore</span>
         </div>
         <div class="dis__copy dis__copy--a">
-          <p class="dis__eyebrow">Movement, opened</p>
+          <p class="dis__eyebrow">04 · Disassembly</p>
           <h2 class="dis__headline">Every mechanism has a pulse.</h2>
           <p class="dis__body">Haute horlogerie worships the 4&nbsp;Hz balance wheel.</p>
         </div>
@@ -327,7 +353,7 @@ export class DisassemblySection extends SectionBase {
         <div class="dis__copy dis__copy--b">
           <p class="dis__eyebrow">Regulation</p>
           <h2 class="dis__headline">This one beats at 1&nbsp;Hz.</h2>
-          <p class="dis__body">Twelve parts stand in for four hundred. An optical heart reads yours, and answers once a second.</p>
+          <p class="dis__body">Ten parts stand in for four hundred. An optical heart reads yours, and answers once a second.</p>
         </div>
         <div class="dis__labels">
           <div class="dis__labelscrim" aria-hidden="true"></div>

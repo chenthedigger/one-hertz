@@ -56,8 +56,15 @@ export interface EnginePayloads {
     restart?: boolean;
   };
   /** Cursor icon channel; `null` clears it. `color` tints the
-   *  finish-swatch icon (defaults to the cursor's swatch fallback). */
-  [EngineEvent.SetCursorIcon]: { icon: CursorIconName | null; color?: string };
+   *  finish-swatch icon (defaults to the cursor's swatch fallback).
+   *  `place: "tag"` floats the chip above the pointer (label-safe — the
+   *  gate:p3 cursor polish for chips that hover DOM labels; additive,
+   *  default stays pointer-centered for 3D-part hovers). */
+  [EngineEvent.SetCursorIcon]: {
+    icon: CursorIconName | null;
+    color?: string;
+    place?: "tag";
+  };
   /** Exploded view: a part proxy was clicked (part = GLB node name). */
   [EngineEvent.SetClickedMesh]: { part: string };
   /** Exploded view: close the selected part. */

@@ -1,0 +1,65 @@
+{
+  "gate": "p4",
+  "author": "P4 integrate lane (single-director gate — no p4 gate verdict existed; synthesized 2026-08-26 from docs/p4/{copy,gallery,look-fixes,perf}.md evidence + fresh live judgment on the combined final tree; probe frames in docs/p4/gate-probe/)",
+  "continuity": "The four P4 lanes (copy, gallery, look-fixes, perf) land as one coherent build: the invented Tide/Graphite/Ember/Midnight colorway world is fully replaced by the founder's real-Apple-Ocean axis (Anchor Blue / Black / Neon Green across two Ti finishes, every combo an orderable apple.com config) and every consumer renders from the one CONFIGS table — gallery captions, Colors rail, Parts card, Footer lineup labels, Straps family rail, cursor swatch. All 13 gate:p3 tunes verified closed on fresh frames (Movement annotation, Parts card drop, Footer mobile remap, chip yield policy, DAYBREAK tag, Straps line 3, Intro live bloom, cursor tag-chip, debug-API trio). The case-flank mottling class is dead at the GLB source (flat +Z normal; Hands .75 reads machined satin). Copy is spec-true against live apple.com fetches (12mm depth, MOLDED not WOVEN, FLAT SAPPHIRE, three Ocean colors) and the Fraunces §4 one-moment law is machine-checked. First load fell 15.96 MB → 3.94 MB with a 10/10 pixel-identical A/B proof against frozen references. Fresh live walks both viewports: zero console errors.",
+  "scopeConcerns": "1) evals/reference/ours predates the real-Ocean world at gate time — full refresh is this integrate lane's canonical step (done: 150+16 frames, zero skips). 2) Rubric assert's explode-tap-tolerance-15px is close-race flaky (FAIL on run 1, PASS solo re-run; same signature look-fixes saw) — harness hardened this lane with a verified selection-clear wait, not an engine defect. 3) The standing SKIP longpress-lenis-stop (schema-v1 scroll scalar) remains a P5 council decision. 4) Perf proxy tier2 sits at exactly the 40 fps floor under 6x CPU throttle — real mid-tier device round still owed before ship (P5). 5) Beauty council (blind judges vs source) not run at this gate — single-director judgment only. 6) LOOKBIBLE amendments (ocean anchor color, side-14mm naming) still need council co-sign (P5).",
+  "verdicts": [
+    {
+      "section": "Copy / spec truth (P4 copy lane)",
+      "verdict": "PASS",
+      "evidence": "copy-smoke 17/17 on the final tree; Hands .75 shows 'Twelve millimeters of titanium' + 'Working rate. The case keeps its posture.' + CATALOG 02/03; Straps .25 shows MOLDED, NOT FORGED with 'molded without a seam' and line 3 legible at the .25 band crossing; credits slate ≤7 rows ≤44 chars with 'as of watchOS 26 · August 2026'."
+    },
+    {
+      "section": "Fraunces editorial moment (Nocturne lead)",
+      "verdict": "PASS",
+      "evidence": "copy-smoke asserts exactly one element sitewide computes to Fraunces, font verified loading, 51.2px ≥ 40px floor; Nocturne .5 AOD frame itself unchanged and gorgeous (outlined hands, red 64 BPM, AOD · REAL SECONDS)."
+    },
+    {
+      "section": "Colorway axis + gallery masters (P4 gallery lane)",
+      "verdict": "PASS",
+      "evidence": "swap-smoke 26/26 on final tree (boot natural-anchor-blue, gallery re-src black-dlc-black with honest caption, outro 4-up + restart); d-Images-5 shows all five Cycles cells with real DOF/contact detail, SIDE-12MM label, 'NATURAL TITANIUM · ANCHOR BLUE' eyebrow; d-Footer-9/-1 show four honestly distinct clones under real Apple names with Anchor Blue on opposite finishes at opposite ends; 812 KB total for 4 real sets."
+    },
+    {
+      "section": "Look fixes vs gate:p3 (13 items)",
+      "verdict": "PASS",
+      "evidence": "Re-judged on fresh probe frames: d-Movement-7 annotation clear of the board on porcelain feathering; d-Parts-5 picker card fully clear of the chip; d-Hands-75 machined satin flank (mottling dead); d-Straps-25 three body lines legible; d-Footer-9 desktop chip whispers beside TOTAL WEIGHT; m-Footer-9/-1 lineup clear of FIN with labels under watch centers; assert 28/29 confirms the debug-API trio stays closed."
+    },
+    {
+      "section": "Perf / first load (P4 perf lane)",
+      "verdict": "PASS",
+      "evidence": "waterfall-final 3.94 MB / 36 req (was 15.96 MB); ab-proof 10/10 identical-class vs frozen references; desktop fps gates PASS at every tier; loader honesty preserved (vital-smoke completion ≥ 2.5 s floor). Caveats published: proxy tier2 at exactly 40 fps, real-device round owed (P5)."
+    },
+    {
+      "section": "Vital chip vs mobile gallery sheet",
+      "verdict": "TUNE",
+      "evidence": "m-Images-5 (pre-tune): chip renders full-strength — bright trace, white 64 BPM, mute button — directly across gallery cell 05 BACK-CRYSTAL on 390x844; the last unowned fixed-chrome overlap (pre-existing P3 debt, flagged by the gallery lane).",
+      "tuneList": [
+        "Join the Images portrait traversal to the one-owner getYield policy (strictly inside the section span so the clamp cannot leak into later sections)"
+      ]
+    },
+    {
+      "section": "Mobile outro model rail",
+      "verdict": "TUNE",
+      "evidence": "m-Footer-1 (pre-tune): ANCHOR BLUE wraps to two lines in slots 1/4 at 92vw/4 columns while BLACK / NEON GREEN sit one line — band baselines and finish sublabels land at three different heights across the rail (the look-fixes lane's named handoff under the new real-name labels).",
+      "tuneList": [
+        "Bottom-align band labels inside a two-line box (portrait only) so all four band bottoms + finish sublabels share one baseline rhythm without shrinking the title type"
+      ]
+    },
+    {
+      "section": "Rubric harness surface",
+      "verdict": "TUNE",
+      "evidence": "assert run 1: explode-tap-tolerance-15px FAIL with 20px-gesture selected=part_crystal — stale selection from a raced overlay close, PASS on solo re-run (same flake look-fixes recorded); engine behavior verified correct by explode-smoke 39/39 both runs.",
+      "tuneList": [
+        "Harden the check's close step: retry the close click until state().explode.selected actually clears instead of a blind 400 ms wait"
+      ]
+    },
+    {
+      "section": "Reference set (evals/reference/ours)",
+      "verdict": "TUNE",
+      "evidence": "Colorway interaction frames still showed the deleted Tide/Graphite/Ember/Midnight world at gate time (gallery lane flag 4).",
+      "tuneList": [
+        "Full eval:capture refresh both viewports on the final tree (canonical integrate step)"
+      ]
+    }
+  ]
+}

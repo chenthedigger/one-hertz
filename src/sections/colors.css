@@ -34,14 +34,17 @@
   letter-spacing: var(--track-caps-wide);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--col-porcelain) 70%, transparent);
-  padding: 2.2rem 7rem;
+  padding: 2rem 7rem;
   /* §7.1 scrim from the outgoing ink ground, shrunk to the text measure
      (gate-4 tune 2 — it rendered as a viewport-wide band with hard
      edges). The ellipse reaches alpha 0 exactly at the box edges, so the
-     falloff feathers in BOTH axes — never a clipped panel. */
+     falloff feathers in BOTH axes — never a clipped panel.
+     gate:p3 Colors polish: 38%→30% ink + tighter vertical falloff (44%
+     vertical radius) — the tag reads as a breath on the dawn ground, not
+     a grey lozenge. */
   background: radial-gradient(
-    50% 50% at 50% 50%,
-    color-mix(in srgb, var(--ink) 38%, transparent),
+    50% 44% at 50% 50%,
+    color-mix(in srgb, var(--ink) 30%, transparent),
     transparent 100%
   );
   will-change: opacity;

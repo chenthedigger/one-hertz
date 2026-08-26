@@ -1,0 +1,9 @@
+{
+  "name": "Mac mini M-class (named desktop perf machine, rubric perf.named_devices.desktop)",
+  "chip": "Apple M5 Pro",
+  "memoryBytes": 25769803776,
+  "os": "macOS 26.4.1 (Darwin 25.4.0)",
+  "browser": "real Chrome via playwright-core channel:\"chrome\", headless",
+  "recordedAt": "2026-08-26",
+  "note": "All p4-perf frametimes + waterfalls in this directory ran on this machine against vite preview :4640."
+}

@@ -2,9 +2,9 @@
  * Hands — the side-elevation beat (source track #9, `Hands_*.png`): the
  * source holds a centered "SLIM PROFILE" plate while the watch rides
  * edge-on under the camera. ONE HERTZ inverts the claim honestly (PLAN §2
- * semantic translation): this case is 14.4 mm of titanium and PROUD of it —
+ * semantic translation): this case is 12 mm of titanium and PROUD of it —
  * headline "PROUD / PROFILE", body copy verbatim from the brief, plus BPM
- * catalog card #2 (96 / 220 bpm — Assertive Profile), the catalog motif.
+ * catalog card #2 (96 / 220 bpm, "Working rate."), the catalog motif.
  * The Action Button's orange flank is the ONLY saturated element in frame
  * (Hands_* grammar); the DOM stays ink/porcelain/greys throughout.
  *
@@ -56,14 +56,16 @@ import "./hands.css";
 const EYEBROW = "09 · PROFILE"; // ≤18 chars caps
 /** Headline — the honest inversion of the source's SLIM PROFILE. */
 const HEADLINE_LINES = ["PROUD", "PROFILE"]; // ≤18 chars/line
-/** The brief's honest copy, verbatim (body ≤220 chars). */
-const BODY_A = "14.4 millimetres of titanium, and proud of every one.";
-const BODY_B = "The only colour it wears is the button on its flank.";
-/** BPM catalog card #2 (value + unit mono · caption ≤60 chars). */
-const CARD_EYEBROW = "BPM CATALOG · 02";
+/** The honest inversion, on the REAL depth: Ultra 3 slimmed to 12 mm
+ *  (apple.com tech specs, verified 2026-08 — 14.4 mm was the Ultra 2). */
+const BODY_A = "Twelve millimeters of titanium, and proud of every one.";
+const BODY_B = "The only color it wears is the button on its flank.";
+/** BPM catalog card #2 (value + unit mono · caption ≤60 chars); eyebrow
+ *  grammar unified with Curves "CATALOG 01/03" / Straps "CATALOG 03/03". */
+const CARD_EYEBROW = "CATALOG 02/03";
 const CARD_REST = "96";
 const CARD_MAX = "220";
-const CARD_CAPTION = "Assertive Profile";
+const CARD_CAPTION = "Working rate. The case keeps its posture."; // 41 ≤ 60
 
 /* ---- grey-line reveals (scrub:2 grammar — LIGHT-ground colors, §7.3) ------ */
 
@@ -448,7 +450,7 @@ function buildMarkup(): string {
     <aside class="hnd__card">
       <span class="hnd__card-rule" aria-hidden="true"></span>
       <p class="hnd__card-eyebrow">${CARD_EYEBROW}</p>
-      <p class="hnd__card-zones">rest / max</p>
+      <p class="hnd__card-zones">tempo / max</p>
       <p class="hnd__card-value tnum">${CARD_REST}<span class="hnd__card-sep">/</span>${CARD_MAX}<span class="hnd__card-unit">bpm</span></p>
       <p class="hnd__card-caption">${CARD_CAPTION}</p>
     </aside>

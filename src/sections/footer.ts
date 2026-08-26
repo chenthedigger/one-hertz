@@ -127,6 +127,21 @@ const CAM_FIT_K =
   ROW_SPAN_WORLD / (ROW_SPAN_FRACTION * 2 * Math.tan((CAM_FOV * Math.PI) / 360));
 const CAM_RADIUS_MAX = 28; // portrait safety — beyond this the row may crop
 
+/* Portrait remap (gate:p3 mobile Footer tune — the m-Footer-100 break):
+ * under the radius cap a 390×844 frame renders the row WIDER than the
+ * label rail's 92vw column grid and vertically centered over the slate
+ * (watches through the FIN line, labels ~500px adrift, chip on the rail).
+ * pf ramps 0→1 over aspect .95→.70 — continuous, so a live resize never
+ * snaps the framing; desktop (aspect ≥ .95) is bit-identical. */
+const PORTRAIT_ASPECT_HI = 0.95;
+const PORTRAIT_ASPECT_RANGE = 0.25;
+/** Extra aim height at full portrait — sinks the row to ~71% of the frame
+ *  (clear of the FIN line; labels land beneath the watch centers). */
+const PORTRAIT_AIM_RISE = 2.15;
+/** Spacing trim at full portrait — outer watch centers land at ±34.5% of
+ *  frame width = the 92vw label rail's outer column centers. */
+const PORTRAIT_SPACING_TRIM = 0.14;
+
 /* ---- beat windows (fraction grid {.05,.1,.15,.2,.25,.4,.5,.75} anchored;
  * fine beats sized per the motion-bible §2 scrub clusters). Every window is
  * authored to be SETTLED at the capture fractions {.25, .5, .75} — a beat
@@ -230,6 +245,8 @@ export class FooterSection extends SectionBase {
   private wrappers: Group[] = [];
   /** Per-slot contact-shadow materials — opacity rides each slot's rise. */
   private shadowMats: MeshBasicMaterial[] = [];
+  /** Per-slot contact-shadow planes — x follows the portrait spacing. */
+  private shadowPlanes: Object3D[] = [];
   private heroHidden = false;
 
   /* P3 SWAP — outro picker state (dual placement #2, rubric mechanic 5). */
@@ -484,7 +501,11 @@ export class FooterSection extends SectionBase {
     const aspect = stage.camera.aspect;
     const radius = Math.min(CAM_RADIUS_MAX, CAM_FIT_K / Math.max(0.35, aspect)) * r.radiusScale;
     const visH = 2 * radius * Math.tan((CAM_FOV * Math.PI) / 360);
-    const riseFrom = Math.min(RISE_FROM_MIN, r.targetY - visH / 2 - 0.9);
+    // Portrait remap factor (constants above): 0 on desktop, 1 at phone.
+    const pf = clamp01((PORTRAIT_ASPECT_HI - aspect) / PORTRAIT_ASPECT_RANGE);
+    const aimY = r.targetY + PORTRAIT_AIM_RISE * pf;
+    const spacing = LINEUP_SPACING * (1 - PORTRAIT_SPACING_TRIM * pf);
+    const riseFrom = Math.min(RISE_FROM_MIN, aimY - visH / 2 - 0.9);
 
     // Rise: scrub-mapped stagger MAX'd with the live wall-clock leg (the
     // source's enter-triggered rise) — eval sees only the scrub map.
@@ -495,11 +516,15 @@ export class FooterSection extends SectionBase {
       const dur = RISE_DUR_BASE + RISE_DUR_STEP * i;
       const scrub = easeOutQuart(win(progress, [RISE_START, RISE_START + dur]));
       const rise = Math.max(scrub, wall.v);
+      const slotX = (i - (LINEUP_COUNT - 1) / 2) * spacing;
+      wrapper.position.x = slotX;
       wrapper.position.y = riseFrom + (LINEUP_Y - riseFrom) * rise;
       // Contact shadow materializes as its watch approaches the ground
       // (LOOKBIBLE §1.4 fix 2 machinery — gate-4 tune 3, lineup grounding).
       const mat = this.shadowMats[i];
       if (mat) mat.opacity = SHADOW_OPACITY * clamp01((rise - 0.55) / 0.45);
+      const plane = this.shadowPlanes[i];
+      if (plane) plane.position.x = slotX;
     }
 
     const o = this.override;
@@ -507,7 +532,7 @@ export class FooterSection extends SectionBase {
     o.phi = CAM_PHI;
     o.radius = radius;
     o.targetX = 0;
-    o.targetY = r.targetY;
+    o.targetY = aimY;
     o.targetZ = 0;
     o.fov = CAM_FOV;
     o.parallaxScale = r.parallaxScale;
@@ -699,6 +724,7 @@ export class FooterSection extends SectionBase {
       if (!Array.isArray(mat) && mat instanceof MeshBasicMaterial) {
         this.shadowMats.push(mat);
       }
+      this.shadowPlanes.push(shadow);
       lineup.add(shadow);
     }
 

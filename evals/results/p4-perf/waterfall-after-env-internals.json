@@ -1,0 +1,293 @@
+{
+  "url": "http://localhost:4640/",
+  "label": "after-env-internals",
+  "timestamps": {
+    "domContentLoaded": 197,
+    "loaderPainted": 363,
+    "loaderReady": 3552,
+    "networkIdle": 3552
+  },
+  "totals": {
+    "requests": 39,
+    "totalBytes": 5002155,
+    "totalMB": 4.77,
+    "finishedBeforeLoaderReady": 39,
+    "bytesBeforeLoaderReady": 5002155,
+    "mbBeforeLoaderReady": 4.77
+  },
+  "requests": [
+    {
+      "url": "/",
+      "kb": 7.3,
+      "start": 4,
+      "end": 24,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-300.woff2",
+      "kb": 14.9,
+      "start": 23,
+      "end": 28,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/GeistMono-var-latin.woff2",
+      "kb": 22.6,
+      "start": 23,
+      "end": 28,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/Inter-var-latin.woff2",
+      "kb": 47.3,
+      "start": 23,
+      "end": 29,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/index-DgyWC_ld.js",
+      "kb": 1004.1,
+      "start": 23,
+      "end": 53,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/index-Dm_t9d8C.css",
+      "kb": 57.7,
+      "start": 24,
+      "end": 29,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/looks/instrument.json",
+      "kb": 11.5,
+      "start": 197,
+      "end": 331,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/ultra-3.ktx2.glb",
+      "kb": 1210.1,
+      "start": 197,
+      "end": 331,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-400.woff2",
+      "kb": 14.8,
+      "start": 197,
+      "end": 296,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-500.woff2",
+      "kb": 14.9,
+      "start": 197,
+      "end": 297,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_sip.glb",
+      "kb": 564,
+      "start": 197,
+      "end": 331,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_1.webp",
+      "kb": 85.6,
+      "start": 197,
+      "end": 200,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_2.webp",
+      "kb": 32.6,
+      "start": 197,
+      "end": 200,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_3.webp",
+      "kb": 50.3,
+      "start": 197,
+      "end": 200,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_4.webp",
+      "kb": 25,
+      "start": 197,
+      "end": 200,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_5.webp",
+      "kb": 32.1,
+      "start": 197,
+      "end": 201,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/looks/instrument.hdr",
+      "kb": 394.7,
+      "start": 331,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/949d765b-52b2-439a-b2f2-a770246ba0cf",
+      "kb": 68.8,
+      "start": 346,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/6d315838-bf7f-4b43-8ac7-030a4a72206a",
+      "kb": 60.5,
+      "start": 346,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/5fc9d290-8f98-44a0-9f9b-7a3e4150aea1",
+      "kb": 17.3,
+      "start": 346,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/6ace49fa-d771-46ce-aeb8-38d01f8dbe8b",
+      "kb": 56.4,
+      "start": 346,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/66997cc9-eac2-4aa2-805f-f43d25a8404a",
+      "kb": 9.6,
+      "start": 346,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/a8a7cb7e-a795-4c10-80e8-977a96e0894e",
+      "kb": 0.8,
+      "start": 346,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/b30d7dfb-4150-42c2-906a-fa4212dc3102",
+      "kb": 51.4,
+      "start": 347,
+      "end": 362,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/b9fd4b4e-e6a9-4a87-b52a-f7f13279c73a",
+      "kb": 0.9,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/1e5ade47-1683-406e-9a4c-96449af64b79",
+      "kb": 0.6,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/144e49cc-50cd-4808-a7b9-7ca6f0cddfdd",
+      "kb": 52.6,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/d547525d-8574-48a3-a11a-d961217b47a5",
+      "kb": 30.6,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/9b1e69a6-4eca-461d-af04-852b03e6cbba",
+      "kb": 32.7,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/6e01d023-eb93-4b04-a9c0-4a367eb4ea06",
+      "kb": 17,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/f1ab43f0-6eb1-473f-91ac-e400e746e8f5",
+      "kb": 14.8,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/6768dc31-f4cc-4e89-8d7e-5c13a2b03161",
+      "kb": 61,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/c97788c7-a155-4a5c-b617-e00b2bb2dc94",
+      "kb": 24.7,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/14891783-7817-419c-bcdd-a1e1a1cd3b10",
+      "kb": 97.9,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/cb42faf5-29f3-4e7d-87e0-d677910c777c",
+      "kb": 2.9,
+      "start": 347,
+      "end": 363,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/basis/basis_transcoder.js",
+      "kb": 56.2,
+      "start": 417,
+      "end": 450,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/basis/basis_transcoder.wasm",
+      "kb": 515,
+      "start": 417,
+      "end": 450,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/80dbfac0-d4a6-4694-8403-dea979c81c5e",
+      "kb": 61.9,
+      "start": 452,
+      "end": 461,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/b66c7c97-bc31-4e6d-a875-0bdf3d6c3163",
+      "kb": 61.9,
+      "start": 452,
+      "end": 458,
+      "beforeLoaderReady": true
+    }
+  ]
+}

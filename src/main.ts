@@ -31,6 +31,7 @@ import { ColorwaySystem, provideColorway } from "./ui/colorway";
 import { runLoaderMatchCut } from "./ui/loaderMatchCut";
 import { LivingVital } from "./ui/vital/vital";
 import { LightKeyframeDriver } from "./gl/lightKeyframes";
+import { ENV_HDR_URL } from "./gl/env";
 import { applyLook, DEFAULT_LOOK, loadLook, type LookConfig } from "./gl/look";
 import { CameraRig } from "./webgl/cameraRig";
 import { Stage } from "./webgl/stage";
@@ -59,19 +60,30 @@ function boot(): void {
   const loader = new Loader(params.eval); // ?eval=1 skips choreography
   const fontsTask = loader.task(1);
   const stageTask = loader.task(2);
-  const envTask = loader.task(2); // studio HDR bytes — the heavy real asset
+  const envTask = loader.task(2); // boot env HDR bytes (the active look's env)
   const watchTask = loader.task(2); // hero GLB bytes (real byte progress)
   const settleTask = loader.task(1);
 
   // -- Real asset progress: fonts ------------------------------------------
   document.fonts.ready.then(() => fontsTask.done());
 
+  // -- Look config resolution starts NOW (P4 perf) --------------------------
+  // The boot env fetch used to be the 6.5 MB TEMP studio HDR, replaced
+  // moments later by the look's own env (instrument.hdr, 404 KB). Resolving
+  // the look JSON (~12 KB) first lets the boot fetch BE the final env — the
+  // studio HDR survives only as the no-look / fetch-failure fallback, so the
+  // reviewer-resilience path is unchanged.
+  const lookPromise: Promise<LookConfig> = loadLook(params.look ?? "instrument");
+  const bootEnvUrl: Promise<string | null> = lookPromise.then((look) =>
+    look.envFile !== undefined ? look.envFile : look.envParams !== undefined ? null : ENV_HDR_URL,
+  );
+
   // -- WebGL stage (env prebuild + first compile are the heavy parts) ------
   const canvas = document.getElementById("stage");
   if (!(canvas instanceof HTMLCanvasElement)) {
     throw new Error("boot: #stage canvas missing");
   }
-  const stage = new Stage(canvas, { onEnvProgress: (p) => envTask.report(p) });
+  const stage = new Stage(canvas, { onEnvProgress: (p) => envTask.report(p), bootEnvUrl });
   provideStage(stage); // section-module stage seam (sections/stageRef.ts)
   stageTask.report(0.6); // context + env + geometry built
   // envReady settles on HDR swap OR confirmed fallback — real readiness
@@ -144,13 +156,22 @@ function boot(): void {
   let colorway: ColorwaySystem | null = null;
   const applyLookToStage = async (look: LookConfig): Promise<void> => {
     const watch = await watchReady;
-    await applyLook(stage, watch, look);
+    // P4 perf: if the boot path already fetched + applied this exact env URL
+    // (same URL ⇒ byte-identical PMREM output), skip applyLook's re-fetch.
+    // envReady always settles (loadHdrEnv catches), so this cannot hang.
+    await stage.envReady;
+    let effective = look;
+    if (look.envFile !== undefined && stage.appliedBootEnvUrl === look.envFile) {
+      const { envFile: _bootApplied, ...rest } = look;
+      effective = rest;
+    }
+    await applyLook(stage, watch, effective);
     lightDriver.setLook(look);
     colorway?.setLook(look);
   };
   void watchReady.then(async () => {
     try {
-      const look = await loadLook(params.look ?? "instrument");
+      const look = await lookPromise;
       currentLookName = look.name ?? currentLookName;
       await applyLookToStage(look);
     } catch (error: unknown) {
@@ -185,6 +206,27 @@ function boot(): void {
   registry.measure();
   engine.refresh(); // tracks were just sized — Lenis must re-learn its limit
   lightDriver.setGeometry(registry.manifest()); // keyframe anchors = section centers
+
+  // Fixed-chrome collision policy probe (gate:p3 Parts/Footer tunes — ONE
+  // owner, not three local fixes): the vital chip dims while the Parts
+  // table sweeps its corner during the Footer traversal (desktop ~.5–.97,
+  // the TOTAL WEIGHT bar crossing lives here) or while the end-slate label
+  // rail owns the bottom-right (mobile ≥.85 — the m-Footer-100 break).
+  // Pure function of the raw scroll + measured bounds — eval-deterministic.
+  let footerSpan: { start: number; end: number } | null = null;
+  let imagesSpan: { start: number; end: number } | null = null;
+  let lastRawScroll = 0;
+  const portraitMq = window.matchMedia("(max-width: 720px)");
+  const learnFooterSpan = (): void => {
+    const f = registry.manifest().find((s) => s.name === "Footer");
+    footerSpan = f ? { start: f.rawStart, end: f.rawEnd } : null;
+    // gate:p4 — portrait gallery sheet: full-width cells pass under the
+    // fixed chip for the whole Images traversal (chip crossed cell 05 at
+    // full strength on 390x844 — the P3 gate's last unowned overlap).
+    const im = registry.manifest().find((s) => s.name === "Images");
+    imagesSpan = im ? { start: im.rawStart, end: im.rawEnd } : null;
+  };
+  learnFooterSpan();
 
   // -- Interaction mechanics (P1 cursor+events lane) --------------------------
   // Longpress hold-zoom (mechanic 2): arms on ANY pointer type; consumers
@@ -235,6 +277,25 @@ function boot(): void {
     stageCanvas: canvas,
     getVelocity: () => engine.lenis.velocity,
     getStageHex: () => lightDriver.stageHex(),
+    getYield: () => {
+      // Portrait gallery sheet window (gate:p4) — strictly inside the span,
+      // so the clamp can never leak a yield into later sections.
+      if (
+        portraitMq.matches &&
+        imagesSpan !== null &&
+        imagesSpan.end > imagesSpan.start &&
+        lastRawScroll >= imagesSpan.start &&
+        lastRawScroll <= imagesSpan.end
+      ) {
+        return 1;
+      }
+      if (footerSpan === null) return 0;
+      const span = footerSpan.end - footerSpan.start;
+      if (span <= 0) return 0;
+      const p = Math.min(1, Math.max(0, (lastRawScroll - footerSpan.start) / span));
+      if (portraitMq.matches) return p >= 0.85 ? 1 : 0;
+      return p >= 0.5 && p <= 0.97 ? 1 : 0;
+    },
   });
   extendState("vital", () => vital.stats());
 
@@ -260,6 +321,7 @@ function boot(): void {
     registry.measure();
     engine.refresh();
     lightDriver.setGeometry(registry.manifest());
+    learnFooterSpan(); // collision-policy bounds follow real layout
   });
 
   // Single frame pipeline: raw Lenis scroll in → sections scrubbed (both
@@ -267,6 +329,7 @@ function boot(): void {
   // raw Lenis velocity (dirty-flag uploads only) → WebGL rig lerps its
   // master → render.
   engine.onFrame((rawScroll, dt) => {
+    lastRawScroll = rawScroll; // vital collision-policy probe reads this
     registry.update(rawScroll);
     setClock(rawScroll / registry.totalRange());
     const dialMode = store.get().dialMode;

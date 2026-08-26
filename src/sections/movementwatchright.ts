@@ -6,8 +6,8 @@
  * watch holds a face-on beauty read composed RIGHT of center; a detail
  * stack sits on the LEFT with thin hairlines reaching toward the case
  * (Refined Dial / Polished Hands / Premium Bezel in the source). Ours
- * makes the hairlines TRUE: three annotations — RETINA DIAL / LIQUID
- * GLASS / TITANIUM BEZEL — are 3D-projected DOM callouts whose dots track
+ * makes the hairlines TRUE: three annotations — RETINA DIAL / FLAT
+ * SAPPHIRE / TITANIUM BEZEL — are 3D-projected DOM callouts whose dots track
  * real mesh positions (part_screen / part_crystal / part_bezel) through
  * the product's clock attitude + case space, re-projected every frame
  * (the HOVER_POSITION pattern, recon "Details" mechanic). Hovering a row
@@ -107,8 +107,11 @@ const ANNOTATIONS: readonly AnnotationSpec[] = [
   },
   {
     id: "glass",
-    label: "LIQUID GLASS",
-    spec: "SAPPHIRE · IOR 1.77",
+    // Apple's own vocabulary is "flat sapphire crystal" — "Liquid Glass"
+    // is the watchOS 26 SOFTWARE material (it lives on the rendered dial,
+    // dial/spec.ts), not the physical crystal this dot annotates.
+    label: "FLAT SAPPHIRE",
+    spec: "CORUNDUM · IOR 1.77",
     token: "depth", // the dive read lives under the glass slab
     part: "part_crystal",
     ox: -0.56,
@@ -565,7 +568,13 @@ export class MovementWatchRightSection extends SectionBase {
       row.dotEl.classList.add("is-active");
       bus.emit(EngineEvent.HoverPosition, { x: row.px, y: row.py, part: row.spec.part });
     }
-    bus.emit(EngineEvent.SetCursorIcon, { icon: row ? "select" : null });
+    // place:"tag" — the chip floats above the pointer so it never covers
+    // the row label it points at (gate:p3 cursor polish; explode's part
+    // hover keeps the default centered chip — it hovers geometry).
+    bus.emit(
+      EngineEvent.SetCursorIcon,
+      row ? { icon: "select", place: "tag" } : { icon: null },
+    );
     // StateStore write — main.ts's frame loop forwards dialMode changes to
     // dial.applyDialToken (docs/p1/dial.md hover-swap contract).
     this.api?.applyState({ dialMode: row ? row.spec.token : "wayfinder" });

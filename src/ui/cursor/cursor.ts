@@ -50,6 +50,8 @@ type Mode = "none" | "text" | "icon";
 interface IconInput {
   name: CursorIconName;
   color?: string | undefined;
+  /** "tag" floats the chip above the pointer (label-safe placement). */
+  place?: "tag" | undefined;
 }
 
 /** Media query gate: the cursor exists only for hovering fine pointers. */
@@ -112,8 +114,8 @@ export class CursorSystem {
     gsap.ticker.add(this.onTick);
 
     this.unsubscribe.push(
-      bus.on(EngineEvent.SetCursorIcon, ({ icon, color }) => {
-        this.busIcon = icon === null ? null : { name: icon, color };
+      bus.on(EngineEvent.SetCursorIcon, ({ icon, color, place }) => {
+        this.busIcon = icon === null ? null : { name: icon, color, place };
         this.resolve();
       }),
       bus.on(EngineEvent.LongpressToggle, ({ active, intensity }) => {
@@ -221,8 +223,18 @@ export class CursorSystem {
 
   /* ---- state machine -------------------------------------------------------- */
 
+  /** Tag chips (label-safe placement) float above the pointer: the
+   *  finish-swatch always, plus any icon sent with `place: "tag"`. */
+  private isTagChip(): boolean {
+    const icon = this.busIcon;
+    return icon !== null && (icon.name === "finish-swatch" || icon.place === "tag");
+  }
+
   private dotScale(mode: Mode): number {
-    return mode === "icon" ? 0 : mode === "text" ? 1.6 : 1;
+    // Tag chips park ABOVE the pointer (gate:p3 cursor polish), so the
+    // dot survives at reduced scale as the chip's anchor point.
+    if (mode === "icon") return this.isTagChip() ? 0.6 : 0;
+    return mode === "text" ? 1.6 : 1;
   }
 
   /** Recompute the derived state from the inputs and animate the change. */
@@ -235,6 +247,11 @@ export class CursorSystem {
     if (next === "icon" && this.busIcon !== null) {
       this.iconEl.innerHTML = iconMarkup(this.busIcon.name, this.busIcon.color);
     }
+    // gate:p3 cursor polish (MWR rows / outro model labels): tag chips
+    // float above the pointer — never a cover over the label they point
+    // at. CSS .is-swatch lifts the chip; dotScale above keeps the dot
+    // visible as its anchor.
+    this.root.classList.toggle("is-swatch", next === "icon" && this.isTagChip());
     if (nextLabel !== null) this.labelEl.textContent = nextLabel;
 
     const modeChanged = next !== this.mode || nextLabel !== this.label;

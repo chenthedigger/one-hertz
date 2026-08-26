@@ -68,7 +68,7 @@
   overflow: hidden; /* mask for the char x-slides */
 }
 
-/* Ghost layer at 40% — §7.5 outranks the §4 ghost band here: "WOVEN,"
+/* Ghost layer at 40% — §7.5 outranks the §4 ghost band here: "MOLDED,"
    crosses the band macro at .25 and tone layers under 40% are banned over
    the product (gate-3 tune 3). Still reads ghost against the solid line. */
 .strp__t-ghost {
@@ -85,10 +85,27 @@
 }
 
 .strp__body {
-  margin-top: 1.6rem;
+  /* 1.6rem visual gap minus the backing's 1.1rem pad; negative bottom
+     cancels the pad so the beat-2 card's rhythm is untouched. */
+  margin-block: 0.5rem -1.1rem;
   display: grid;
   gap: 0.3rem;
   opacity: 0;
+  /* gate:p3 Straps tune (§7.5 with §7.1 grammar): the third grey-ramp line
+     crosses the band macro at .25 where the page scrim has already
+     feathered out — this both-axes-feathered porcelain ellipse rides the
+     block's own opacity (arrives .12, departs with the head at .32), so
+     the ramp reads on ≥50% ground exactly where the band passes and the
+     band macro stays unwashed everywhere else. Ellipse reaches alpha 0
+     inside the box (never a clipped panel). */
+  padding: 1.1rem 2.4rem;
+  margin-inline: -2.4rem;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    color-mix(in srgb, var(--porcelain) 74%, transparent),
+    color-mix(in srgb, var(--porcelain) 42%, transparent) 62%,
+    transparent 100%
+  );
 }
 
 .strp__line {
@@ -148,7 +165,7 @@
   margin-top: 0.5rem;
 }
 
-/* ---- Beat 3 · family callout rail (copy only — Ocean is on stage) ----------
+/* ---- Beat 3 · Ocean color rail (the shipped recolor axis, live tick) -------
    Gate-3 tunes 2+4: the rail moved from top-center into the bottom-left
    dead zone — it fills the .75 vacancy the source's edge-to-edge band
    grammar would never leave empty, AND it no longer crosses the band, so

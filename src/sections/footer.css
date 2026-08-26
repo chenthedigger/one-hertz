@@ -307,4 +307,15 @@
     font-size: 0.8rem;
     letter-spacing: var(--track-caps);
   }
+
+  /* gate:p4 — "ANCHOR BLUE" wraps to two lines at 92vw/4 columns while
+     BLACK / NEON GREEN sit one; bottom-align every band label inside a
+     two-line box so all four band bottoms + finish sublabels share one
+     baseline rhythm (keeps the title type scale instead of shrinking it). */
+  .outro__model-band {
+    display: flex;
+    min-height: 2.4em;
+    align-items: flex-end;
+    justify-content: center;
+  }
 }

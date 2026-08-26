@@ -138,12 +138,12 @@
    "roughness": 0.9
   },
   "mat_band_ocean": {
-   "color": "#1f6153",
+   "color": "#283f58",
    "roughness": 0.56,
    "envMapIntensity": 0.4
   },
   "mat_band_tab": {
-   "color": "#1f6153",
+   "color": "#243a52",
    "roughness": 0.62,
    "envMapIntensity": 0.4
   },
@@ -243,7 +243,8 @@
     "envRotationDeg": 250,
     "envIntensity": 1.05,
     "exposure": 1.05,
-    "note": "DOM section \u2014 hold"
+    "anchorOffset": -0.05,
+    "note": "DOM section \u2014 hold; anchorOffset -0.05 starts the porcelain\u2192Nocturne bgStage ramp one beat sooner (gate-4 Images exit handoff \u2014 the exit strap grounds on a staged ramp, not bare grey). Safe: the Straps\u2192Images segment is value-flat, so only the outgoing ramp moves"
    },
    {
     "section": "Nocturne",
@@ -281,7 +282,7 @@
   ]
  },
  "x_colorway": {
-  "comment": "P3 colorway-swap variant tables (src/ui/colorway.ts). finishes x bands = the 4 shipped configs (2 Ti finishes x Ocean COLOR recolors - founder 2026-08-26; Alpine/Trail geometry reserved pending purchase). natural+tide MUST mirror the base materialOverrides (boot state). metalnessMapIntensity is the colorway tween scalar (metalness x mmi is written to the material). Supersedes x_dlcVariant; the DLC anisotropy values it carried are dropped from the tween (5-param law) - look lane may re-add them as a static physical-upgrade pass.",
+  "comment": "P3 colorway-swap variant tables (src/ui/colorway.ts). finishes x bands = the 4 shipped configs (2 Ti finishes x REAL Apple Ocean colors - founder 2026-08-26, verified on apple.com buy pages at P4: Anchor Blue / Neon Green / Black are the only Ocean colorways Apple sells for Ultra 3; Alpine/Trail geometry reserved pending purchase). natural+anchor-blue MUST mirror the base materialOverrides (boot state). Band albedos judged on P4 Cycles frames under this env (LOOKBIBLE 1.3 law 4), not swatches. metalnessMapIntensity is the colorway tween scalar (metalness x mmi is written to the material). Supersedes x_dlcVariant; the DLC anisotropy values it carried are dropped from the tween (5-param law) - look lane may re-add them as a static physical-upgrade pass.",
   "finishes": {
    "natural": {
     "mat_titanium_case": {
@@ -401,67 +402,51 @@
    }
   },
   "bands": {
-   "tide": {
+   "anchor-blue": {
     "mat_band_ocean": {
-     "color": "#1f6153",
+     "color": "#283f58",
      "roughness": 0.56,
      "metalness": 0.0,
      "envMapIntensity": 0.4,
      "metalnessMapIntensity": 1.0
     },
     "mat_band_tab": {
-     "color": "#1f6153",
+     "color": "#243a52",
      "roughness": 0.62,
      "metalness": 0.0,
      "envMapIntensity": 0.4,
      "metalnessMapIntensity": 1.0
     }
    },
-   "graphite": {
+   "black": {
     "mat_band_ocean": {
-     "color": "#33363a",
+     "color": "#202226",
      "roughness": 0.52,
      "metalness": 0.0,
      "envMapIntensity": 0.5,
      "metalnessMapIntensity": 1.0
     },
     "mat_band_tab": {
-     "color": "#303338",
+     "color": "#1d1f23",
      "roughness": 0.58,
      "metalness": 0.0,
      "envMapIntensity": 0.48,
      "metalnessMapIntensity": 1.0
     }
    },
-   "ember": {
+   "neon-green": {
     "mat_band_ocean": {
-     "color": "#b0431d",
+     "color": "#a2df2e",
      "roughness": 0.58,
      "metalness": 0.0,
      "envMapIntensity": 0.42,
      "metalnessMapIntensity": 1.0
     },
     "mat_band_tab": {
-     "color": "#a63f1c",
+     "color": "#97d329",
      "roughness": 0.64,
      "metalness": 0.0,
      "envMapIntensity": 0.42,
-     "metalnessMapIntensity": 1.0
-    }
-   },
-   "midnight": {
-    "mat_band_ocean": {
-     "color": "#1b2740",
-     "roughness": 0.54,
-     "metalness": 0.0,
-     "envMapIntensity": 0.45,
-     "metalnessMapIntensity": 1.0
-    },
-    "mat_band_tab": {
-     "color": "#192338",
-     "roughness": 0.6,
-     "metalness": 0.0,
-     "envMapIntensity": 0.44,
      "metalnessMapIntensity": 1.0
     }
    }

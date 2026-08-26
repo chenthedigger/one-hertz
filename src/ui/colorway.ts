@@ -74,7 +74,7 @@ export interface ColorwayConfig {
   readonly finish: string;
   /** Band variant key into the look's x_colorway.bands table. */
   readonly band: string;
-  /** Display label ("Natural Titanium · Tide"). */
+  /** Display label ("Natural Titanium · Anchor Blue"). */
   readonly label: string;
   readonly finishLabel: string;
   readonly bandLabel: string;
@@ -85,55 +85,66 @@ export interface ColorwayConfig {
   readonly accent: string;
 }
 
+/*
+ * The four shipped configs are REAL apple.com Ultra 3 configurations
+ * (founder 2026-08-26: real Apple Ocean colors only — verified against
+ * apple.com buy pages 2026-08-26): Apple sells the Ocean Band for Ultra 3
+ * in exactly three colors — Black, Anchor Blue, Neon Green — each paired
+ * with both titanium finishes. Three real colors across four slots means
+ * one color repeats; Anchor Blue carries the repeat on OPPOSITE finishes
+ * at opposite ends of the outro lineup (slots 1/4), so all four clones
+ * stay visibly distinct. Order alternates finishes (the harness's tracked
+ * mat_titanium_case must change on every adjacent-index swap).
+ */
 export const CONFIGS: readonly ColorwayConfig[] = [
   {
-    id: "natural-titanium",
+    id: "natural-anchor-blue",
     finish: "natural",
-    band: "tide",
-    label: "Natural Titanium · Tide",
+    band: "anchor-blue",
+    label: "Natural Titanium · Anchor Blue",
     finishLabel: "NATURAL",
-    bandLabel: "TIDE",
+    bandLabel: "ANCHOR BLUE",
     finishHex: "#cfccc6",
-    bandHex: "#1f6153",
+    bandHex: "#283f58",
     accent: "#ff2d55", // the base biosignal — this IS the boot state
   },
   {
-    id: "black-graphite",
+    id: "black-dlc-black",
     finish: "black-dlc",
-    band: "graphite",
-    label: "Black DLC · Graphite",
+    band: "black",
+    label: "Black Titanium · Black",
     finishLabel: "BLACK DLC",
-    bandLabel: "GRAPHITE",
+    bandLabel: "BLACK",
     finishHex: "#17181b",
-    bandHex: "#33363a",
+    bandHex: "#202226",
     accent: "#ff453a",
   },
   {
-    id: "natural-ember",
+    id: "natural-neon-green",
     finish: "natural",
-    band: "ember",
-    label: "Natural Titanium · Ember",
+    band: "neon-green",
+    label: "Natural Titanium · Neon Green",
     finishLabel: "NATURAL",
-    bandLabel: "EMBER",
+    bandLabel: "NEON GREEN",
     finishHex: "#cfccc6",
-    bandHex: "#b0431d",
+    bandHex: "#a2df2e",
     accent: "#ff5a2d",
   },
   {
-    id: "black-midnight",
+    id: "black-dlc-anchor-blue",
     finish: "black-dlc",
-    band: "midnight",
-    label: "Black DLC · Midnight",
+    band: "anchor-blue",
+    label: "Black Titanium · Anchor Blue",
     finishLabel: "BLACK DLC",
-    bandLabel: "MIDNIGHT",
+    bandLabel: "ANCHOR BLUE",
     finishHex: "#17181b",
-    bandHex: "#1b2740",
+    bandHex: "#283f58",
     accent: "#ff2d6e",
   },
 ];
 
 /** INITIAL_STATE.colorway — config 0 is the page's boot state. */
-export const DEFAULT_CONFIG_ID = "natural-titanium";
+export const DEFAULT_CONFIG_ID = "natural-anchor-blue";
 
 export function configById(id: string): ColorwayConfig | null {
   return CONFIGS.find((c) => c.id === id) ?? null;

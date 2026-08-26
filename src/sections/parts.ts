@@ -77,7 +77,8 @@ const ROWS: ReadonlyArray<readonly [string, string, string, string]> = [
   ["DEPTH GAUGE", "07", "HYDROSTATIC", "40 m"],
   ["PRECISION GPS", "08", "SATELLITE", "L1 + L5"],
   ["COMPASS", "09", "MAGNETIC", "±2°"],
-  ["MICROPHONE", "10", "ACOUSTIC", "0–130 dB"],
+  // Noise app measures "up to 130 dB" (apple.com); no mic hears 0 dB SPL.
+  ["MICROPHONE", "10", "ACOUSTIC", "to 130 dB"],
 ];
 
 const SUMMARY_MODEL = "MODEL 1HZ";
@@ -89,7 +90,7 @@ const SUMMARY_VALUE = "immaterial"; // ≤12 — the inversion's punchline
  *  table); the eyebrow is the only static string. */
 const PICKER_EYEBROW = "COLORWAY";
 
-/** "Natural Titanium · Tide" → { name: "Natural Titanium", sub: "Ocean · Tide" }. */
+/** "Natural Titanium · Anchor Blue" → { name: "Natural Titanium", sub: "Ocean · Anchor Blue" }. */
 function pickerCopy(cfg: ColorwayConfig): { name: string; sub: string } {
   const [name = cfg.label, band = cfg.bandLabel] = cfg.label.split(" · ");
   return { name, sub: `Ocean · ${band}` };

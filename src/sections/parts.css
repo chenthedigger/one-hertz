@@ -115,7 +115,11 @@
 
 .prt__picker {
   position: absolute;
-  top: 7svh;
+  /* gate:p3 Parts tune — rest position dropped ~48px (7svh → below the
+     fixed vital chip's band): the ECG trace / 64 BPM / mute never touch
+     the card bounds at .5–1 (two chrome systems no longer stack at the
+     section's most-judged corner). Mobile keeps its own bottom anchor. */
+  top: calc(7svh + 48px);
   right: 6vw;
   z-index: 1;
   display: flex;

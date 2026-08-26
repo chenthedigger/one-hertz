@@ -638,8 +638,27 @@ const CHECKS: Record<string, Check> = {
     await gesture(10);
     const sel10 = pick(await getState(page), "explode.selected");
     if (sel10 != null) {
-      const close = await page.$("[data-explode-close]");
-      if (close) await close.click({ timeout: 2000 }).catch(() => {});
+      // Verified close: the click can race the overlay's settle on a busy run —
+      // retry until explode.selected actually clears (stale selection otherwise
+      // masquerades as a 20px-gesture mis-select; observed flaky 2026-08-26).
+      for (let i = 0; i < 3; i++) {
+        const close = await page.$("[data-explode-close]");
+        if (close) await close.click({ timeout: 2000 }).catch(() => {});
+        const cleared = await page
+          .waitForFunction(
+            () => {
+              const api = (window as unknown as Record<string, unknown>).__ONE_HERTZ__ as
+                | { state(): { explode?: { selected?: unknown } } }
+                | undefined;
+              return (api?.state().explode?.selected ?? null) == null;
+            },
+            null,
+            { timeout: 1500 },
+          )
+          .then(() => true)
+          .catch(() => false);
+        if (cleared) break;
+      }
     }
     await page.waitForTimeout(400);
     await gesture(20);

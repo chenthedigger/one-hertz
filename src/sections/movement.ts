@@ -56,6 +56,8 @@ import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.j
 import { getClock } from "../core/clock";
 import { extendState } from "../core/debug";
 import { isEvalMode } from "../core/determinism";
+import { bus, EngineEvent } from "../core/events";
+import { params } from "../core/params";
 import { SectionBase, timelineAdapter } from "../core/section";
 import { BASIS_TRANSCODER_PATH } from "../webgl/watch";
 import type { CameraPoseOverride, CameraRig } from "../webgl/cameraRig";
@@ -71,7 +73,9 @@ const STACK_LINES = ["THE", "/ HIGHLY", "ATTENTIVE", "SILICON", "MOVEMENT"];
 const LABEL_NEURAL = "NEURAL ENGINE"; // ≤18 chars caps
 const BODY_NEURAL = "Neural Engine, on a wrist."; // ≤220 chars
 const LABEL_RELIABILITY = "RELIABILITY";
-const BODY_RELIABILITY = "Swimproof. Crash and fall detection."; // ≤220 chars
+// "Swimproof" is Series-tier vocabulary; Ultra's verified reliability story
+// is the detection pair (apple.com Ultra 3, checked 2026-08-26).
+const BODY_RELIABILITY = "Crash and fall detection. It calls when you can't."; // 50 ≤ 220
 
 /* ---- featured object: the S-SiP ------------------------------------------- */
 
@@ -230,15 +234,29 @@ export class MovementSection extends SectionBase {
     this.addDomAdapter(timelineAdapter(this.buildDomTimeline(pin)));
     this.addWebglAdapter(timelineAdapter(this.buildCameraTimeline()));
 
-    // Featured object load starts at construction — progressive, never a
-    // loader task (source-parity: first paint waits on the hero only).
+    // Featured-object fetch policy (P4 perf — keep the 564 KB SiP GLB out
+    // of the first-load window; progressive resilience unchanged):
+    //   eval / solo=Movement → load now (frame determinism / sandbox);
+    //   live → one-shot prefetch on the first lifecycle `enter` within two
+    //   tracks of Movement (Disassembly/Mechanism above, Curves below).
     if (this.stage) {
       this.sipAnchor.name = "movement_sip_anchor";
       this.sipAnchor.position.copy(SIP_ANCHOR);
       this.sipAnchor.visible = false;
       this.sipAnchor.add(this.sipSpin);
       this.stage.scene.add(this.sipAnchor);
-      void this.loadSip();
+      let kicked = false;
+      const kick = (): void => {
+        if (kicked) return;
+        kicked = true;
+        offEnter();
+        void this.loadSip();
+      };
+      const PREFETCH_SECTIONS = new Set(["Disassembly", "Mechanism", "Movement", "Curves"]);
+      const offEnter = bus.on(EngineEvent.SectionEnter, ({ section }) => {
+        if (PREFETCH_SECTIONS.has(section)) kick();
+      });
+      if (isEvalMode || params.solo === "Movement") kick();
     } else {
       this.sipReady = true; // exotic embedding: DOM-only beat
     }

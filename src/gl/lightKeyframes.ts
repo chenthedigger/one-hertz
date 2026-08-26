@@ -45,6 +45,15 @@ export interface SectionLightKeyframe {
   bloomStrength?: number;
   /** DOM+GL stage ground for the beat; absent = the look's bgTokens.stage. */
   bgStage?: string;
+  /**
+   * Anchor shift, in fractions of the owning section's raw range, added to
+   * the center anchor (default 0 = exact center). The sanctioned knob for
+   * "start the next ramp earlier/later" retimes (gate-4 Images exit
+   * handoff: Images `anchorOffset: -0.05` starts the porcelain→Nocturne
+   * bgStage ramp one beat sooner — safe there because the Straps→Images
+   * segment is value-flat, so only the outgoing ramp moves).
+   */
+  anchorOffset?: number;
   /** Authoring annotation — ignored by the driver. */
   note?: string;
 }
@@ -208,14 +217,23 @@ export class LightKeyframeDriver {
     this.anchor();
   }
 
-  /** Anchor each keyframe at its section's raw center (progressDom 0.5). */
+  /** Anchor each keyframe at its section's raw center (progressDom 0.5),
+   *  plus the key's optional `anchorOffset` (fractions of its own range). */
   private anchor(): void {
-    const centers = new Map<string, number>();
-    for (const g of this.geometry) centers.set(g.name, (g.rawStart + g.rawEnd) / 2);
+    const spans = new Map<string, { center: number; range: number }>();
+    for (const g of this.geometry) {
+      spans.set(g.name, {
+        center: (g.rawStart + g.rawEnd) / 2,
+        range: g.rawEnd - g.rawStart,
+      });
+    }
     this.anchored = this.keyframes
-      .filter((k) => centers.has(k.section))
+      .filter((k) => spans.has(k.section))
       .map((k) => ({
-        at: centers.get(k.section) as number,
+        at:
+          (spans.get(k.section) as { center: number; range: number }).center +
+          (k.anchorOffset ?? 0) *
+            (spans.get(k.section) as { center: number; range: number }).range,
         sample: {
           envRotationDeg: k.envRotationDeg,
           envIntensity: k.envIntensity,

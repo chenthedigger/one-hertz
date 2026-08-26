@@ -74,13 +74,15 @@ const PRE_TITLE = "07 · CATALOG 01/03";
 const HEADLINE_LINES = ["GUARDED", "CONTOURS"];
 /** Sub-copy: the raised guarding lip (grey-line reveal pair, ≤220 each). */
 const SUB_LINES = [
-  "The sapphire dome falls away into a titanium chamfer.",
+  // "flat sapphire" is the Ultra's real crystal geometry (Apple's own
+  // wording) — the case lip does the guarding, not a domed crystal.
+  "A flat sapphire plate, let into a titanium chamfer.",
   "A raised lip guards the glass, machined from the case.",
 ];
 /** BPM card figure: value + unit mono · caption ≤60 chars (§8). */
 const BPM_VALUE = 58;
 const BPM_DENOMINATOR = "/ 220 bpm";
-const CAPTION = "Resting rate. The raised lip stands guard.";
+const CAPTION = "Resting rate. Armor, measured in heartbeats."; // 44 ≤ 60
 /** Shared-denominator page-flip rail (Curves=01 · Hands=02 · Straps=03). */
 const PAGES = ["01", "02", "03"];
 const ACTIVE_PAGE = 0;

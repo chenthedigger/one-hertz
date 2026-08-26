@@ -65,7 +65,9 @@ const DAWN_TAG = "DAYBREAK · 06:00"; // 16 ≤ 18 caps — Nocturne's bookend
 const EYEBROW = "13 · EDITIONS"; // 13 ≤ 18 caps
 const TITLE_LINE_1 = "ONE HEART,"; // 10 ≤ 18 at colossal
 const TITLE_LINE_2 = "FOUR LIGHTS."; // 12 ≤ 18
-const LEAD = "Two finishes. Four band colors. One heart."; // 42 ≤ 48
+// Three REAL Ocean colors (Black / Anchor Blue / Neon Green — apple.com buy
+// pages 2026-08-26) across four finish×color editions; Anchor Blue repeats.
+const LEAD = "Two finishes. Three Ocean colors. One heart."; // 44 ≤ 48
 const GREY_LINES = [
   "Natural titanium returns the light.", // 35 ≤ 44
   "DLC keeps it. Ocean cools it.", // 29

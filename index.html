@@ -14,6 +14,14 @@
     <link rel="preload" href="/assets/fonts/ClashDisplay-300.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/GeistMono-var-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/Inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- P4 perf: the two boot-critical 3D fetches start at HTML parse instead
+         of after module boot (~150 ms earlier). Consumers are plain fetch()
+         (three FileLoader / loadLook): request mode cors + credentials
+         same-origin, so the preload needs `crossorigin` to match (verified —
+         without it Chrome double-fetches). The env HDR is NOT preloaded: its
+         URL comes from the look JSON (?look= aware). -->
+    <link rel="preload" href="/assets/watch/ultra-3.ktx2.glb" as="fetch" crossorigin />
+    <link rel="preload" href="/assets/looks/instrument.json" as="fetch" crossorigin />
   </head>
   <body>
     <!-- Activity-rings loader (P3 vital lane): the ring triad colors are

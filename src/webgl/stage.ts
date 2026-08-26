@@ -36,7 +36,7 @@ import {
   tuneContactShadow,
   type ContactShadowTune,
 } from "../gl/contactShadow";
-import { buildProceduralEnv, loadStudioHdr } from "../gl/env";
+import { buildProceduralEnv, ENV_HDR_URL, loadHdrEnv } from "../gl/env";
 import { PostPipeline } from "../gl/post";
 import { detectInitialTier, QualityGovernor, TIER_FULL } from "../gl/quality";
 import {
@@ -67,8 +67,17 @@ export interface MaterialInfo {
 }
 
 export interface StageOptions {
-  /** Real byte progress of the studio HDR fetch (feeds a loader task). */
+  /** Real byte progress of the boot env HDR fetch (feeds a loader task). */
   onEnvProgress?: ((p: number) => void) | undefined;
+  /**
+   * Boot env HDR URL, resolved asynchronously (P4 perf: main.ts resolves the
+   * active look's `envFile` so the boot fetch IS the final env — no dead
+   * studio-HDR bytes). Resolutions:
+   *   string → fetch + PMREM that URL (byte progress → onEnvProgress)
+   *   null   → keep the procedural env (look owns env via envParams)
+   * Omitted / rejected → legacy fallback: the TEMP studio HDR.
+   */
+  bootEnvUrl?: Promise<string | null> | undefined;
 }
 
 export class Stage {
@@ -98,6 +107,8 @@ export class Stage {
   private watchAsset: WatchAsset | null = null;
   /** True once a look config owns the env (boot HDR must not clobber it). */
   private envLockedByLook = false;
+  /** Boot env URL actually applied (lets applyLook skip a re-fetch). */
+  private bootEnvApplied: string | null = null;
   /** Active look's contactShadow tune (survives a later watch adoption). */
   private contactShadowTune: ContactShadowTune | null = null;
 
@@ -126,9 +137,12 @@ export class Stage {
     this.camera.position.set(0, 0.4, 6);
 
     // Environment: procedural PMREM NOW (never an unlit first frame), the
-    // studio HDR swapped in when its bytes arrive (gl/env.ts).
+    // boot env HDR swapped in when its bytes arrive (gl/env.ts). The URL is
+    // the active look's own env when main.ts resolves it (P4 perf — the old
+    // unconditional studio-HDR fetch shipped 6.5 MB that the look replaced
+    // moments later); the studio HDR survives only as the no-look fallback.
     this.scene.environment = buildProceduralEnv(this.renderer);
-    this.envReady = this.upgradeEnvironment(options.onEnvProgress);
+    this.envReady = this.upgradeEnvironment(options.onEnvProgress, options.bootEnvUrl);
 
     this.placeholderDial = createPlaceholderDialTexture();
     this.screenMaterial = createScreenMaterial(this.placeholderDial);
@@ -145,9 +159,25 @@ export class Stage {
     this.resize();
   }
 
-  /** Swap the procedural env for the studio HDR once loaded (TEMP asset). */
-  private async upgradeEnvironment(onProgress?: (p: number) => void): Promise<void> {
-    const hdr = await loadStudioHdr(this.renderer, onProgress);
+  /** Swap the procedural env for the boot HDR once loaded. */
+  private async upgradeEnvironment(
+    onProgress?: (p: number) => void,
+    bootEnvUrl?: Promise<string | null>,
+  ): Promise<void> {
+    let url: string | null = ENV_HDR_URL; // legacy fallback: TEMP studio HDR
+    if (bootEnvUrl) {
+      try {
+        url = await bootEnvUrl;
+      } catch {
+        url = ENV_HDR_URL; // look resolution failed — studio stand-in
+      }
+    }
+    if (url === null) {
+      // The look owns its env procedurally (envParams) — nothing to fetch.
+      onProgress?.(1);
+      return;
+    }
+    const hdr = await loadHdrEnv(this.renderer, url, onProgress);
     if (hdr === null) return; // fallback stays; page remains presentable
     if (this.disposed || this.envLockedByLook) {
       // A look config already swapped its own env in — the boot HDR lost
@@ -158,6 +188,16 @@ export class Stage {
     const previous = this.scene.environment;
     this.scene.environment = hdr;
     previous?.dispose();
+    this.bootEnvApplied = url;
+  }
+
+  /**
+   * The boot env URL that actually landed (null until then / on fallback).
+   * applyLook consults this to skip re-fetching an env the boot path
+   * already applied (same URL ⇒ byte-identical PMREM output).
+   */
+  get appliedBootEnvUrl(): string | null {
+    return this.bootEnvApplied;
   }
 
   /** Torus-knot placeholder "watch" on a pedestal — swapped for the GLB in P1.5. */

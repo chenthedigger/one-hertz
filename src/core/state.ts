@@ -21,7 +21,7 @@ export interface EngineStateContract {
   camera: string;
   /** Explode rig state: "assembled" | "exploded" | "part-focus" (open set). */
   explode: string;
-  /** Colorway/finish id, e.g. "natural-titanium". */
+  /** Colorway/finish id, e.g. "natural-anchor-blue". */
   colorway: string;
   /** Dial face mode: "wayfinder" | "aod" | "depth" | "heart" | "compass". */
   dialMode: string;
@@ -44,7 +44,7 @@ export const STATE_KEYS: readonly StateKey[] = [
 export const INITIAL_STATE: Readonly<EngineStateContract> = Object.freeze({
   camera: "intro-hero",
   explode: "assembled",
-  colorway: "natural-titanium",
+  colorway: "natural-anchor-blue",
   dialMode: "wayfinder",
   postStack: "default",
 });

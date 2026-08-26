@@ -68,6 +68,10 @@ export interface VitalOptions {
   getVelocity(): number;
   /** Applied stage ground hex from the light-keyframe driver (null = parked). */
   getStageHex(): string | null;
+  /** Fixed-chrome collision policy (gate:p3 Parts/Footer tunes): 0..1 —
+   *  ≥0.5 dims the chip while a section's own chrome owns its corner.
+   *  Must be a pure function of scroll (eval-deterministic). */
+  getYield?(): number;
 }
 
 function clamp01(v: number): number {
@@ -125,6 +129,7 @@ export class LivingVital {
   private beats = 0;
   private flash = 0;
   private dark = false;
+  private yielded = false;
   private revealed = false;
   private shownValue = -1; // last painted readout (write-on-change)
   private tickArmed = false; // stage scale applied this frame — clear next
@@ -208,6 +213,14 @@ export class LivingVital {
       ease: "power3.out",
       delay: 0.4,
       onStart: () => this.root.classList.add("is-live"),
+      onComplete: () => {
+        // Hand opacity back to the class system so the collision-policy
+        // yield (CSS .is-yield) can drive it; .is-settled carries the
+        // live-only transition (eval never adds it — instant toggles keep
+        // captures deterministic).
+        gsap.set(this.root, { clearProps: "opacity,visibility" });
+        this.root.classList.add("is-settled");
+      },
     });
   }
 
@@ -244,6 +257,15 @@ export class LivingVital {
     if (dark !== this.dark) {
       this.dark = dark;
       this.root.classList.toggle("is-dark", dark);
+    }
+
+    // Collision-policy yield (gate:p3 — ONE owner for the Parts/Footer
+    // fixed-chrome overlaps): dim while section chrome owns the corner.
+    // Probe is a pure function of scroll, so eval captures stay stable.
+    const yielded = (this.opts.getYield?.() ?? 0) >= 0.5;
+    if (yielded !== this.yielded) {
+      this.yielded = yielded;
+      this.root.classList.toggle("is-yield", yielded);
     }
 
     // Readout (write-on-change; pinned 64 under eval).

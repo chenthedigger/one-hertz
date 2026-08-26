@@ -1,0 +1,398 @@
+{
+  "url": "http://localhost:4640/",
+  "label": "baseline",
+  "timestamps": {
+    "domContentLoaded": 222,
+    "loaderPainted": 450,
+    "loaderReady": 3557,
+    "networkIdle": 3557
+  },
+  "totals": {
+    "requests": 54,
+    "totalBytes": 16733029,
+    "totalMB": 15.96,
+    "finishedBeforeLoaderReady": 54,
+    "bytesBeforeLoaderReady": 16733029,
+    "mbBeforeLoaderReady": 15.96
+  },
+  "requests": [
+    {
+      "url": "/",
+      "kb": 7.3,
+      "start": 8,
+      "end": 34,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-300.woff2",
+      "kb": 14.9,
+      "start": 32,
+      "end": 36,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/GeistMono-var-latin.woff2",
+      "kb": 22.6,
+      "start": 32,
+      "end": 36,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/Inter-var-latin.woff2",
+      "kb": 47.3,
+      "start": 32,
+      "end": 38,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/index-DMmgS1di.js",
+      "kb": 1003.6,
+      "start": 32,
+      "end": 63,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/index-Dm_t9d8C.css",
+      "kb": 57.7,
+      "start": 32,
+      "end": 38,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/env/studio_small_03_2k.hdr",
+      "kb": 6517.4,
+      "start": 221,
+      "end": 513,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/ultra-3.ktx2.glb",
+      "kb": 1210.1,
+      "start": 221,
+      "end": 392,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-400.woff2",
+      "kb": 14.8,
+      "start": 222,
+      "end": 356,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/fonts/ClashDisplay-500.woff2",
+      "kb": 14.9,
+      "start": 222,
+      "end": 357,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_sip.glb",
+      "kb": 564,
+      "start": 222,
+      "end": 392,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_battery.glb",
+      "kb": 1282.8,
+      "start": 222,
+      "end": 393,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_taptic.glb",
+      "kb": 361.3,
+      "start": 222,
+      "end": 393,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_display.glb",
+      "kb": 373.8,
+      "start": 222,
+      "end": 393,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_speaker.glb",
+      "kb": 418.8,
+      "start": 222,
+      "end": 393,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_sensor_array.glb",
+      "kb": 1523,
+      "start": 222,
+      "end": 393,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/watch/internals/part_crown_asm.glb",
+      "kb": 210.8,
+      "start": 222,
+      "end": 393,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_1.webp",
+      "kb": 85.6,
+      "start": 222,
+      "end": 226,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_2.webp",
+      "kb": 32.6,
+      "start": 222,
+      "end": 226,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_3.webp",
+      "kb": 50.3,
+      "start": 222,
+      "end": 226,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_4.webp",
+      "kb": 25,
+      "start": 222,
+      "end": 225,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/gallery/natural-titanium_5.webp",
+      "kb": 32.1,
+      "start": 222,
+      "end": 226,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/d2ec574b-9238-47bf-a576-854808f79a35",
+      "kb": 68.8,
+      "start": 404,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/77c7c7cd-9326-4a16-9472-afb06922563a",
+      "kb": 60.5,
+      "start": 404,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/b9ef1878-3bc2-41a4-8a25-40a9a56222f9",
+      "kb": 17.3,
+      "start": 404,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/155bcb3a-7337-4fb1-af36-672036cc4d0a",
+      "kb": 56.4,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/6cb9e8e3-3e37-46ce-a14d-79e80f5a23c5",
+      "kb": 9.6,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/95dde9ba-9258-4268-b3a7-8e782578df09",
+      "kb": 0.8,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/f578a414-db50-4d65-8a2b-340427b4e0d4",
+      "kb": 51.4,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/9aa4c267-dba9-4afc-8ba8-74f5e9c4eb67",
+      "kb": 0.9,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/c046d9eb-f8a5-4bae-837c-642da2bdf020",
+      "kb": 0.6,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/d84c096a-c0f5-4c43-a786-3f505aad94fc",
+      "kb": 52.6,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/70249cd5-1434-4d28-95ce-84387a435784",
+      "kb": 30.6,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/3ca65dd5-2344-485e-8cbd-704180d8409a",
+      "kb": 32.7,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/e0aeee6e-66b3-47e6-93b1-0e2bc7dab688",
+      "kb": 17,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/7273602a-3785-4752-8f75-f61409302701",
+      "kb": 14.8,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/deafd76a-346b-41fd-80ef-09563534b0dc",
+      "kb": 61,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/51cb465c-5250-49ec-b160-d06ef4ea9525",
+      "kb": 24.7,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/adca503b-4c9b-4515-bf8f-45051fbbf57b",
+      "kb": 97.9,
+      "start": 405,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/7c029c15-925b-46c7-9d35-1589a047e681",
+      "kb": 2.9,
+      "start": 406,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/41af4947-4c4c-4481-a316-70e814425db4",
+      "kb": 2.9,
+      "start": 406,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/5c4d2e40-41cc-498a-981a-f73229c3551a",
+      "kb": 333.3,
+      "start": 408,
+      "end": 451,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/dff86c49-56c5-4de4-87da-56ff4156ed5a",
+      "kb": 59.7,
+      "start": 408,
+      "end": 452,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/aa04fb3e-4673-41bf-9ee7-a7840515520a",
+      "kb": 110.9,
+      "start": 410,
+      "end": 452,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/a7dd79e0-fdb9-4789-8013-993695cc2d91",
+      "kb": 46.6,
+      "start": 413,
+      "end": 452,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/61cd9217-4718-4064-8275-79b7e8ee23ca",
+      "kb": 10.6,
+      "start": 413,
+      "end": 452,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/4f7e1999-7321-4478-8e52-9319da233cba",
+      "kb": 142.7,
+      "start": 413,
+      "end": 452,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/basis/basis_transcoder.js",
+      "kb": 56.2,
+      "start": 452,
+      "end": 454,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/basis/basis_transcoder.wasm",
+      "kb": 515,
+      "start": 452,
+      "end": 454,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/173f6dbb-4a67-46d5-b52c-19c2f8a2884b",
+      "kb": 61.9,
+      "start": 457,
+      "end": 480,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/eab74cef-23d1-4065-8442-92a62a7b7d44",
+      "kb": 61.9,
+      "start": 457,
+      "end": 470,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "blob:http://localhost:4640/5c50535f-a792-4105-bab9-358d9d0c2457",
+      "kb": 61.9,
+      "start": 457,
+      "end": 470,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/looks/instrument.json",
+      "kb": 11.5,
+      "start": 661,
+      "end": 705,
+      "beforeLoaderReady": true
+    },
+    {
+      "url": "/assets/looks/instrument.hdr",
+      "kb": 394.7,
+      "start": 706,
+      "end": 717,
+      "beforeLoaderReady": true
+    }
+  ]
+}

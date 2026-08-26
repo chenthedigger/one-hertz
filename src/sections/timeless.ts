@@ -64,8 +64,8 @@ const SENSING_LINES = [
 const MOVEMENT_EYEBROW = "SILICON MOVEMENT"; // 16 ≤18 caps
 const MOVEMENT_LINES = [
   "Powered by the S-series SiP; never wound,",
-  "8 hours in a 15-minute charge.",
-]; // 41 + 30 chars
+  "12 hours in a 15-minute charge.", // Ultra 3 fast-charge claim, apple.com specs
+]; // 41 + 31 chars
 
 /* ---- beat windows (fraction grid {.05,.1,.15,.2,.25,.4,.5,.75} anchors;
  * fine beats .04–.15 per the motion-bible §2 scrub clusters) --------------- */

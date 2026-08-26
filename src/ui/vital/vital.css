@@ -22,6 +22,20 @@
   visibility: visible;
 }
 
+/* Collision-policy yield (gate:p3 Parts/Footer tunes — one owner, not
+   three local fixes): the chip whispers while section chrome owns its
+   corner (the Parts table sweeping past during the Footer traversal on
+   desktop; the end-slate label rail on mobile). The transition rides
+   .is-settled — added after the live reveal only, never under ?eval=1,
+   so eval snapshots toggle instantly (deterministic captures). */
+.vital.is-settled {
+  transition: opacity 0.35s linear;
+}
+
+.vital.is-yield {
+  opacity: 0.12;
+}
+
 /* The Intro section's placeholder vital (its P3 anchor) yields to this
    live chrome — one instrument, never two. */
 body.vital-live .intro__vital {

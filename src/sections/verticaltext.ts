@@ -61,7 +61,9 @@ import "./verticaltext.css";
 const EYEBROW_A = "03 · EXTERIOR"; // ≤18 chars caps
 const HEAD_A_GHOST = "CASE &"; // ≤18 chars/line at colossal
 const HEAD_A_SOLID = "FINISHES";
-const LINES_A = ["Aerospace-grade titanium", "Satin-brushed · 100 m"]; // ≤34c
+// Apple's own spec vocabulary ("Titanium case, Grade 5" · "Water
+// resistance 100m" — apple.com Ultra 3 tech specs, verified 2026-08).
+const LINES_A = ["Grade 5 titanium, satin-brushed", "Water resistance · 100 m"]; // ≤34c
 
 const EYEBROW_B = "03 · DISPLAY";
 const HEAD_B_GHOST = "FACE &";

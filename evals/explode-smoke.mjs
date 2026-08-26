@@ -352,12 +352,16 @@ const shoot = (page, name) => page.screenshot({ path: path.join(SHOTS_DIR, name)
 {
   const { page, errors } = await newPage(BASE + "/");
   await page.waitForFunction(() => !document.getElementById("loader"), null, { timeout: 25000 });
+  // P4 perf contract: on the LIVE page internals fetch on approach (scroll-
+  // distance prefetch), never while idle at Intro — so arrive first, then
+  // wait for the full roster (semantics preserved: every roster assertion
+  // in this block runs at Disassembly).
+  await goto(page, "Disassembly", 0.5);
   await page.waitForFunction(
     () => window.__ONE_HERTZ__?.state().explode?.parts?.length === 10,
     null,
     { timeout: 20000 },
   );
-  await goto(page, "Disassembly", 0.5);
   await page.waitForTimeout(600); // non-eval: let the frame pipeline settle
 
   // -- taptic tick-back oscillates at ~8 Hz on hover -------------------------

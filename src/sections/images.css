@@ -177,7 +177,7 @@
 }
 
 /* LOOKBIBLE §6 shot-list placement — one colossal, one tall, two medium,
-   one wide grid-breaking strip (the 14.4 mm edge-on story). */
+   one wide grid-breaking strip (the 12 mm edge-on story). */
 .gal__fig--1 {
   grid-area: 1 / 1 / 9 / 5;
 }

@@ -88,6 +88,14 @@ html.is-longpressing * {
   will-change: transform, opacity;
 }
 
+/* gate:p3 cursor polish — the finish-swatch chip is a TAG, not a cover:
+   over picker rows / outro model labels it floats above the pointer (the
+   dot stays visible at reduced scale as its anchor), so the chip never
+   occludes the label it points at (MWR rows, outro model sub-labels). */
+.cursor.is-swatch .cursor__icon {
+  margin-top: -58px;
+}
+
 .cursor__label {
   position: absolute;
   top: 16px;

@@ -49,6 +49,7 @@
  */
 
 import { gsap } from "gsap";
+import { MeshStandardMaterial } from "three";
 import { getClock } from "../core/clock";
 import { isEvalMode } from "../core/determinism";
 import { params } from "../core/params";
@@ -376,6 +377,32 @@ export class IntroSection extends SectionBase {
       // Watch enters from depth onto the contact shadow — 2.0 s power3.out
       // (source-exact loader→watch entrance; position pre-offset at boot).
       tl.to(stage.product.position, { y: 0, z: 0, duration: 2, ease: "power3.out" }, 0);
+      // gate:p3 Intro tune — soften the numeral bloom at the live entrance
+      // tumble attitude: the match-cut lands on the frame where the
+      // tumbling dial catches the env and the emissive numerals bloom
+      // hotter than any eval frame. The screen emissive rides the SAME 2 s
+      // wall-clock chain as the tumble, from 60% up to its authored value
+      // (power2.in — stays soft through the tumble, arrives with the
+      // settle), restoring the exact pre-ramp intensity on complete. Live
+      // only by construction: eval boots at the settled frame and never
+      // arms this chain, so captures keep the authored 2.1.
+      const screenMat = stage.watch?.screenMesh?.material ?? null;
+      if (screenMat instanceof MeshStandardMaterial) {
+        const authored = screenMat.emissiveIntensity;
+        screenMat.emissiveIntensity = authored * 0.6;
+        tl.to(
+          screenMat,
+          {
+            emissiveIntensity: authored,
+            duration: 2,
+            ease: "power2.in",
+            onComplete: () => {
+              screenMat.emissiveIntensity = authored; // exact restore — no residue
+            },
+          },
+          0,
+        );
+      }
       const root = stage.watch?.root ?? null;
       if (root) {
         // Rotation settle rides the watch root (stage.render owns

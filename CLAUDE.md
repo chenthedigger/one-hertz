@@ -36,6 +36,10 @@
 
 ## Current state (2026-08-26)
 
+- **P4 COMPLETE: real-Ocean colorway world + look/copy/perf hardening live on prod** (v227a44b5, one-hertz.ubonranto.workers.dev) · colorway axis = 2 Ti finishes × real Apple Ocean colors (Anchor Blue / Black / Neon Green, every combo orderable on apple.com; Tide/Graphite/Ember/Midnight deleted) · gallery = 20 Cycles masters (812 KB for 4 real sets) · copy spec-true vs live apple.com (12mm, MOLDED, FLAT SAPPHIRE) + Fraunces §4 one-moment machine-checked · 13/13 gate:p3 tunes closed (flank mottling fixed at GLB source; vital chip has ONE yield owner incl. mobile gallery window) · first load **15.96 MB → 3.94 MB (−75%)**, 10/10 pixel-identical A/B vs frozen refs · gate:p4 (docs/p4/gate.json, single-director) 4 TUNEs all applied · rubric assert **28/29 PASS, 0 FAIL, gate PASS** (1 SKIP = longpress-lenis-stop, P5 schema call) · all seven smokes serial ALL PASS + zero console errors both viewports · evals/reference/ours refreshed (150+16 frames, zero skips, real-Ocean world) · dist token scan clean · prod engine-smoke PASS · lane notes docs/p4/{copy,gallery,look-fixes,perf,integrate}.md · next: **P5 council** (beauty gate vs source, LOOKBIBLE co-signs, schema v2, real mid-tier device perf round, worker asset prune) — caveats: beauty council NOT run at this gate; perf proxy tier2 at exactly the 40 fps floor.
+
+## Prior state (P3)
+
 - **P3 COMPLETE: all 5 interaction mechanics live on prod** (vc66bb51f, one-hertz.ubonranto.workers.dev) · rubric structural checklist **28/29 PASS, 0 FAIL, gate PASS** (criticals=0, passRate 0.966; the 1 SKIP = longpress-lenis-stop, schema-v1 scroll-scalar constraint — P5 council) · evals/reference/ours refreshed (150+16 frames, zero skips) · all six smokes + zero console errors both viewports · lane notes docs/p3/{tune-w3w4,explode,swap,vital,integrate}.md · next: P4 (asset weight ~13MB first-load is lever #1, gallery Cycles masters, copy review) + P5 council items listed in docs/p3/integrate.md.
 
 ## Prior state (P2)

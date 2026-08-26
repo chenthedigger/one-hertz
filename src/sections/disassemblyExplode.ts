@@ -115,16 +115,19 @@ export const PART_COPY: Record<string, ExplodePartCopy> = {
     desc: "A dial that breathes at one hertz: LTPO3 silicon slows the refresh to a heartbeat, so the always-on face sips power all night long.",
   },
   part_display: {
+    // The sapphire is part 01 — this laminate is what lives beneath it.
     name: "Display laminate",
-    desc: "Three wafers in a sandwich: sapphire lid, the OLED itself, and a stamped steel shield whose kapton tails feed the case one brain.",
+    desc: "Three wafers in a sandwich: the touch layer, the OLED itself, and a stamped steel shield whose kapton tails feed the case one brain.",
   },
   part_sip: {
     name: "S10 SiP",
     desc: "An entire movement poured into resin: CPU, GPU, neural engine and storage in one system-in-package where a mainplate would carry gears.",
   },
   part_battery: {
-    name: "35.3 mAh cell",
-    desc: "The mainspring, replaced: a crimped-foil lithium pouch that winds itself from a puck every night and never once asks for a key.",
+    // 42 hours = the Apple-published power reserve (apple.com Ultra 3 specs)
+    // — a barrel is specced by its reserve, so the cell is too.
+    name: "42-hour cell",
+    desc: "The mainspring barrel, replaced: a crimped-foil pouch holding a 42-hour reserve. It winds itself from a puck every night, never from a key.",
   },
   part_speaker: {
     name: "Speaker cassette",
